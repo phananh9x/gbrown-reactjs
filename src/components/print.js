@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as API from '../API';
 import moment from 'moment';
+import ReactToPrint from "react-to-print";
 
 class Print extends Component {
   constructor(props, context) {
@@ -10,7 +11,7 @@ class Print extends Component {
       },
     };
   }
-  componentDidMount() {
+  componentWillMount() {
     if (this.props.match.params && this.props.match.params.purchaseId) {
       // console.log(this.props.match.params.purchaseId)
       API.getPurchaseDetail(this.props.match.params.purchaseId).then(data => {
@@ -23,10 +24,18 @@ class Print extends Component {
       })
     }
   }
+
+  componentDidMount() {
+
+  }
    render() {
       const { value } = this.state
       return (
-          <div className="App">
+          <div className="App" ref={el => (this.componentRef = el)} >
+            <ReactToPrint
+              trigger={() => <a href="#">Print this out!</a>}
+              content={() => this.componentRef}
+            />
               <div className="A4 page">
                 <div className="section">
                   <img className="w100" src='http://103.7.41.176:3000/images/file-1536241983261-bg1-5858.png' />
@@ -100,7 +109,7 @@ class Print extends Component {
                     <th width="100">ĐƠN GIÁ</th>
                     <th width="100">GIÁ GIẢM</th>
                     <th width="100">THÀNH TIỀN</th>
-                    <th width="150">KÍCH THƯỚC</th>
+                    <th width="120">KÍCH THƯỚC</th>
                     <th>GHI CHÚ</th>
                 </tr>
                 {value.category && value.category.map((e,i) => 
