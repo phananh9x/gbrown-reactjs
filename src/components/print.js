@@ -181,6 +181,82 @@ class Print extends Component {
                   </div>
                 </div>
               ))}
+              <div className="A4 page">
+                <div className="section">
+                  <div className="cont_fullscreen">
+                    <div className="cont_center">
+                      <div className="tit_fullscreen">GBROWN FLOWER / SIMONTU</div>
+                      <div className="cont_mota">
+                        Thân gửi đến Quý khách hàng, ước mong anh chị dành chút thời gian có
+                        thể xem qua bảng báo giá này. Và nhờ anh chị xác nhận lại thông tin
+                        trên. Chân thành!
+                      </div>
+                      <div className="cont_baogia clearfix">
+                        <h2>THÔNG TIN BÁO GIÁ</h2>
+                        <div className="cont_baogia_main clearfix">
+                          <div className="line_baogia">{`Tên khách hàng: ${value.customerName}`}</div>
+                          <div className="line_baogia">MSHĐ: {value.purchaseId}</div>
+                          <div className="line_baogia">SĐT: {value.phone}</div>
+                          <div className="line_baogia">Ngày diễn ra tiệc: {moment(value.startDate).format("DD.MM.YYYY")}</div>
+                          <div className="line_baogia">NVKD phụ trách: {value.saleGbrown&& value.saleGbrown.toUpperCase() || ''}</div>
+                          <div className="line_baogia">
+                            Địa điểm tổ chức: {value.location}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="tit_center clearfix">ĐẠI DIỆN</div>
+                      <div className="tit_center clearfix">GBROWN FLOWER</div>
+                    </div>
+                    <div className="cont_fo2 clearfix">
+                      <div className="cont_center clearfix">
+                        <ul className="mangxahoi clearfix">
+                          <li>
+                            <a href="" target="_blank" title="Mạng xã hội 1">
+                              <img
+                                src="http://gbrownflowerquanlynoibo.info/upload/hinhanh/icon_1-6704.png"
+                                alt="Mạng xã hội 1"
+                              />
+                            </a>
+                          </li>
+                          <li>
+                            <a href="" target="_blank" title="Mạng xã hội 2">
+                              <img
+                                src="http://gbrownflowerquanlynoibo.info/upload/hinhanh/icon_2-2740.png"
+                                alt="Mạng xã hội 2"
+                              />
+                            </a>
+                          </li>
+                          <li>
+                            <a href="" target="_blank" title="Mạng xã hội 3">
+                              <img
+                                src="http://gbrownflowerquanlynoibo.info/upload/hinhanh/icon_3-8084.png"
+                                alt="Mạng xã hội 3"
+                              />
+                            </a>
+                          </li>
+                          <li>
+                            <a href="" target="_blank" title="Mạng xã hội 4">
+                              <img
+                                src="http://gbrownflowerquanlynoibo.info/upload/hinhanh/icon_4-2977.png"
+                                alt="Mạng xã hội 4"
+                              />
+                            </a>
+                          </li>
+                        </ul>
+                        <div className="tit_fo2">Mọi chi tiết xin liên hệ:</div>
+                        <div className="tit_fo3">
+                          CÔNG TY TNH TỔ CHỨC SỰ KIỆN VÀ DỊCH VỤ TRANG TRÍ CƯỚI GBROWN
+                        </div>
+                        <div className="tit_fo2">
+                          www.salegbrown.vn | www.gbrownflower.vn | 0902 079 921 - 0942 887
+                          200 | www.facebook.com/gbrownflower
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
         </div>
   );
   }
