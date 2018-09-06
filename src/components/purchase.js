@@ -308,9 +308,9 @@ class Purchase extends Component {
         // console.log(data.results)
         this.setState({
           value: {
-            ...data.results[0]
+            ...data.results
           },
-          thongTinHangMuc: data.results[0].category
+          thongTinHangMuc: data.results.category
         })
       })
     }
@@ -325,7 +325,7 @@ class Purchase extends Component {
         this.setState({
           save : false
         })
-        this.props.history.push(`/purchase/${e.results.PurchaseId}`);
+        // this.props.history.push(`/purchase/${e.results.purchaseId}`);
       }, 1000)
     })
   }
