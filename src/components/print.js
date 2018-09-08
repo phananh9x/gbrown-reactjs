@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import * as API from '../API';
 import moment from 'moment';
 import ReactToPrint from "react-to-print";
-
 class Print extends Component {
   constructor(props, context) {
     super(props, context);
@@ -33,7 +32,7 @@ class Print extends Component {
       return (
           <div className="App" ref={el => (this.componentRef = el)} >
             <ReactToPrint
-              trigger={() => <a href="#">Print this out!</a>}
+              trigger={() => <button style={{position: 'absolute'}} class="btn btn-success">In báo Giá</button>}
               content={() => this.componentRef}
             />
               <div className="A4 page">
@@ -79,7 +78,7 @@ class Print extends Component {
                           <div className="cont_mainbodyl clearfix">
                             <div className="line">{`Sale phụ trách: ${value.saleGbrown && value.saleGbrown.toUpperCase()|| ''}`}</div>
                             <div className="line">{`SĐT: ${value.phoneSaleGbrown && value.phoneSaleGbrown  || '0933153999'}`}</div>
-                            <div className="line">{`Email: ${value.email}`}</div>
+                            <div className="line">{`Email: ${value.emailSaleGbrown}`}</div>
                           </div>
                         </div>
                         <div className="section3bodyr clearfix">
@@ -116,18 +115,18 @@ class Print extends Component {
                   (<tr>
                       <td align="center">{i+1}</td>
                       <td align="center">{e.categoryName}</td>
-                      <td align="center">1</td>
+                      <td align="center">{e.amount && e.amount || 1}</td>
                       <td align="center">{`${e.price && e.price || 0}đ`}</td>
                       <td align="center">{`${e.reducedPrice && e.reducedPrice || 0}đ`}</td>
                       <td align="center">{`${e.cash && e.cash||0 }đ`}</td>
-                      <td align="center"></td>
-                      <td align="center"></td>
+                      <td align="center">{e.size && e.size || ''}</td>
+                      <td align="center">{e.desciption && e.desciption || ''}</td>
                   </tr>)
                 )}
                 <tr>
                     <td colspan="4" align="center">TỔNG SỐ TIỀN (VNĐ)<br/>{`${value.total}đ` }</td>
                     <td style={{background:'#e1e0e5'}} colspan="3" align="center">(tổng số tiền ghi bằng chữ)<br/>
-                                        73 triệu 500 ngàn đồng                                  </td>
+                                                                          </td>
                 </tr>
                     </tbody></table>
                 <div className="wrap_titfo clearfix">Bảng Giá trên chưa bao gồm Thuế VAT</div>
@@ -168,11 +167,13 @@ class Print extends Component {
                             <div className="cont_footer_l clearfix">
                                 <h2 style={{fontWeight: 'bold'}}>{`${i + 1}. ${e.categoryName} `}</h2>
                                 <p>{`Giá tiền: ${e.price}đ`}</p>
-                                <p>Số lượng: 1</p>
+                                <p>Số lượng: {e.amount && e.amount || 1}</p>
                             </div>
                             <div className="cont_footer_r clearfix">
                                 <h2 style={{fontWeight: 'bold'}}>MÔ TẢ CHI TIẾT:</h2>
-                                <div className="cont_motachitiet clearfix"></div>
+                                <div className="cont_motachitiet clearfix">
+                                {e.desciption && e.desciption || ''}
+                                </div>
                             </div>
                         </div>
                       </div>

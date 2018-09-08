@@ -50,153 +50,153 @@ function FieldCheckBox({ id, label, help, ...props }) {
 
 function ThongTinHangMuc({index, value, handleChange,handleChangeFile, ...props}) {
   return (
-      <div className="row">
-        <div className="col-xs-12">
-            <h1>{`THÔNG TIN HẠNG MỤC ${index+1}`}</h1>
-        </div>
-        <div className="col-xs-6">
-          <FieldGroup
-            value={value}
-            id="categoryName"
-            type="text"
-            label="Tên Hạng Mục"
-            thongTinHangMuc={index}
-            handleChange={handleChange}
-          />
-          <FieldGroupFileImage
-            label="Hình Ảnh Hạng Mục"
-            thongTinHangMuc={index}
-            value={value.image}
-          /> 
-          <FieldGroupFile
-            id="imageCategory"
-            type="file"
-            label="Thêm Hình Ảnh Hạng Mục"
-            thongTinHangMuc={index}
-            handleChangeFile={handleChangeFile}
-          />
-          <FieldGroup
-            value={value}
-            id="price"
-            type="number"
-            label="Giá Tiền"
-            thongTinHangMuc={index}
-            handleChange={handleChange}
-          />
-          <FieldGroup
-            value={value}
-            id="reducedPrice"
-            type="number"
-            label="Giá Giảm"
-            thongTinHangMuc={index}
-            handleChange={handleChange}
-          />
-          <FieldGroup
-            value={value}
-            id="cash"
-            type="number"
-            label="Còn lại"
-            thongTinHangMuc={index}
-            handleChange={handleChange}
-          />
-           <FieldGroup
-            value={value}
-            id="size"
-            type="text"
-            label="Kích Thước"
-            thongTinHangMuc={index}
-            handleChange={handleChange}
-          /> 
-           <FieldGroup
-            value={value}
-            id="amount"
-            type="text"
-            label="Số Lượng"
-            thongTinHangMuc={index}
-            handleChange={handleChange}
-          /> 
-          <FieldGroup
-            value={value}
-            id="description"
-            type="text"
-            label="Mô Tả Chi Tiết"
-            textArea
-            thongTinHangMuc={index}
-            handleChange={handleChange}
-          />
-        </div>
-        <div className="col-xs-6">
-          <FieldGroup
-            value={value}
-            id="implementationOfficer"
-            type="text"
-            label="Nhân Viên Thực Hiện"
-            thongTinHangMuc={index}
-            handleChange={handleChange}
-          />
-          <FieldGroup
-            value={value}
-            id="customerRequirements"
-            type="text"
-            label="Yêu Cầu Khách Hàng"
-            thongTinHangMuc={index}
-            handleChange={handleChange}
-          />
-          <FieldGroup
-            value={value}
-            id="proposedPurchase"
-            type="text"
-            label="Đề Xuất Thu Mua"
-            thongTinHangMuc={index}
-            handleChange={handleChange}
-          />
-          <FieldGroup
-            value={value}
-            id="employeeComments"
-            type="text"
-            label="Góp Ý Nhân Viên"
-            thongTinHangMuc={index}
-            handleChange={handleChange}
-          />
-        
-          <FieldGroupFile
-            id="imageSetup"
-            type="file"
-            label="Hình Ảnh Không Gian Set-Up"
-            thongTinHangMuc={index}
-          />
-          <FieldGroup
-            value={value}
-            id="requestSetup"
-            type="text"
-            label="Yêu Cầu Của Không Gian Set-Up"
-            thongTinHangMuc={index}
-            handleChange={handleChange}
-          />
-          <FieldGroup
-            value={value}
-            id="relatedMaterials"
-            type="text"
-            label="Vật Liệu Liên Quan"
-            thongTinHangMuc={index}
-            handleChange={handleChange}
-          />
-          <FieldGroup
-            value={value}
-            id="customerReviews"
-            type="text"
-            label="Ý Kiến Khách Hàng"
-            thongTinHangMuc={index}
-            handleChange={handleChange}
-          />
-        </div>
-        {props.phanTichHangMuc && props.phanTichHangMuc.length && props.phanTichHangMuc.map(item => {
-          return (<PhanTichHangMuc index={item}/>)
-        })}
-        <div className="col-xs-12">
-          <button className="btn btn-primary" onClick={props.onClick.bind(this, index)}>Thêm Phân Tích Hạng Mục</button>
-        </div>
+    <div className="row">
+      <div className="col-xs-12">
+          <h1>{`THÔNG TIN HẠNG MỤC ${index+1}`}</h1>
       </div>
+      <div className="col-xs-6">
+        <FieldGroup
+          value={value}
+          id="categoryName"
+          type="text"
+          label="Tên Hạng Mục"
+          thongTinHangMuc={index}
+          handleChange={handleChange}
+        />
+        <FieldGroupFileImage
+          label="Hình Ảnh Hạng Mục"
+          thongTinHangMuc={index}
+          value={value.image}
+        /> 
+        <FieldGroupFile
+          id="imageCategory"
+          type="file"
+          label="Thêm Hình Ảnh Hạng Mục"
+          thongTinHangMuc={index}
+          handleChangeFile={handleChangeFile}
+        />
+        <FieldGroup
+          value={value}
+          id="price"
+          type="number"
+          label="Giá Tiền"
+          thongTinHangMuc={index}
+          handleChange={handleChange}
+        />
+        <FieldGroup
+          value={value}
+          id="reducedPrice"
+          type="number"
+          label="Giá Giảm"
+          thongTinHangMuc={index}
+          handleChange={handleChange}
+        />
+        <FieldGroup
+          value={value}
+          id="cash"
+          type="number"
+          label="Còn lại"
+          thongTinHangMuc={index}
+          handleChange={handleChange}
+        />
+         <FieldGroup
+          value={value}
+          id="size"
+          type="text"
+          label="Kích Thước"
+          thongTinHangMuc={index}
+          handleChange={handleChange}
+        />
+        <FieldGroup
+          value={value}
+          id="amount"
+          type="text"
+          label="Số Lượng"
+          thongTinHangMuc={index}
+          handleChange={handleChange}
+        /> 
+        <FieldGroup
+          value={value}
+          id="description"
+          type="text"
+          label="Mô Tả Chi Tiết"
+          textArea
+          thongTinHangMuc={index}
+          handleChange={handleChange}
+        />
+      </div>
+      <div className="col-xs-6">
+        <FieldGroup
+          value={value}
+          id="implementationOfficer"
+          type="text"
+          label="Nhân Viên Thực Hiện"
+          thongTinHangMuc={index}
+          handleChange={handleChange}
+        />
+        <FieldGroup
+          value={value}
+          id="customerRequirements"
+          type="text"
+          label="Yêu Cầu Khách Hàng"
+          thongTinHangMuc={index}
+          handleChange={handleChange}
+        />
+        <FieldGroup
+          value={value}
+          id="proposedPurchase"
+          type="text"
+          label="Đề Xuất Thu Mua"
+          thongTinHangMuc={index}
+          handleChange={handleChange}
+        />
+        <FieldGroup
+          value={value}
+          id="employeeComments"
+          type="text"
+          label="Góp Ý Nhân Viên"
+          thongTinHangMuc={index}
+          handleChange={handleChange}
+        />
+      
+        <FieldGroupFile
+          id="imageSetup"
+          type="file"
+          label="Hình Ảnh Không Gian Set-Up"
+          thongTinHangMuc={index}
+        />
+        <FieldGroup
+          value={value}
+          id="requestSetup"
+          type="text"
+          label="Yêu Cầu Của Không Gian Set-Up"
+          thongTinHangMuc={index}
+          handleChange={handleChange}
+        />
+        <FieldGroup
+          value={value}
+          id="relatedMaterials"
+          type="text"
+          label="Vật Liệu Liên Quan"
+          thongTinHangMuc={index}
+          handleChange={handleChange}
+        />
+        <FieldGroup
+          value={value}
+          id="customerReviews"
+          type="text"
+          label="Ý Kiến Khách Hàng"
+          thongTinHangMuc={index}
+          handleChange={handleChange}
+        />
+      </div>
+      {props.phanTichHangMuc && props.phanTichHangMuc.length && props.phanTichHangMuc.map(item => {
+        return (<PhanTichHangMuc index={item}/>)
+      })}
+      <div className="col-xs-12">
+        <button className="btn btn-primary" onClick={props.onClick.bind(this, index)}>Thêm Phân Tích Hạng Mục</button>
+      </div>
+    </div>
   )
 }
 
@@ -310,7 +310,7 @@ function FieldGroupFileImage({ label, value, thongTinHangMuc, ...props }) {
     </div>
   );
 }
-class Purchase extends Component {
+class AddPurchase extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -418,7 +418,7 @@ class Purchase extends Component {
         <Alert bsStyle={`success ${ !save ? 'hide' : '' }`} >
           <strong>Đã lưu thôn tin đơn hàng!</strong> 
         </Alert>
-        <div className="container-fluid">
+         <div className="container-fluid">
           <div className="row">
             <div className="col-xs-8">
               <h1>THÔNG TIN ĐƠN HÀNG</h1>
@@ -449,6 +449,7 @@ class Purchase extends Component {
                 id="agreementCode"
                 type="text"
                 label="Mã Hợp Đồng"
+                handleChange={this.handleChange}
               />
               <FieldGroup
                 value={value}
@@ -630,4 +631,4 @@ class Purchase extends Component {
   }
 }
 
-export default withRouter(Purchase);
+export default withRouter(AddPurchase);
