@@ -194,7 +194,7 @@ function ThongTinHangMuc({index, value, handleChange,handleChangeFile, ...props}
         return (<PhanTichHangMuc index={item}/>)
       })}
       <div className="col-xs-12">
-        <button className="btn btn-primary" onClick={props.onClick.bind(this, index)}>Thêm Phân Tích Hạng Mục</button>
+        {/*<button className="btn btn-primary" onClick={props.onClick.bind(this, index)}>Thêm Phân Tích Hạng Mục</button>*/}
       </div>
     </div>
   )
@@ -349,12 +349,9 @@ class AddPurchase extends Component {
       this.setState({
         save: true
       })
-      setTimeout(() => {
-        this.setState({
-          save : false
-        })
-        // this.props.history.push(`/purchase/${e.results.purchaseId}`);
-      }, 1000)
+      this.props.history.push({
+        pathname: '/purchase/'+e.results.purchaseId,
+      });
     })
   }
 

@@ -194,7 +194,7 @@ function ThongTinHangMuc({index, value, handleChange,handleChangeFile, ...props}
           return (<PhanTichHangMuc index={item}/>)
         })}
         <div className="col-xs-12">
-          <button className="btn btn-primary" onClick={props.onClick.bind(this, index)}>Thêm Phân Tích Hạng Mục</button>
+          {/*<button className="btn btn-primary" onClick={props.onClick.bind(this, index)}>Thêm Phân Tích Hạng Mục</button>*/}
         </div>
       </div>
   )
@@ -430,8 +430,10 @@ class Purchase extends Component {
                               justifyContent: 'center',
                               alignItems: 'center',
                               height: '70px'}}>
-                  <Link to="/main"><button class="btn btn-primary">Thêm Đơn Hàng</button></Link>
-                  <Link to={`/print/${purchaseId}`}><button class="btn btn-success">In báo Giá</button></Link>
+                  <Link to="/main"><button className="btn btn-primary">Thêm Đơn Hàng</button></Link>
+                  <Link to={`/baogia/${purchaseId}`}><button className="btn btn-success">In báo Giá</button></Link>
+                  <Link to={`/chitiethopdong/${purchaseId}`}><button className="btn btn-success">In Chi Tiết Hợp Đồng</button></Link>
+                  <button className="btn btn-success" onClick={()=> window.open(`${API.server}purchase/${purchaseId}/hopdong`, "_blank")}>In Hợp Đồng</button>
                 </div>
               }
 

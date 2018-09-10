@@ -65,7 +65,9 @@
 .w100 {
   width: 100%;
 }
-
+.bold {
+  font-weight: 600;
+}
 
 
 ::-webkit-scrollbar {background:#fff;width:10px;height:11px;}
