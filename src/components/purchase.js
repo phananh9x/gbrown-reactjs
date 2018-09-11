@@ -425,6 +425,7 @@ class Purchase extends Component {
 
   render() {
     const { thongTinHangMuc, phanTichHangMuc, save, value, purchaseId } = this.state
+    console.log(thongTinHangMuc);
 
     return (
       <div className="App">
