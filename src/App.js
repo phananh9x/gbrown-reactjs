@@ -3,10 +3,10 @@ import logo from './logo.svg';
 import './App.css';
 import 'react-table/react-table.css'
 import Purchase from './components/purchase'
-import AddPurchase from './components/AddPurchase'
+import AddPurchase from './components/addpurchase'
 import Print from './components/print'
-import PrintDetail from './components/PrintDetail'
-import PurchaseList from './components/PurchaseList'
+import PrintDetail from './components/printdetail'
+import PurchaseList from './components/purchaselist'
 import {
   BrowserRouter as Router,
   Route,
