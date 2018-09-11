@@ -28,9 +28,10 @@ function FieldGroupSelect({ id, label, help, ...props }) {
       </div>
       <div className="col-xs-8">
         <FormControl id={id} componentClass="select" placeholder="Chọn">
-          <option value="nhanVien1">Nhân Viên 1</option>
-          <option value="nhanVien2">Nhân Viên 2</option>
-          <option value="nhanVien3">Nhân Viên 3</option>
+          <option value="nhanVien1">Đơn hàng mới</option>
+          <option value="nhanVien2">Đang tư vấn</option>
+          <option value="nhanVien3">Thành công</option>
+          <option value="nhanVien3">Thất bại</option>
         </FormControl>
       </div>
     </div>
@@ -386,6 +387,9 @@ class AddPurchase extends Component {
 
   handleChange(key, value, thongTinHangMuc) {
     if (thongTinHangMuc !== undefined) {
+      /**
+       * validate if number
+       */
       if (key === 'phoneSaleGbrown' || key === 'phone' || key === 'total' || key === 'deposit') {
         const re = /^[0-9\b]+$/;
         if (value == '' || re.test(value)) {
@@ -394,8 +398,6 @@ class AddPurchase extends Component {
       } else {
         this.state.thongTinHangMuc[thongTinHangMuc][key] = value;
       }
-
-
       this.setState({
         value: {
           ...this.state.value,
