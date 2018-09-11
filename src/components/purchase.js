@@ -420,10 +420,10 @@ class Purchase extends Component {
         </Alert>
         <div className="container-fluid">
           <div className="row">
-            <div className="col-xs-8">
+            <div className="col-xs-6">
               <h1>THÔNG TIN ĐƠN HÀNG</h1>
             </div>
-            <div className="col-xs-4">
+            <div className="col-xs-6">
               {
                 purchaseId&& 
                 <div style={{ display: 'flex',
@@ -434,6 +434,7 @@ class Purchase extends Component {
                   <Link to={`/baogia/${purchaseId}`}><button className="btn btn-success">In báo Giá</button></Link>
                   <Link to={`/chitiethopdong/${purchaseId}`}><button className="btn btn-success">In Chi Tiết Hợp Đồng</button></Link>
                   <button className="btn btn-success" onClick={()=> window.open(`${API.server}purchase/${purchaseId}/hopdong`, "_blank")}>In Hợp Đồng</button>
+                  <button className="btn btn-success" onClick={()=> window.open(`${API.server}purchase/${purchaseId}/bangiaotiencoc   `, "_blank")}>In Bàn Giao Tiền Cọc</button>
                 </div>
               }
 
@@ -559,21 +560,21 @@ class Purchase extends Component {
                 value={value}
                 id="saleGbrown"
                 type="text"
-                label="Sale Gbrown"
+                label="Nhân Viên Thực Hiện"
                 handleChange={this.handleChange}
               />
               <FieldGroup
                 value={value}
                 id="phoneSaleGbrown"
                 type="Number"
-                label="Phone Sale Gbrown"
+                label="Sđt Nhân Viên"
                 handleChange={this.handleChange}
               />
               <FieldGroup
                 value={value}
                 id="emailSaleGbrown"
                 type="email"
-                label="Email Sale Gbrown"
+                label="Email Nhân Viên"
                 handleChange={this.handleChange}
               />
               <FieldGroup
