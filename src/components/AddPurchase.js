@@ -522,7 +522,6 @@ class AddPurchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroup
-                inputType="number"
                 value={value}
                 id="phone"
                 type="number"
