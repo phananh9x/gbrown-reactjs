@@ -191,8 +191,14 @@ function ThongTinHangMuc({ index, value, handleChange, handleChangeFile, ...prop
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
+        <FieldGroupFileImage
+          label="Hình Ảnh Không Gian Set-Up"
+          thongTinHangMuc={index}
+          value={value.image}
+        />
 
         <FieldGroupFile
+          handleChangeFile={handleChangeFile}
           id="imageSetup"
           type="file"
           label="Hình Ảnh Không Gian Set-Up"
@@ -343,6 +349,7 @@ function FieldGroupFileImage({ label, value, thongTinHangMuc, ...props }) {
     </div>
   );
 }
+const RELOAD = 1, JUST_CLOSE = 0;
 class AddPurchase extends Component {
   constructor(props, context) {
     super(props, context);
@@ -360,6 +367,12 @@ class AddPurchase extends Component {
     this.addThongTinHangMuc = this.addThongTinHangMuc.bind(this);
     this.addPhanTichHangMuc = this.addPhanTichHangMuc.bind(this);
     this.savePurchase = this.savePurchase.bind(this);
+    this.message = {
+      title: '',
+      message: '',
+      button: '',
+      code: JUST_CLOSE
+    }
   }
 
   componentDidMount() {
@@ -379,6 +392,12 @@ class AddPurchase extends Component {
 
   savePurchase() {
     API.savePurchase(this.state.value).then(e => {
+      this.message = {
+        title: 'Thông báo',
+        message: 'Tạo đơn hàng thành công',
+        button: 'Đóng',
+        code: RELOAD
+      };
       this.setState({
         save: true
       })
@@ -415,23 +434,32 @@ class AddPurchase extends Component {
   }
   handleChangeFile(value, thongTinHangMuc) {
     let formdata = new FormData();
-    formdata.append("file", value[0]);
-    API.upload(formdata).then(data => {
-      var url = { url: API.server + data.results.path };
-      console.log('thongTinHangMuc', thongTinHangMuc === undefined, thongTinHangMuc)
-      if (thongTinHangMuc === undefined) {
-        this.state.value.image.push(url);
-        this.setState(this.state);
-      } else {
-        this.state.thongTinHangMuc[thongTinHangMuc].image.push(url);
-        this.setState({
-          value: {
-            ...this.state.value,
-            category: this.state.thongTinHangMuc
-          }
-        })
-      }
-    })
+    if (value[0].type !== 'image/png' && value[0].type !== 'image/jpeg') {
+      this.message = {
+        title: 'Lỗi',
+        message: 'Chỉ hỗ trợ định dạng png, jpg',
+        button: 'Đóng',
+        code: JUST_CLOSE
+      };
+      this.setState({ save: true });
+    } else {
+      formdata.append("file", value[0]);
+      API.upload(formdata).then(data => {
+        var url = { url: API.server + data.results.path };
+        if (thongTinHangMuc === undefined) {
+          this.state.value.image.push(url);
+          this.setState(this.state);
+        } else {
+          this.state.thongTinHangMuc[thongTinHangMuc].image.push(url);
+          this.setState({
+            value: {
+              ...this.state.value,
+              category: this.state.thongTinHangMuc
+            }
+          })
+        }
+      })
+    }
   }
 
   addThongTinHangMuc() {
@@ -658,12 +686,15 @@ class AddPurchase extends Component {
         {save && <ShowMessage
           onClick={() => {
             //reload to refresh field data
-            window.location.reload();
+            if (this.message.code === RELOAD) {
+              window.location.reload();
+            }
             this.setState({ save: false });
           }}
-          title="Thông báo"
-          message="Tạo đơn hàng thành công"
-          button="Đóng lại" />}
+          title={this.message.title}
+          message={this.message.message}
+          button={this.message.button}
+        />}
       </div>
     );
   }
