@@ -229,8 +229,8 @@ function ThongTinHangMuc({ index, value, handleChange, handleChangeFile, ...prop
           handleChange={handleChange}
         />
       </div>
-      {props.phanTichHangMuc && props.phanTichHangMuc.length && props.phanTichHangMuc.map(item => {
-        return (<PhanTichHangMuc index={item} />)
+      {props.phanTichHangMuc && props.phanTichHangMuc.length && props.phanTichHangMuc.map((item, key) => {
+        return (<PhanTichHangMuc index={item} key={key} />)
       })}
       <div className="col-xs-12">
         {/*<button className="btn btn-primary" onClick={props.onClick.bind(this, index)}>Thêm Phân Tích Hạng Mục</button>*/}
@@ -676,7 +676,7 @@ class AddPurchase extends Component {
           </div>
 
           {thongTinHangMuc.map((item, index) => {
-            return (<ThongTinHangMuc value={item} index={index} onClick={this.addPhanTichHangMuc.bind(this, item)} handleChange={this.handleChange} handleChangeFile={this.handleChangeFile} phanTichHangMuc={phanTichHangMuc[item]} />)
+            return (<ThongTinHangMuc key={index} value={item} index={index} onClick={this.addPhanTichHangMuc.bind(this, item)} handleChange={this.handleChange} handleChangeFile={this.handleChangeFile} phanTichHangMuc={phanTichHangMuc[item]} />)
           })}
           <div className="col-xs-12 content-center">
             <FieldCheckBox />
