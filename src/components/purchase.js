@@ -6,18 +6,30 @@ import moment from 'moment';
 import { withRouter } from "react-router-dom";
 import { Link } from 'react-router-dom'
 
-function FieldGroupSelect({ id, label, help, ...props }) {
+const status = {
+  s1: "Đơng hàng mới",
+  s2: "Đang chăm sóc",
+  s3: "Thành công",
+  s4: "Thất bại",
+}
+
+
+function FieldGroupSelect({ id, label, help, handleChange, ...props }) {
   return (
     <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
         <ControlLabel >{label}</ControlLabel>
       </div>
       <div className="col-xs-8">
-        <FormControl id={id} componentClass="select" placeholder="Chọn">
-          <option value="nhanVien1">Đơn hàng mới</option>
-          <option value="nhanVien2">Đang chăm sóc</option>
-          <option value="nhanVien3">Thành công</option>
-          <option value="nhanVien3">Thất bại</option>
+        <FormControl id={id} componentClass="select" placeholder="Chọn" onChange={(e) => {
+          if (handleChange) {
+            handleChange(status[e.target.value])
+          }
+        }}>
+          <option value="s1">{status.s1}</option>
+          <option value="s2">{status.s2}</option>
+          <option value="s3">{status.s3}</option>
+          <option value="s4">{status.s4}</option>
         </FormControl>
       </div>
     </div>
