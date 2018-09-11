@@ -29,7 +29,7 @@ function FieldGroupSelect({ id, label, help, ...props }) {
       <div className="col-xs-8">
         <FormControl id={id} componentClass="select" placeholder="Chọn">
           <option value="nhanVien1">Đơn hàng mới</option>
-          <option value="nhanVien2">Đang tư vấn</option>
+          <option value="nhanVien2">Đang chăm sóc</option>
           <option value="nhanVien3">Thành công</option>
           <option value="nhanVien3">Thất bại</option>
         </FormControl>
