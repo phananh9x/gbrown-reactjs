@@ -386,7 +386,15 @@ class AddPurchase extends Component {
 
   handleChange(key, value, thongTinHangMuc) {
     if (thongTinHangMuc !== undefined) {
-      this.state.thongTinHangMuc[thongTinHangMuc][key] = value;
+      if (key === 'phoneSaleGbrown' || key === 'phone' || key === 'total' || key === 'deposit') {
+        const re = /^[0-9\b]+$/;
+        if (value == '' || re.test(value)) {
+          this.state.thongTinHangMuc[thongTinHangMuc][key] = value;
+        }
+      } else {
+        this.state.thongTinHangMuc[thongTinHangMuc][key] = value;
+      }
+
 
       this.setState({
         value: {
@@ -471,13 +479,6 @@ class AddPurchase extends Component {
               />
               <FieldGroup
                 value={value}
-                id="agreementCode"
-                type="text"
-                label="Mã Hợp Đồng"
-                handleChange={this.handleChange}
-              />
-              <FieldGroup
-                value={value}
                 id="eventName"
                 type="text"
                 label="Tên Sự Kiên"
@@ -491,9 +492,10 @@ class AddPurchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroup
+                inputType="number"
                 value={value}
                 id="phone"
-                type="text"
+                type="number"
                 label="Số Điện Thoại"
                 handleChange={this.handleChange}
               />
@@ -521,7 +523,7 @@ class AddPurchase extends Component {
               <FieldGroup
                 value={value}
                 id="total"
-                type="text"
+                type="number"
                 label="Tổng tiền"
                 handleChange={this.handleChange}
               />
@@ -589,7 +591,7 @@ class AddPurchase extends Component {
               <FieldGroup
                 value={value}
                 id="phoneSaleGbrown"
-                type="Number"
+                type="number"
                 label="Phone Sale Gbrown"
                 handleChange={this.handleChange}
               />
@@ -610,7 +612,7 @@ class AddPurchase extends Component {
               <FieldGroup
                 value={value}
                 id="deposit"
-                type="text"
+                type="number"
                 label="Đặt Cọc"
                 handleChange={this.handleChange}
               />
