@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import * as API from '../API';
 import moment from 'moment';
 import ReactToPrint from "react-to-print";
+import '../styles/print.css'
+
 class Print extends Component {
   constructor(props, context) {
     super(props, context);
