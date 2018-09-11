@@ -15,11 +15,27 @@ import {
   withRouter,
   Switch
 } from "react-router-dom";
+import { Navbar, NavItem, Nav } from 'react-bootstrap'
 
 class App extends Component {
   render() {
     return (
       <div className="App">
+        <Navbar>
+          {/* <Navbar.Header>
+            <Navbar.Brand>
+              <a href="/">Menu</a>
+            </Navbar.Brand>
+          </Navbar.Header> */}
+          <Nav>
+            <NavItem eventKey={1} href="/">
+              Danh sách đơn hàng
+            </NavItem>
+            {/* <NavItem eventKey={2} href="#">
+              Link
+            </NavItem> */}
+          </Nav>
+        </Navbar>;
         <Router>
           <Switch>
             <Route exact path="/" component={PurchaseList} />
