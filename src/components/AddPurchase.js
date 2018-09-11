@@ -22,7 +22,7 @@ import { Link } from 'react-router-dom'
 
 function FieldGroupSelect({ id, label, help, ...props }) {
   return (
-    <div controlId={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
+    <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
         <ControlLabel >{label}</ControlLabel>
       </div>
@@ -58,7 +58,7 @@ function ShowMessage({ title, message, button, onClick }) {
 
 function FieldCheckBoxWithLabel({ id, label, help, ...props }) {
   return (
-    <div controlId={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
+    <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
         <ControlLabel >{label}</ControlLabel>
       </div>
@@ -304,7 +304,7 @@ function PhanTichHangMuc({ index, ...props }) {
 
 function FieldGroup({ id, label, type, value, help, disabled, textArea, handleChangeFile, handleChange, thongTinHangMuc, ...props }) {
   return (
-    <div controlId={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
+    <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
         <ControlLabel >{label}</ControlLabel>
       </div>
@@ -318,7 +318,7 @@ function FieldGroup({ id, label, type, value, help, disabled, textArea, handleCh
 
 function FieldGroupFile({ id, label, help, disabled, textArea, handleChangeFile, thongTinHangMuc, ...props }) {
   return (
-    <div controlId={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
+    <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
         <ControlLabel >{label}</ControlLabel>
       </div>
