@@ -19,7 +19,103 @@ import * as API from '../API';
 import moment from 'moment';
 import { withRouter } from "react-router-dom";
 import { Link } from 'react-router-dom'
-
+const nhanVien = [{
+  name: 'Nguyễn Thị Na',
+  phone: '01667183543',
+  email: ''
+},{
+  name: 'TRẦN THỊ YẾN NHI',
+  phone: '01636763482',
+  email: ''
+},{
+  name: 'NGUYỄN THỊ BÍCH HỒNG',
+  phone: '01662262818',
+  email: ''
+},{
+  name: 'CAO THỊ LIÊN HƯƠNG',
+  phone: '0908720570',
+  email: ''
+},{
+  name: 'VÕ THỊ THU HIẾU',
+  phone: '01687894341',
+  email: ''
+},{
+  name: 'DƯƠNG QUỐC BẢO',
+  phone: '01676567750',
+  email: ''
+},{
+  name: 'LÊ QUỐC BẢO',
+  phone: '0968675073',
+  email: ''
+},{
+  name: 'BẠCH THANH QUỐC HƯNG',
+  phone: '01647294699',
+  email: ''
+},{
+  name: 'BẠCH THANH QUỐC BỬU',
+  phone: '0962362841',
+  email: ''
+},{
+  name: 'NGUYỄN HUỲNH THẢO NGUYÊN',
+  phone: '01682192892',
+  email: ''
+},{
+  name: 'NGÔ THỊ THU',
+  phone: '01694655380',
+  email: ''
+},{
+  name: 'NGÔ VĂN CHIẾN',
+  phone: '01694649446',
+  email: ''
+},{
+  name: 'ĐẶNG HOÀNG TRUNG HIẾU',
+  phone: '01689281550',
+  email: ''
+},{
+  name: 'TRẦN THỊ THU THẢO',
+  phone: '01299-12879 ',
+  email: ''
+},{
+  name: 'NGUYỄN CỬU QUÝ',
+  phone: '0915733607',
+  email: ''
+},{
+  name: 'NGUYỄN VĂN ẨN',
+  phone: '01694992535',
+  email: ''
+},{
+  name: 'NGUYỄN NGỌC NON',
+  phone: '0898548144',
+  email: ''
+},{
+  name: 'NGUYỄN THANH DUY ',
+  phone: '0901916494',
+  email: ''
+},{
+  name: 'NGUYỄN CỬU QUÝ',
+  phone: '0915733607',
+  email: ''
+},{
+  name: 'HUỲNH THỊ TRÚC QUYÊN ',
+  phone: '0987636964',
+  email: ''
+},{
+  name: 'TRẦN ĐẶNG MINH QUÝ ',
+  phone: '0928041332',
+  email: ''
+},{
+  name: 'LÊ THÚY HOA',
+  phone: '01677149396',
+  email: ''
+},{
+  name: 'PHAN NHẬT MINH',
+  phone: '0901428284',
+  email: ''
+},{
+  name: 'ĐẶNG THANH NAM ',
+  phone: '01213638883',
+  email: ''
+}]
 function FieldGroupSelect({ id, label, help, ...props }) {
   return (
     <div controlId={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
@@ -32,6 +128,23 @@ function FieldGroupSelect({ id, label, help, ...props }) {
           <option value="nhanVien2">Đang chăm sóc</option>
           <option value="nhanVien3">Thành công</option>
           <option value="nhanVien3">Thất bại</option>
+        </FormControl>
+      </div>
+    </div>
+  );
+}
+
+function FieldGroupSelectNhanVien({ id, label, help, handleChange, ...props }) {
+  return (
+    <div controlId={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
+      <div className="col-xs-4 app-label">
+        <ControlLabel >{label}</ControlLabel>
+      </div>
+      <div className="col-xs-8">
+        <FormControl id={id} componentClass="select" placeholder="Chọn"  onChange={e => handleChange(id, e.target.value)}>
+          {nhanVien.map((e,i) =>
+            <option value={e.name}>{e.name}</option>
+          )}
         </FormControl>
       </div>
     </div>
@@ -303,7 +416,8 @@ function FieldGroup({ id, label, type, value, help, disabled, textArea, handleCh
         <ControlLabel >{label}</ControlLabel>
       </div>
       <div className="col-xs-8">
-        {textArea && <FormControl type={type} value={value[id] && type == 'date' && moment(value[id]).format("YYYY-MM-DD") || value[id] || ''} componentClass="textarea" onChange={e => handleChange(id, e.target.value)} disabled={disabled ? disabled : false} {...props} />
+        {textArea && 
+          <FormControl type={type} value={value[id] && type == 'date' && moment(value[id]).format("YYYY-MM-DD") || value[id] || ''} componentClass="textarea" onChange={e => handleChange(id, e.target.value)}  {...props} />
           || <FormControl type={type} value={value[id] && type == 'date' && moment(value[id]).format("YYYY-MM-DD") || value[id] || ''} onChange={e => handleChangeFile && handleChangeFile(e.target.files) || handleChange(id, e.target.value, thongTinHangMuc)} disabled={disabled ? disabled : false} {...props} />}
       </div>
     </div>
@@ -349,6 +463,7 @@ class AddPurchase extends Component {
     this.state = {
       value: {
         image: [],
+        phoneSaleGbrown: nhanVien[0].phone
       },
       thongTinHangMuc: [],
       phanTichHangMuc: {},
@@ -387,30 +502,55 @@ class AddPurchase extends Component {
 
   handleChange(key, value, thongTinHangMuc) {
     if (thongTinHangMuc !== undefined) {
-      /**
-       * validate if number
-       */
-      if (key === 'phoneSaleGbrown' || key === 'phone' || key === 'total' || key === 'deposit') {
-        const re = /^[0-9\b]+$/;
-        if (value == '' || re.test(value)) {
+      if (key === 'saleGbrown') {
+        let phoneSaleGbrown = nhanVien.filter(e => e.name === value)[0].phone;
+        this.setState({
+          value: {
+            ...this.state.value,
+            phoneSaleGbrown: phoneSaleGbrown,
+            [key] : value
+          }
+        })
+      }else {
+        /**
+         * validate if number
+         */
+        if (key === 'phoneSaleGbrown' || key === 'phone' || key === 'total' || key === 'deposit') {
+          const re = /^[0-9\b]+$/;
+          if (value == '' || re.test(value)) {
+            this.state.thongTinHangMuc[thongTinHangMuc][key] = value;
+          }
+        } else {
           this.state.thongTinHangMuc[thongTinHangMuc][key] = value;
         }
-      } else {
-        this.state.thongTinHangMuc[thongTinHangMuc][key] = value;
+        if ((key === 'price' || key === 'reducedPrice') && this.state.thongTinHangMuc[thongTinHangMuc].price) {
+          this.state.thongTinHangMuc[thongTinHangMuc].cash = this.state.thongTinHangMuc[thongTinHangMuc].price - (this.state.thongTinHangMuc[thongTinHangMuc].reducedPrice &&  this.state.thongTinHangMuc[thongTinHangMuc].reducedPrice || 0)
+        }
+        this.setState({
+          value: {
+            ...this.state.value,
+            category: this.state.thongTinHangMuc
+          }
+        })
       }
-      this.setState({
-        value: {
-          ...this.state.value,
-          category: this.state.thongTinHangMuc
-        }
-      })
     } else {
-      this.setState({
-        value: {
-          ...this.state.value,
-          [key]: value
-        }
-      })
+      if (key === 'saleGbrown') {
+        let phoneSaleGbrown = nhanVien.filter(e => e.name === value)[0].phone;
+        this.setState({
+          value: {
+            ...this.state.value,
+            phoneSaleGbrown: phoneSaleGbrown,
+            [key] : value
+          }
+        })
+      }else {
+        this.setState({
+          value: {
+            ...this.state.value,
+            [key]: value
+          }
+        })
+      }
     }
   }
   handleChangeFile(value, thongTinHangMuc) {
@@ -583,25 +723,25 @@ class AddPurchase extends Component {
                 label="Địa Điểm Set-Up"
                 handleChange={this.handleChange}
               />
-              <FieldGroup
+              <FieldGroupSelectNhanVien
                 value={value}
                 id="saleGbrown"
                 type="text"
-                label="Sale Gbrown"
+                label="Nhân Viên Thực Hiện"
                 handleChange={this.handleChange}
               />
               <FieldGroup
                 value={value}
                 id="phoneSaleGbrown"
                 type="number"
-                label="Phone Sale Gbrown"
+                label="SĐT Nhân Viên"
                 handleChange={this.handleChange}
               />
               <FieldGroup
                 value={value}
                 id="emailSaleGbrown"
                 type="email"
-                label="Email Sale Gbrown"
+                label="Email Nhân Viên"
                 handleChange={this.handleChange}
               />
               <FieldGroup

@@ -38,6 +38,23 @@ fetch(`${server}purchase/create`, {
     return error;
 });
 
+export const updatePurchase = (payload, id) =>
+fetch(`${server}purchase/${id}/update`, {
+    method: 'POST',
+    headers: {
+        ...headers,
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+    
+}).then(res => {
+    return res.json();
+})
+.catch(error => {
+    console.log("This is error");
+    return error;
+});
+
 export const getPurchaseDetail = (id) =>
 fetch(`${server}purchase/${id}`, {
     method: 'GET',
