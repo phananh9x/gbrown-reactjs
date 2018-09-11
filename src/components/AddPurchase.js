@@ -1,5 +1,19 @@
 import React, { Component } from 'react';
-import { FormGroup, FormControl, ControlLabel, HelpBlock, Checkbox, Grid, Row, Thumbnail, Col, Image, Alert } from 'react-bootstrap'
+import {
+  FormGroup,
+  FormControl,
+  ControlLabel,
+  HelpBlock,
+  Checkbox,
+  Grid,
+  Row,
+  Thumbnail,
+  Col,
+  Image,
+  Alert,
+  Modal,
+  Button
+} from 'react-bootstrap'
 import ReactToPrint from "react-to-print";
 import * as API from '../API';
 import moment from 'moment';
@@ -14,11 +28,30 @@ function FieldGroupSelect({ id, label, help, ...props }) {
       </div>
       <div className="col-xs-8">
         <FormControl id={id} componentClass="select" placeholder="Chọn">
-          <option value="nhanVien1">Nhân Viên 1</option>
-          <option value="nhanVien2">Nhân Viên 2</option>
-          <option value="nhanVien3">Nhân Viên 3</option>
+          <option value="nhanVien1">Đơn hàng mới</option>
+          <option value="nhanVien2">Đang chăm sóc</option>
+          <option value="nhanVien3">Thành công</option>
+          <option value="nhanVien3">Thất bại</option>
         </FormControl>
       </div>
+    </div>
+  );
+}
+
+function ShowMessage({ title, message, button, onClick }) {
+  return (
+    <div className="static-modal">
+      <Modal.Dialog>
+        <Modal.Header>
+          <Modal.Title>{title}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>{message}</Modal.Body>
+
+        <Modal.Footer>
+          <Button onClick={onClick}>{button}</Button>
+        </Modal.Footer>
+      </Modal.Dialog>
     </div>
   );
 }
@@ -48,11 +81,11 @@ function FieldCheckBox({ id, label, help, ...props }) {
   );
 }
 
-function ThongTinHangMuc({index, value, handleChange,handleChangeFile, ...props}) {
+function ThongTinHangMuc({ index, value, handleChange, handleChangeFile, ...props }) {
   return (
     <div className="row">
       <div className="col-xs-12">
-          <h1>{`THÔNG TIN HẠNG MỤC ${index+1}`}</h1>
+        <h1>{`THÔNG TIN HẠNG MỤC ${index + 1}`}</h1>
       </div>
       <div className="col-xs-6">
         <FieldGroup
@@ -67,7 +100,7 @@ function ThongTinHangMuc({index, value, handleChange,handleChangeFile, ...props}
           label="Hình Ảnh Hạng Mục"
           thongTinHangMuc={index}
           value={value.image}
-        /> 
+        />
         <FieldGroupFile
           id="imageCategory"
           type="file"
@@ -99,7 +132,7 @@ function ThongTinHangMuc({index, value, handleChange,handleChangeFile, ...props}
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
-         <FieldGroup
+        <FieldGroup
           value={value}
           id="size"
           type="text"
@@ -114,7 +147,7 @@ function ThongTinHangMuc({index, value, handleChange,handleChangeFile, ...props}
           label="Số Lượng"
           thongTinHangMuc={index}
           handleChange={handleChange}
-        /> 
+        />
         <FieldGroup
           value={value}
           id="description"
@@ -158,7 +191,7 @@ function ThongTinHangMuc({index, value, handleChange,handleChangeFile, ...props}
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
-      
+
         <FieldGroupFile
           id="imageSetup"
           type="file"
@@ -191,7 +224,7 @@ function ThongTinHangMuc({index, value, handleChange,handleChangeFile, ...props}
         />
       </div>
       {props.phanTichHangMuc && props.phanTichHangMuc.length && props.phanTichHangMuc.map(item => {
-        return (<PhanTichHangMuc index={item}/>)
+        return (<PhanTichHangMuc index={item} />)
       })}
       <div className="col-xs-12">
         {/*<button className="btn btn-primary" onClick={props.onClick.bind(this, index)}>Thêm Phân Tích Hạng Mục</button>*/}
@@ -200,70 +233,70 @@ function ThongTinHangMuc({index, value, handleChange,handleChangeFile, ...props}
   )
 }
 
-function PhanTichHangMuc({index, ...props}) {
+function PhanTichHangMuc({ index, ...props }) {
   return (
     <div className="row">
       <div className="col-xs-2">
       </div>
       <div className="col-xs-10">
-          <h3>{`PHÂN TÍCH HẠNG MỤC LIÊN QUAN ${ index + 1 }`}</h3>
-          <div className="col-xs-6">
-            <FieldGroup
-              id="formControlsText"
-              type="text"
-              label="Tên Hạng Mục Liên Quan"
-            />
-            <FieldGroupSelect
-              id="formControlsText"
-              type="text"
-              label="Nhân Viên Thực Hiện"
-            />
-            </div>
-          <div className="col-xs-6">
-            <FieldGroup
-              id="formControlsEmail"
-              type="date"
-              label="Thời Gian Yêu Cầu Của CV"
-            />
-            <FieldGroup
-              id="formControlsEmail"
-              type="date"
-              label="Thời Gian Dự Kiến Đặt Đơn Hàng"
-            />
-            <FieldGroup
-              id="formControlsEmail"
-              type="date"
-              label="Thời Gian Dự Kiến Bàn Giao"
-            />
-            <FieldGroup
-              id="formControlsEmail"
-              type="text"
-              label="Địa Điểm Bàn Giao"
-            />
-            <FieldGroup
-              id="formControlsEmail"
-              type="text"
-              label="Note"
-            />
-            <FieldGroup
-              id="formControlsEmail"
-              type="text"
-              label="Phản Hồi Công Việc Của Nhân Viên"
-            />
-            <FieldCheckBoxWithLabel
-              id="formControlsEmail"
-              type="text"
-              label="Báo Cáo Đã Tiếp Nhận Thông Tin"
-            />
-            
-          </div>
+        <h3>{`PHÂN TÍCH HẠNG MỤC LIÊN QUAN ${index + 1}`}</h3>
+        <div className="col-xs-6">
+          <FieldGroup
+            id="formControlsText"
+            type="text"
+            label="Tên Hạng Mục Liên Quan"
+          />
+          <FieldGroupSelect
+            id="formControlsText"
+            type="text"
+            label="Nhân Viên Thực Hiện"
+          />
+        </div>
+        <div className="col-xs-6">
+          <FieldGroup
+            id="formControlsEmail"
+            type="date"
+            label="Thời Gian Yêu Cầu Của CV"
+          />
+          <FieldGroup
+            id="formControlsEmail"
+            type="date"
+            label="Thời Gian Dự Kiến Đặt Đơn Hàng"
+          />
+          <FieldGroup
+            id="formControlsEmail"
+            type="date"
+            label="Thời Gian Dự Kiến Bàn Giao"
+          />
+          <FieldGroup
+            id="formControlsEmail"
+            type="text"
+            label="Địa Điểm Bàn Giao"
+          />
+          <FieldGroup
+            id="formControlsEmail"
+            type="text"
+            label="Note"
+          />
+          <FieldGroup
+            id="formControlsEmail"
+            type="text"
+            label="Phản Hồi Công Việc Của Nhân Viên"
+          />
+          <FieldCheckBoxWithLabel
+            id="formControlsEmail"
+            type="text"
+            label="Báo Cáo Đã Tiếp Nhận Thông Tin"
+          />
+
+        </div>
       </div>
 
     </div>
   )
 }
 
-function FieldGroup({ id, label, type, value, help, disabled, textArea, handleChangeFile, handleChange,thongTinHangMuc, ...props }) {
+function FieldGroup({ id, label, type, value, help, disabled, textArea, handleChangeFile, handleChange, thongTinHangMuc, ...props }) {
   return (
     <div controlId={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
@@ -277,17 +310,17 @@ function FieldGroup({ id, label, type, value, help, disabled, textArea, handleCh
   );
 }
 
-function FieldGroupFile({ id, label, help, disabled, textArea, handleChangeFile,thongTinHangMuc, ...props }) {
+function FieldGroupFile({ id, label, help, disabled, textArea, handleChangeFile, thongTinHangMuc, ...props }) {
   return (
     <div controlId={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
         <ControlLabel >{label}</ControlLabel>
       </div>
       <div className="col-xs-8">
-      {thongTinHangMuc === undefined && <FormControl onChange={e => handleChangeFile(e.target.files)} disabled={disabled ? disabled : false} {...props} /> ||
-        <FormControl onChange={e => handleChangeFile(e.target.files, thongTinHangMuc)} disabled={disabled ? disabled : false} {...props} />
-      }
-      
+        {thongTinHangMuc === undefined && <FormControl onChange={e => handleChangeFile(e.target.files)} disabled={disabled ? disabled : false} {...props} /> ||
+          <FormControl onChange={e => handleChangeFile(e.target.files, thongTinHangMuc)} disabled={disabled ? disabled : false} {...props} />
+        }
+
       </div>
     </div>
   );
@@ -300,12 +333,12 @@ function FieldGroupFileImage({ label, value, thongTinHangMuc, ...props }) {
         <ControlLabel >{label}</ControlLabel>
       </div>
       <div className="col-xs-8">
-      {
-        value.map((e,i) => (
-          <Col xs={6} key={i}>
-            <Thumbnail href={e.url} target='blank' src={e.url} alt="242x200" /> 
-          </Col>))
-      }
+        {
+          value.map((e, i) => (
+            <Col xs={6} key={i}>
+              <Thumbnail href={e.url} target='blank' src={e.url} alt="242x200" />
+            </Col>))
+        }
       </div>
     </div>
   );
@@ -315,7 +348,7 @@ class AddPurchase extends Component {
     super(props, context);
     this.state = {
       value: {
-        image:[],
+        image: [],
       },
       thongTinHangMuc: [],
       phanTichHangMuc: {},
@@ -330,18 +363,18 @@ class AddPurchase extends Component {
   }
 
   componentDidMount() {
-      // console.log(this.props.match.params.purchaseId)
-      if (this.state.purchaseId) {
-        API.getPurchaseDetail(this.props.match.params.purchaseId).then(data => {
-          // console.log(data.results)
-          this.setState({
-            value: {
-              ...data.results
-            },
-            thongTinHangMuc: data.results.category
-          })
+    // console.log(this.props.match.params.purchaseId)
+    if (this.state.purchaseId) {
+      API.getPurchaseDetail(this.props.match.params.purchaseId).then(data => {
+        // console.log(data.results)
+        this.setState({
+          value: {
+            ...data.results
+          },
+          thongTinHangMuc: data.results.category
         })
-      }
+      })
+    }
   }
 
   savePurchase() {
@@ -349,25 +382,31 @@ class AddPurchase extends Component {
       this.setState({
         save: true
       })
-      this.props.history.push({
-        pathname: '/purchase/'+e.results.purchaseId,
-      });
     })
   }
 
   handleChange(key, value, thongTinHangMuc) {
     if (thongTinHangMuc !== undefined) {
-      this.state.thongTinHangMuc[thongTinHangMuc][key] = value;
-
+      /**
+       * validate if number
+       */
+      if (key === 'phoneSaleGbrown' || key === 'phone' || key === 'total' || key === 'deposit') {
+        const re = /^[0-9\b]+$/;
+        if (value == '' || re.test(value)) {
+          this.state.thongTinHangMuc[thongTinHangMuc][key] = value;
+        }
+      } else {
+        this.state.thongTinHangMuc[thongTinHangMuc][key] = value;
+      }
       this.setState({
-        value : {
+        value: {
           ...this.state.value,
           category: this.state.thongTinHangMuc
         }
       })
-    }else {
+    } else {
       this.setState({
-        value : {
+        value: {
           ...this.state.value,
           [key]: value
         }
@@ -378,15 +417,15 @@ class AddPurchase extends Component {
     let formdata = new FormData();
     formdata.append("file", value[0]);
     API.upload(formdata).then(data => {
-      var url = {url: API.server + data.results.path};
-      console.log('thongTinHangMuc',thongTinHangMuc === undefined, thongTinHangMuc )
+      var url = { url: API.server + data.results.path };
+      console.log('thongTinHangMuc', thongTinHangMuc === undefined, thongTinHangMuc)
       if (thongTinHangMuc === undefined) {
         this.state.value.image.push(url);
         this.setState(this.state);
-      }else {
+      } else {
         this.state.thongTinHangMuc[thongTinHangMuc].image.push(url);
         this.setState({
-          value : {
+          value: {
             ...this.state.value,
             category: this.state.thongTinHangMuc
           }
@@ -397,7 +436,7 @@ class AddPurchase extends Component {
 
   addThongTinHangMuc() {
     this.state.phanTichHangMuc[this.state.thongTinHangMuc.length] = []
-    this.state.thongTinHangMuc.push({image : []});
+    this.state.thongTinHangMuc.push({ image: [] });
     this.setState(this.state)
   }
 
@@ -408,25 +447,24 @@ class AddPurchase extends Component {
 
 
   render() {
-    const { thongTinHangMuc, phanTichHangMuc, save, value, purchaseId} = this.state
+    const { thongTinHangMuc, phanTichHangMuc, save, value, purchaseId } = this.state
 
     return (
       <div className="App">
-        <Alert bsStyle={`success ${ !save ? 'hide' : '' }`} >
-          <strong>Đã lưu thôn tin đơn hàng!</strong> 
-        </Alert>
-         <div className="container-fluid">
+        <div className="container-fluid">
           <div className="row">
             <div className="col-xs-8">
               <h1>THÔNG TIN ĐƠN HÀNG</h1>
             </div>
             <div className="col-xs-4">
               {
-                purchaseId&& 
-                <div style={{ display: 'flex',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                              height: '70px'}}>
+                purchaseId &&
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '70px'
+                }}>
                   <Link to="/main"><button class="btn btn-primary">Thêm Đơn Hàng</button></Link>
                   <Link to={`/print/${purchaseId}`}><button class="btn btn-success">In báo Giá</button></Link>
                 </div>
@@ -443,13 +481,6 @@ class AddPurchase extends Component {
               />
               <FieldGroup
                 value={value}
-                id="agreementCode"
-                type="text"
-                label="Mã Hợp Đồng"
-                handleChange={this.handleChange}
-              />
-              <FieldGroup
-                value={value}
                 id="eventName"
                 type="text"
                 label="Tên Sự Kiên"
@@ -463,9 +494,10 @@ class AddPurchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroup
+                inputType="number"
                 value={value}
                 id="phone"
-                type="text"
+                type="number"
                 label="Số Điện Thoại"
                 handleChange={this.handleChange}
               />
@@ -493,7 +525,7 @@ class AddPurchase extends Component {
               <FieldGroup
                 value={value}
                 id="total"
-                type="text"
+                type="number"
                 label="Tổng tiền"
                 handleChange={this.handleChange}
               />
@@ -561,7 +593,7 @@ class AddPurchase extends Component {
               <FieldGroup
                 value={value}
                 id="phoneSaleGbrown"
-                type="Number"
+                type="number"
                 label="Phone Sale Gbrown"
                 handleChange={this.handleChange}
               />
@@ -582,7 +614,7 @@ class AddPurchase extends Component {
               <FieldGroup
                 value={value}
                 id="deposit"
-                type="text"
+                type="number"
                 label="Đặt Cọc"
                 handleChange={this.handleChange}
               />
@@ -609,20 +641,29 @@ class AddPurchase extends Component {
                 handleChange={this.handleChange}
               />
             </div>
-            
+
           </div>
           <div className="col-xs-12">
             <button className="btn btn-primary" onClick={this.addThongTinHangMuc}>Thêm Hạng Mục</button>
           </div>
-          
+
           {thongTinHangMuc.map((item, index) => {
-            return (<ThongTinHangMuc value={item} index={index} onClick={this.addPhanTichHangMuc.bind(this, item)} handleChange={this.handleChange} handleChangeFile={this.handleChangeFile}  phanTichHangMuc = {phanTichHangMuc[item]}/>)
+            return (<ThongTinHangMuc value={item} index={index} onClick={this.addPhanTichHangMuc.bind(this, item)} handleChange={this.handleChange} handleChangeFile={this.handleChangeFile} phanTichHangMuc={phanTichHangMuc[item]} />)
           })}
           <div className="col-xs-12 content-center">
-              <FieldCheckBox />
-              <button className="btn btn-primary w10" onClick={this.savePurchase}>Lưu Đơn Hàng</button>
-            </div>
+            <FieldCheckBox />
+            <button className="btn btn-primary w10" onClick={this.savePurchase}>Lưu Đơn Hàng</button>
+          </div>
         </div>
+        {save && <ShowMessage
+          onClick={() => {
+            //reload to refresh field data
+            window.location.reload();
+            this.setState({ save: false });
+          }}
+          title="Thông báo"
+          message="Tạo đơn hàng thành công"
+          button="Đóng lại" />}
       </div>
     );
   }
