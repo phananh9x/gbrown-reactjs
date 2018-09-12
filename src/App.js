@@ -16,6 +16,8 @@ import PurchaseList from './components/purchaselist';
 import { showNavBar } from './actions/navBar';
 import Login from './screen/login';
 
+import { Link } from 'react-router-dom';
+
 class App extends Component {
   componentWillReceiveProps(nextProps) {
     console.log(nextProps);
@@ -32,25 +34,29 @@ class App extends Component {
 
     return (
       <div className="App">
-        {navBar.showNavbar
-          && (
-            <Navbar className="navbar-fixed-top">
-              <Navbar.Header>
-                <Navbar.Brand>
-                  <a href="/">Dashboard</a>
-                </Navbar.Brand>
-              </Navbar.Header>
-              <Nav>
-                <NavItem eventKey={1} href="/">
-                  Danh sách đơn hàng
-                </NavItem>
-              </Nav>
-            </Navbar>
-          )
-        }
-
         <div style={{ marginTop: navBar.showNavbar ? 50 : 0 }}>
           <Router>
+            <div>
+            {navBar.showNavbar
+            && (
+              <Navbar className="navbar-fixed-top">
+                <Navbar.Header>
+                  <Link to='/'>
+                    <Navbar.Brand>
+                      <a href="#">Dashboard</a>
+                    </Navbar.Brand>
+                  </Link>
+                </Navbar.Header>
+                <Nav>
+                  <Link to='/'>
+                    <Navbar.Brand>
+                      <a href="#">Danh sách đơn hàng</a>
+                    </Navbar.Brand>
+                  </Link>
+                </Nav>
+              </Navbar>
+            )
+          }
             <Switch>
               <Route exact path="/login" component={Login} />
               <Route exact path="/" component={PurchaseList} />
@@ -59,6 +65,7 @@ class App extends Component {
               <Route exact path="/main" component={AddPurchase} />
               <Route exact path="/purchase/:purchaseId" component={Purchase} />
             </Switch>
+            </div>
           </Router>
 
         </div>
