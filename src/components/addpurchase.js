@@ -330,7 +330,6 @@ function ThongTinHangMuc({
         />
       </div>
       {phanTichHangMuc
-        && phanTichHangMuc.length
         && phanTichHangMuc.map((item, key) =>
           (<PhanTichHangMuc index={item} key={parseInt(key.toString())} />))
       }

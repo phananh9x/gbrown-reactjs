@@ -331,7 +331,7 @@ function ThongTinHangMuc({
           handleChange={handleChange}
         />
       </div>
-      {phanTichHangMuc.map((item, k) => (
+      {phanTichHangMuc && phanTichHangMuc.map((item, k) => (
         <PhanTichHangMuc index={item} key={parseInt(k.toString())} />))}
     </div>
   );
