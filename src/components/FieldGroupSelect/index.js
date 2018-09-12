@@ -5,13 +5,6 @@ import {
 } from 'react-bootstrap';
 
 
-const status = {
-  s1: 'Đơng hàng mới',
-  s2: 'Đang chăm sóc',
-  s3: 'Thành công',
-  s4: 'Thất bại',
-};
-
 export default class FieldGroupSelect extends Component {
   constructor(props) {
     super(props);
@@ -21,7 +14,7 @@ export default class FieldGroupSelect extends Component {
 
   render() {
     const {
-      id, label, handleChange
+      id, label, handleChange, data
     } = this.props;
 
     return (
@@ -36,14 +29,13 @@ export default class FieldGroupSelect extends Component {
             placeholder="Chọn"
             onChange={(e) => {
               if (handleChange) {
-                handleChange(status[e.target.value]);
+                handleChange(data[e.target.value]);
               }
             }}
           >
-            <option value="s1">{status.s1}</option>
-            <option value="s2">{status.s2}</option>
-            <option value="s3">{status.s3}</option>
-            <option value="s4">{status.s4}</option>
+            {data && data.length && data.map((e, i) => (
+              <option key={parseInt(i.tString())} value={i}>{e.name}</option>
+            ))}
           </FormControl>
         </div>
       </div>

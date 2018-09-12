@@ -8,11 +8,10 @@ import {
   Modal,
   Button
 } from 'react-bootstrap';
-import moment from 'moment';
 import { withRouter, Link } from 'react-router-dom';
 import * as API from '../API';
 import FieldGroupSelect from './FieldGroupSelect';
-
+import FieldGroup from './FieldGroup';
 
 const nhanVien = [{
   name: 'Nguyễn Thị Na',
@@ -112,6 +111,12 @@ const nhanVien = [{
   email: ''
 }];
 
+const status = {
+  s1: 'Đơng hàng mới',
+  s2: 'Đang chăm sóc',
+  s3: 'Thành công',
+  s4: 'Thất bại',
+};
 
 function FieldGroupSelectNhanVien({
   id, label, handleChange
@@ -400,45 +405,6 @@ function PhanTichHangMuc({ index }) {
   );
 }
 
-function FieldGroup({
-  id,
-  label,
-  type, value,
-  help, disabled,
-  textArea, handleChangeFile, handleChange, thongTinHangMuc, ...props
-}) {
-  return (
-    <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
-      <div className="col-xs-4 app-label">
-        <ControlLabel>{label}</ControlLabel>
-      </div>
-      <div className="col-xs-8">
-        {textArea
-          ? (
-            <FormControl
-              type={type}
-              value={value[id] && type === 'date' && (moment(value[id]).format('YYYY-MM-DD') || value[id] || '')}
-              componentClass="textarea"
-              onChange={e => handleChange(id, e.target.value)}
-              {...props}
-            />
-          )
-          : (
-            <FormControl
-              type={type}
-              value={value[id] && type === 'date' && (moment(value[id]).format('YYYY-MM-DD') || value[id] || '')}
-              onChange={e => handleChangeFile
-                && (handleChangeFile(e.target.files)
-                  || handleChange(id, e.target.value, thongTinHangMuc))}
-              disabled={disabled || false}
-              {...props}
-            />
-          )
-        }
-      </div>
-    </div>
-  );
-}
 
 function FieldGroupFile({
   id, label, help, disabled, textArea, handleChangeFile, thongTinHangMuc, ...props
@@ -828,7 +794,7 @@ class AddPurchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroupSelect
-                value={value}
+                data={status}
                 id="status"
                 type="text"
                 label="Trạng thái"
