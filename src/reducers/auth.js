@@ -1,6 +1,7 @@
-import update from 'immutability-helper'
+
 // import * as TYPES from '../actions/constants'
-import { ApiResult } from '../actions/utils'
+import { ApiResult } from '../actions/utils';
+
 const initialState = {
   signUp: {
     status: ApiResult.initDefault(),
@@ -37,17 +38,21 @@ const initialState = {
     firstName: '',
     lastName: ''
   }
-}
+};
 
-const getUser = (data) => {
-  let userData = {}
-  userData = data[0] || {}
-  return { userData }
-}
+/**
+ * define but never use
+ * un comment when use
+ */
+// const getUser = (data) => {
+//   let userData = {};
+//   userData = data[0] || {};
+//   return { userData };
+// };
 
 export default function categoryReducer(state = initialState, action) {
   switch (action.type) {
     default:
-      return state
+      return state;
   }
 }

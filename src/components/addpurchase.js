@@ -1,163 +1,130 @@
 import React, { Component } from 'react';
 import {
-  FormGroup,
   FormControl,
   ControlLabel,
-  HelpBlock,
   Checkbox,
-  Grid,
-  Row,
   Thumbnail,
   Col,
-  Image,
-  Alert,
   Modal,
   Button
-} from 'react-bootstrap'
-import ReactToPrint from "react-to-print";
-import * as API from '../API';
+} from 'react-bootstrap';
 import moment from 'moment';
-import { withRouter } from "react-router-dom";
-import { Link } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom';
+import * as API from '../API';
+import FieldGroupSelect from './FieldGroupSelect';
+
+
 const nhanVien = [{
   name: 'Nguyễn Thị Na',
   phone: '01667183543',
   email: ''
-},{
+}, {
   name: 'TRẦN THỊ YẾN NHI',
   phone: '01636763482',
   email: ''
-},{
+}, {
   name: 'NGUYỄN THỊ BÍCH HỒNG',
   phone: '01662262818',
   email: ''
-},{
+}, {
   name: 'CAO THỊ LIÊN HƯƠNG',
   phone: '0908720570',
   email: ''
-},{
+}, {
   name: 'VÕ THỊ THU HIẾU',
   phone: '01687894341',
   email: ''
-},{
+}, {
   name: 'DƯƠNG QUỐC BẢO',
   phone: '01676567750',
   email: ''
-},{
+}, {
   name: 'LÊ QUỐC BẢO',
   phone: '0968675073',
   email: ''
-},{
+}, {
   name: 'BẠCH THANH QUỐC HƯNG',
   phone: '01647294699',
   email: ''
-},{
+}, {
   name: 'BẠCH THANH QUỐC BỬU',
   phone: '0962362841',
   email: ''
-},{
+}, {
   name: 'NGUYỄN HUỲNH THẢO NGUYÊN',
   phone: '01682192892',
   email: ''
-},{
+}, {
   name: 'NGÔ THỊ THU',
   phone: '01694655380',
   email: ''
-},{
+}, {
   name: 'NGÔ VĂN CHIẾN',
   phone: '01694649446',
   email: ''
-},{
+}, {
   name: 'ĐẶNG HOÀNG TRUNG HIẾU',
   phone: '01689281550',
   email: ''
-},{
+}, {
   name: 'TRẦN THỊ THU THẢO',
   phone: '01299-12879 ',
   email: ''
-},{
+}, {
   name: 'NGUYỄN CỬU QUÝ',
   phone: '0915733607',
   email: ''
-},{
+}, {
   name: 'NGUYỄN VĂN ẨN',
   phone: '01694992535',
   email: ''
-},{
+}, {
   name: 'NGUYỄN NGỌC NON',
   phone: '0898548144',
   email: ''
-},{
+}, {
   name: 'NGUYỄN THANH DUY ',
   phone: '0901916494',
   email: ''
-},{
+}, {
   name: 'NGUYỄN CỬU QUÝ',
   phone: '0915733607',
   email: ''
-},{
+}, {
   name: 'HUỲNH THỊ TRÚC QUYÊN ',
   phone: '0987636964',
   email: ''
-},{
+}, {
   name: 'TRẦN ĐẶNG MINH QUÝ ',
   phone: '0928041332',
   email: ''
-},{
+}, {
   name: 'LÊ THÚY HOA',
   phone: '01677149396',
   email: ''
-},{
+}, {
   name: 'PHAN NHẬT MINH',
   phone: '0901428284',
   email: ''
-},{
+}, {
   name: 'ĐẶNG THANH NAM ',
   phone: '01213638883',
   email: ''
-}]
+}];
 
 
-const status = {
-  s1: "Đơng hàng mới",
-  s2: "Đang chăm sóc",
-  s3: "Thành công",
-  s4: "Thất bại",
-}
-
-
-function FieldGroupSelect({ id, label, help, handleChange, ...props }) {
-  return (
-    <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
-      <div className="col-xs-4 app-label">
-        <ControlLabel >{label}</ControlLabel>
-      </div>
-      <div className="col-xs-8">
-        <FormControl id={id} componentClass="select" placeholder="Chọn" onChange={(e) => {
-          if (handleChange) {
-            handleChange(status[e.target.value])
-          }
-        }}>
-          <option value="s1">{status.s1}</option>
-          <option value="s2">{status.s2}</option>
-          <option value="s3">{status.s3}</option>
-          <option value="s4">{status.s4}</option>
-        </FormControl>
-      </div>
-    </div>
-  );
-}
-
-function FieldGroupSelectNhanVien({ id, label, help, handleChange, ...props }) {
+function FieldGroupSelectNhanVien({
+  id, label, handleChange
+}) {
   return (
     <div controlId={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
-        <ControlLabel >{label}</ControlLabel>
+        <ControlLabel>{label}</ControlLabel>
       </div>
       <div className="col-xs-8">
-        <FormControl id={id} componentClass="select" placeholder="Chọn"  onChange={e => handleChange(id, e.target.value)}>
-          {nhanVien.map((e,i) =>
-            <option value={e.name}>{e.name}</option>
+        <FormControl id={id} componentClass="select" placeholder="Chọn" onChange={e => handleChange(id, e.target.value)}>
+          {nhanVien.map((e, i) =>
+            <option key={parseInt(i.toString())} value={e.name}>{e.name}</option>
           )}
         </FormControl>
       </div>
@@ -165,7 +132,9 @@ function FieldGroupSelectNhanVien({ id, label, help, handleChange, ...props }) {
   );
 }
 
-function ShowMessage({ title, message, button, onClick }) {
+function ShowMessage({
+  title, message, button, onClick
+}) {
   return (
     <div className="static-modal">
       <Modal.Dialog>
@@ -183,32 +152,36 @@ function ShowMessage({ title, message, button, onClick }) {
   );
 }
 
-function FieldCheckBoxWithLabel({ id, label, help, ...props }) {
+function FieldCheckBoxWithLabel({
+  id, label
+}) {
   return (
     <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
-        <ControlLabel >{label}</ControlLabel>
+        <ControlLabel>{label}</ControlLabel>
       </div>
       <div className="col-xs-8">
-        <Checkbox id={id}></Checkbox>
+        <Checkbox id={id} />
       </div>
     </div>
   );
 }
 
 
-function FieldCheckBox({ id, label, help, ...props }) {
+function FieldCheckBox() {
   return (
     <div>
-      <Checkbox id={'vipPurchase'}>Đơn Hàng VIP</Checkbox>
-      <Checkbox id={'customerInfoCompleted'}>Hoàn Tất Thông Tin Khách Hàng</Checkbox>
-      <Checkbox id={'depositColected'}>Thu Tiền Cọc</Checkbox>
-      <Checkbox id={'eventPriceColected'}>Thu Tiền Tiệc</Checkbox>
+      <Checkbox id="vipPurchase">Đơn Hàng VIP</Checkbox>
+      <Checkbox id="customerInfoCompleted">Hoàn Tất Thông Tin Khách Hàng</Checkbox>
+      <Checkbox id="depositColected">Thu Tiền Cọc</Checkbox>
+      <Checkbox id="eventPriceColected">Thu Tiền Tiệc</Checkbox>
     </div>
   );
 }
 
-function ThongTinHangMuc({ index, value, handleChange, handleChangeFile, ...props }) {
+function ThongTinHangMuc({
+  index, value, handleChange, handleChangeFile, phanTichHangMuc,
+}) {
   return (
     <div className="row">
       <div className="col-xs-12">
@@ -356,21 +329,19 @@ function ThongTinHangMuc({ index, value, handleChange, handleChangeFile, ...prop
           handleChange={handleChange}
         />
       </div>
-      {props.phanTichHangMuc && props.phanTichHangMuc.length && props.phanTichHangMuc.map((item, key) => {
-        return (<PhanTichHangMuc index={item} key={key} />)
-      })}
-      <div className="col-xs-12">
-        {/*<button className="btn btn-primary" onClick={props.onClick.bind(this, index)}>Thêm Phân Tích Hạng Mục</button>*/}
-      </div>
+      {phanTichHangMuc
+        && phanTichHangMuc.length
+        && phanTichHangMuc.map((item, key) =>
+          (<PhanTichHangMuc index={item} key={parseInt(key.toString())} />))
+      }
     </div>
-  )
+  );
 }
 
-function PhanTichHangMuc({ index, ...props }) {
+function PhanTichHangMuc({ index }) {
   return (
     <div className="row">
-      <div className="col-xs-2">
-      </div>
+      <div className="col-xs-2" />
       <div className="col-xs-10">
         <h3>{`PHÂN TÍCH HẠNG MỤC LIÊN QUAN ${index + 1}`}</h3>
         <div className="col-xs-6">
@@ -379,6 +350,7 @@ function PhanTichHangMuc({ index, ...props }) {
             type="text"
             label="Tên Hạng Mục Liên Quan"
           />
+
           <FieldGroupSelect
             id="formControlsText"
             type="text"
@@ -426,33 +398,73 @@ function PhanTichHangMuc({ index, ...props }) {
       </div>
 
     </div>
-  )
+  );
 }
 
-function FieldGroup({ id, label, type, value, help, disabled, textArea, handleChangeFile, handleChange, thongTinHangMuc, ...props }) {
+function FieldGroup({
+  id,
+  label,
+  type, value,
+  help, disabled,
+  textArea, handleChangeFile, handleChange, thongTinHangMuc, ...props
+}) {
   return (
     <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
-        <ControlLabel >{label}</ControlLabel>
+        <ControlLabel>{label}</ControlLabel>
       </div>
       <div className="col-xs-8">
-        {textArea && 
-          <FormControl type={type} value={value[id] && type == 'date' && moment(value[id]).format("YYYY-MM-DD") || value[id] || ''} componentClass="textarea" onChange={e => handleChange(id, e.target.value)}  {...props} />
-          || <FormControl type={type} value={value[id] && type == 'date' && moment(value[id]).format("YYYY-MM-DD") || value[id] || ''} onChange={e => handleChangeFile && handleChangeFile(e.target.files) || handleChange(id, e.target.value, thongTinHangMuc)} disabled={disabled ? disabled : false} {...props} />}
+        {textArea
+          ? (
+            <FormControl
+              type={type}
+              value={value[id] && type === 'date' && (moment(value[id]).format('YYYY-MM-DD') || value[id] || '')}
+              componentClass="textarea"
+              onChange={e => handleChange(id, e.target.value)}
+              {...props}
+            />
+          )
+          : (
+            <FormControl
+              type={type}
+              value={value[id] && type === 'date' && (moment(value[id]).format('YYYY-MM-DD') || value[id] || '')}
+              onChange={e => handleChangeFile
+                && (handleChangeFile(e.target.files)
+                  || handleChange(id, e.target.value, thongTinHangMuc))}
+              disabled={disabled || false}
+              {...props}
+            />
+          )
+        }
       </div>
     </div>
   );
 }
 
-function FieldGroupFile({ id, label, help, disabled, textArea, handleChangeFile, thongTinHangMuc, ...props }) {
+function FieldGroupFile({
+  id, label, help, disabled, textArea, handleChangeFile, thongTinHangMuc, ...props
+}) {
   return (
     <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
-        <ControlLabel >{label}</ControlLabel>
+        <ControlLabel>{label}</ControlLabel>
       </div>
       <div className="col-xs-8">
-        {thongTinHangMuc === undefined && <FormControl onChange={e => handleChangeFile(e.target.files)} disabled={disabled ? disabled : false} {...props} /> ||
-          <FormControl onChange={e => handleChangeFile(e.target.files, thongTinHangMuc)} disabled={disabled ? disabled : false} {...props} />
+        {thongTinHangMuc === undefined
+          ? (
+            <FormControl
+              onChange={e => handleChangeFile(e.target.files)}
+              disabled={disabled || false}
+              {...props}
+            />
+          )
+          : (
+            <FormControl
+              onChange={e => handleChangeFile(e.target.files, thongTinHangMuc)}
+              disabled={disabled || false}
+              {...props}
+            />
+          )
         }
 
       </div>
@@ -460,27 +472,31 @@ function FieldGroupFile({ id, label, help, disabled, textArea, handleChangeFile,
   );
 }
 
-function FieldGroupFileImage({ label, value, thongTinHangMuc, ...props }) {
+function FieldGroupFileImage({
+  label, value
+}) {
   return (
     <div style={{ marginBottom: 10, heigh: '200px' }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
-        <ControlLabel >{label}</ControlLabel>
+        <ControlLabel>{label}</ControlLabel>
       </div>
       <div className="col-xs-8">
         {
           value.map((e, i) => (
-            <Col xs={6} key={i}>
-              <Thumbnail href={e.url} target='blank' src={e.url} alt="242x200" />
+            <Col xs={6} key={parseInt(i.toString())}>
+              <Thumbnail href={e.url} target="blank" src={e.url} alt="242x200" />
             </Col>))
         }
       </div>
     </div>
   );
 }
-const RELOAD = 1, JUST_CLOSE = 0;
+const RELOAD = 1; const
+  JUST_CLOSE = 0;
 class AddPurchase extends Component {
   constructor(props, context) {
     super(props, context);
+    const { match } = this.props;
     this.state = {
       value: {
         image: [],
@@ -489,7 +505,7 @@ class AddPurchase extends Component {
       thongTinHangMuc: [],
       phanTichHangMuc: {},
       save: false,
-      purchaseId: this.props.match.params.purchaseId
+      purchaseId: match.params.purchaseId
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeFile = this.handleChangeFile.bind(this);
@@ -501,26 +517,29 @@ class AddPurchase extends Component {
       message: '',
       button: '',
       code: JUST_CLOSE
-    }
+    };
   }
 
   componentDidMount() {
+    const { purchaseId } = this.state;
+    const { match } = this.props;
     // console.log(this.props.match.params.purchaseId)
-    if (this.state.purchaseId) {
-      API.getPurchaseDetail(this.props.match.params.purchaseId).then(data => {
+    if (purchaseId) {
+      API.getPurchaseDetail(match.params.purchaseId).then((data) => {
         // console.log(data.results)
         this.setState({
           value: {
             ...data.results
           },
           thongTinHangMuc: data.results.category
-        })
-      })
+        });
+      });
     }
   }
 
   savePurchase() {
-    API.savePurchase(this.state.value).then(e => {
+    const { value } = this.state;
+    API.savePurchase(value).then(() => {
       this.message = {
         title: 'Thông báo',
         message: 'Tạo đơn hàng thành công',
@@ -529,67 +548,69 @@ class AddPurchase extends Component {
       };
       this.setState({
         save: true
-      })
-    })
+      });
+    });
   }
 
-  handleChange(key, value, thongTinHangMuc) {
-    console.log('status', value);
-    if (thongTinHangMuc !== undefined) {
+  handleChange(key, valuek, thongTinHangMuclk) {
+    const { value, thongTinHangMuc } = this.state;
+    if (thongTinHangMuclk !== undefined) {
       if (key === 'saleGbrown') {
-        let phoneSaleGbrown = nhanVien.filter(e => e.name === value)[0].phone;
+        const phoneSaleGbrown = nhanVien.filter(e => e.name === valuek)[0].phone;
         this.setState({
           value: {
-            ...this.state.value,
-            phoneSaleGbrown: phoneSaleGbrown,
-            [key] : value
+            ...value,
+            phoneSaleGbrown,
+            [key]: valuek
           }
-        })
-      }else {
+        });
+      } else {
         /**
-         * validate if number
-         */
+                 * validate if number
+                 */
         if (key === 'phoneSaleGbrown' || key === 'phone' || key === 'total' || key === 'deposit') {
           const re = /^[0-9\b]+$/;
-          if (value == '' || re.test(value)) {
-            this.state.thongTinHangMuc[thongTinHangMuc][key] = value;
+          if (value === '' || re.test(value)) {
+            thongTinHangMuc[thongTinHangMuclk][key] = value;
           }
         } else {
-          this.state.thongTinHangMuc[thongTinHangMuc][key] = value;
+          thongTinHangMuc[thongTinHangMuclk][key] = value;
         }
-        if ((key === 'price' || key === 'reducedPrice') && this.state.thongTinHangMuc[thongTinHangMuc].price) {
-          this.state.thongTinHangMuc[thongTinHangMuc].cash = this.state.thongTinHangMuc[thongTinHangMuc].price - (this.state.thongTinHangMuc[thongTinHangMuc].reducedPrice &&  this.state.thongTinHangMuc[thongTinHangMuc].reducedPrice || 0)
+        if ((key === 'price' || key === 'reducedPrice') && thongTinHangMuc[thongTinHangMuclk].price) {
+          const { price } = thongTinHangMuc[thongTinHangMuclk];
+          const { reducedPrice } = thongTinHangMuc[thongTinHangMuclk];
+          thongTinHangMuc[thongTinHangMuclk].cash = price - (reducedPrice || 0);
         }
         this.setState({
           value: {
-            ...this.state.value,
-            category: this.state.thongTinHangMuc
+            ...value,
+            category: thongTinHangMuc
           }
-        })
+        });
       }
+    } else if (key === 'saleGbrown') {
+      const phoneSaleGbrown = nhanVien.filter(e => e.name === value)[0].phone;
+      this.setState({
+        value: {
+          ...value,
+          phoneSaleGbrown,
+          [key]: value
+        }
+      });
     } else {
-      if (key === 'saleGbrown') {
-        let phoneSaleGbrown = nhanVien.filter(e => e.name === value)[0].phone;
-        this.setState({
-          value: {
-            ...this.state.value,
-            phoneSaleGbrown: phoneSaleGbrown,
-            [key] : value
-          }
-        })
-      }else {
-        this.setState({
-          value: {
-            ...this.state.value,
-            [key]: value
-          }
-        })
-      }
+      this.setState({
+        value: {
+          ...value,
+          [key]: value
+        }
+      });
     }
   }
-  handleChangeFile(value, thongTinHangMuc) {
-    let formdata = new FormData();
-    if (value[0].type !== 'image/png' && value[0].type !== 'image/jpeg') {
+
+  handleChangeFile(values, thongTinHangMuclk) {
+    const formdata = new FormData();
+    const { value, thongTinHangMuc } = this.state;
+    if (values[0].type !== 'image/png' && values[0].type !== 'image/jpeg') {
       this.message = {
         title: 'Lỗi',
         message: 'Chỉ hỗ trợ định dạng png, jpg',
@@ -598,39 +619,43 @@ class AddPurchase extends Component {
       };
       this.setState({ save: true });
     } else {
-      formdata.append("file", value[0]);
-      API.upload(formdata).then(data => {
-        var url = { url: API.server + data.results.path };
-        if (thongTinHangMuc === undefined) {
-          this.state.value.image.push(url);
-          this.setState(this.state);
+      formdata.append('file', values[0]);
+      API.upload(formdata).then((data) => {
+        const url = { url: API.server + data.results.path };
+        if (thongTinHangMuclk === undefined) {
+          value.image.push(url);
+          this.setState({ value });
         } else {
-          this.state.thongTinHangMuc[thongTinHangMuc].image.push(url);
+          thongTinHangMuc[thongTinHangMuclk].image.push(url);
           this.setState({
             value: {
-              ...this.state.value,
-              category: this.state.thongTinHangMuc
+              ...value,
+              category: thongTinHangMuc
             }
-          })
+          });
         }
-      })
+      });
     }
   }
 
-  addThongTinHangMuc() {
-    this.state.phanTichHangMuc[this.state.thongTinHangMuc.length] = []
-    this.state.thongTinHangMuc.push({ image: [] });
-    this.setState(this.state)
+  addThongTinHangMuc = () => {
+    const { thongTinHangMuc, phanTichHangMuc } = this.state;
+    phanTichHangMuc[thongTinHangMuc.length] = [];
+    thongTinHangMuc.push({ image: [] });
+    this.setState({ thongTinHangMuc, phanTichHangMuc });
   }
 
-  addPhanTichHangMuc(index) {
-    this.state.phanTichHangMuc[index].push({})
-    this.setState(this.state)
+  addPhanTichHangMuc = (index) => {
+    const { phanTichHangMuc } = this.state;
+    phanTichHangMuc[index].push({});
+    this.setState(phanTichHangMuc);
   }
 
 
   render() {
-    const { thongTinHangMuc, phanTichHangMuc, save, value, purchaseId } = this.state
+    const {
+      thongTinHangMuc, phanTichHangMuc, save, value, purchaseId
+    } = this.state;
 
     return (
       <div className="App">
@@ -641,16 +666,19 @@ class AddPurchase extends Component {
             </div>
             <div className="col-xs-4">
               {
-                purchaseId &&
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: '70px'
-                }}>
-                  <Link to="/main"><button class="btn btn-primary">Thêm Đơn Hàng</button></Link>
-                  <Link to={`/print/${purchaseId}`}><button class="btn btn-success">In báo Giá</button></Link>
-                </div>
+                purchaseId
+                && (
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '70px'
+                  }}
+                  >
+                    <Link to="/main"><button type="button" className="btn btn-primary">Thêm Đơn Hàng</button></Link>
+                    <Link to={`/print/${purchaseId}`}><button type="button" className="btn btn-success">In báo Giá</button></Link>
+                  </div>
+                )
               }
 
             </div>
@@ -720,7 +748,7 @@ class AddPurchase extends Component {
               />
               <FieldGroupFileImage
                 label="Hình Ảnh"
-                value={this.state.value.image && this.state.value.image.length && this.state.value.image || []}
+                value={value.image || []}
               />
               <FieldGroupFile
                 id="image"
@@ -826,29 +854,38 @@ class AddPurchase extends Component {
 
           </div>
           <div className="col-xs-12">
-            <button className="btn btn-primary" onClick={this.addThongTinHangMuc}>Thêm Hạng Mục</button>
+            <button type="button" className="btn btn-primary" onClick={this.addThongTinHangMuc}>Thêm Hạng Mục</button>
           </div>
 
-          {thongTinHangMuc.map((item, index) => {
-            return (<ThongTinHangMuc key={index} value={item} index={index} onClick={this.addPhanTichHangMuc.bind(this, item)} handleChange={this.handleChange} handleChangeFile={this.handleChangeFile} phanTichHangMuc={phanTichHangMuc[item]} />)
-          })}
+          {thongTinHangMuc.map((item, index) => (
+            <ThongTinHangMuc
+              key={parseInt(index.toString())}
+              value={item}
+              index={index}
+              onClick={this.addPhanTichHangMuc}
+              handleChange={this.handleChange}
+              handleChangeFile={this.handleChangeFile}
+              phanTichHangMuc={phanTichHangMuc[item]}
+            />))}
           <div className="col-xs-12 content-center">
             <FieldCheckBox />
-            <button className="btn btn-primary w10" onClick={this.savePurchase}>Lưu Đơn Hàng</button>
+            <button type="button" className="btn btn-primary w10" onClick={this.savePurchase}>Lưu Đơn Hàng</button>
           </div>
         </div>
-        {save && <ShowMessage
-          onClick={() => {
-            //reload to refresh field data
-            if (this.message.code === RELOAD) {
-              window.location.reload();
-            }
-            this.setState({ save: false });
-          }}
-          title={this.message.title}
-          message={this.message.message}
-          button={this.message.button}
-        />}
+        {save && (
+          <ShowMessage
+            onClick={() => {
+              // reload to refresh field data
+              if (this.message.code === RELOAD) {
+                window.location.reload();
+              }
+              this.setState({ save: false });
+            }}
+            title={this.message.title}
+            message={this.message.message}
+            button={this.message.button}
+          />
+        )}
       </div>
     );
   }

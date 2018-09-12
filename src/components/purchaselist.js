@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import * as API from '../API';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import moment from 'moment';
-import ReactToPrint from "react-to-print";
-// import BootstrapTable from 'react-bootstrap-table-next';
-import ReactTable from 'react-table'
-import { browserHistory } from 'react-router-dom';
+import ReactTable from 'react-table';
+import * as API from '../API';
+
+const renderCell = (props) => {
+  const { value } = props;
+  return <Link to={`/print/${value}`}><span className="print">In Báo Giá</span></Link>;
+};
+
 const columns = [{
   accessor: 'purchaseId',
   Header: 'Mã Đơn Đặt Sự Kiện'
@@ -26,20 +29,20 @@ const columns = [{
   Header: 'Số Điện Thoại'
 }, {
   id: 'startDate',
-  accessor: d => moment(d.startDate).format("DD-MM-YYYY"),
+  accessor: d => moment(d.startDate).format('DD-MM-YYYY'),
   Header: 'Ngày Tổ Chức',
 }, {
   id: 'agreementDate',
-  accessor: d => moment(d.agreementDate).format("DD-MM-YYYY"),
+  accessor: d => moment(d.agreementDate).format('DD-MM-YYYY'),
   Header: 'Ngày Chuẩn Bị',
 }, {
   id: 'setupDate',
-  accessor: d => moment(d.setupDate).format("DD-MM-YYYY"),
+  accessor: d => moment(d.setupDate).format('DD-MM-YYYY'),
   Header: 'Ngày Set-up',
 }, {
   accessor: 'purchaseId',
   Header: 'Action',
-  Cell: props => <Link to={`/print/${props.value}`} ><span className='print' >In Báo Giá</span></Link>
+  Cell: props => renderCell(props),
 }];
 
 class PurchaseList extends Component {
@@ -47,16 +50,20 @@ class PurchaseList extends Component {
     super(props, context);
     this.state = {
       value: [],
-      size: 10
+      pageSize: 10
     };
   }
+
   componentDidMount() {
-    API.getAllPurchase(this.props.match.params.purchaseId).then(data => {
-      this.setState({ value: data.results })
+    const { match } = this.props;
+    API.getAllPurchase(match.params.purchaseId).then((data) => {
+      this.setState({ value: data.results });
     });
   }
+
   render() {
-    const { value } = this.state
+    const { value, pageSize } = this.state;
+    const { history } = this.props;
     return (
       <div className="app">
         <div className="container-fluid">
@@ -64,37 +71,38 @@ class PurchaseList extends Component {
             <div className="col-xs-8">
               <h1>DANH SÁCH ĐƠN ĐẶT HÀNG</h1>
             </div>
-            <div className="col-xs-4" style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: '70px'
-            }}>
-              <Link to="/main"><button className="btn btn-primary">Thêm Đơn Hàng</button></Link>
+            <div
+              className="col-xs-4"
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '70px'
+              }}
+            >
+              <Link to="/main"><button type="button" className="btn btn-primary">Thêm Đơn Hàng</button></Link>
             </div>
           </div>
           <ReactTable
             data={value}
             defaultPageSize={10}
             columns={columns}
-            pageSize={this.state.pageSize}
-            getTrProps={(state, rowInfo, column, instance) => {
-              return {
-                onClick: e => {
-                  console.log(e.target.className)
-                  console.log(state)
-                  console.log(rowInfo)
-                  console.log(column)
-                  console.log(instance)
-                  if (e.target.className != 'print') {
-                    this.props.history.push({
-                      pathname: '/purchase/' + rowInfo.original.purchaseId,
-                    })
-                  }
-                  console.log('It was in this row:', rowInfo)
+            pageSize={pageSize}
+            getTrProps={(state, rowInfo, column, instance) => ({
+              onClick: (e) => {
+                console.log(e.target.className);
+                console.log(state);
+                console.log(rowInfo);
+                console.log(column);
+                console.log(instance);
+                if (e.target.className !== 'print') {
+                  history.push({
+                    pathname: `/purchase/${rowInfo.original.purchaseId}`,
+                  });
                 }
+                console.log('It was in this row:', rowInfo);
               }
-            }}
+            })}
           />
         </div>
       </div>
