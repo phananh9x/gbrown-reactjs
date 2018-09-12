@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Navbar, NavItem, Nav } from 'react-bootstrap';
+
 import './App.css';
 import 'react-table/react-table.css';
 import {
@@ -13,15 +13,11 @@ import AddPurchase from './components/addpurchase';
 import Print from './components/print';
 import PrintDetail from './components/printdetail';
 import PurchaseList from './components/purchaselist';
-
 import Login from './screen/login';
 import { showNavBar } from './redux/actions/navBar';
+import NavigationBar from './components/NavigationBar';
 
 class App extends Component {
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-  }
-
   componentDidMount() {
     const { dispathNavBar } = this.props;
     dispathNavBar(true);
@@ -29,26 +25,12 @@ class App extends Component {
 
   render() {
     const { navBar } = this.props;
-    console.log(navBar.showNavbar);
 
     return (
       <div className="App">
-        {navBar.showNavbar
-          && (
-            <Navbar className="navbar-fixed-top">
-              <Navbar.Header>
-                <Navbar.Brand>
-                  <a href="/">Dashboard</a>
-                </Navbar.Brand>
-              </Navbar.Header>
-              <Nav>
-                <NavItem eventKey={1} href="/">
-                  Danh sách đơn hàng
-                </NavItem>
-              </Nav>
-            </Navbar>
-          )
-        }
+        <NavigationBar
+          show={navBar.showNavbar}
+        />
 
         <div style={{ marginTop: navBar.showNavbar ? 50 : 0 }}>
           <Router>
