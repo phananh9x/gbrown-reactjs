@@ -1,12 +1,15 @@
 // import Parse from 'parse/react-native'
 
 export class ApiResult {
-  static DEFAULT = '__DEFAULT__'
-  static FETCHING = '__FETCHING__'
-  static SUCCESS = '__SUCCESS__'
-  static FAILURE = '__FAILURE__'
+  static DEFAULT = '__DEFAULT__';
 
-  constructor (status = ApiResult.DEFAULT, data) {
+  static FETCHING = '__FETCHING__';
+
+  static SUCCESS = '__SUCCESS__';
+
+  static FAILURE = '__FAILURE__';
+
+  constructor(status = ApiResult.DEFAULT, data) {
     if (typeof status === 'object') {
       return Object.assign(this, status);
     }
@@ -14,47 +17,53 @@ export class ApiResult {
     this.data = data;
   }
 
-  isDefault () {
+  isDefault() {
     return this.status === ApiResult.DEFAULT;
   }
-  isFetching () {
+
+  isFetching() {
     return this.status === ApiResult.FETCHING;
   }
-  isSuccess () {
+
+  isSuccess() {
     return this.status === ApiResult.SUCCESS;
   }
-  isFailure () {
+
+  isFailure() {
     return this.status === ApiResult.FAILURE;
   }
 
-  get message () {
-    if (this._message) return this._message
+  get message() {
+    if (this._message) return this._message;
     if (this.data instanceof Error /* || this.data instanceof Parse.Error */) {
-      const errorMessage = this.data.message
-      return typeof errorMessage === 'string' ? errorMessage : `${errorMessage}`
-    } else if (typeof this.data === 'string') return this.data
+      const errorMessage = this.data.message;
+      return typeof errorMessage === 'string' ? errorMessage : `${errorMessage}`;
+    } if (typeof this.data === 'string') return this.data;
     switch (this.status) {
       case ApiResult.SUCCESS:
-        return 'Success'
+        return 'Success';
       case ApiResult.FAILURE:
-        return 'Failure'
+        return 'Failure';
       case ApiResult.FETCHING:
-        return 'Fethching'
+        return 'Fethching';
+      default:
+        return '';
     }
-    return ''
   }
 
-  static initDefault (...args) {
+  static initDefault(...args) {
     return new ApiResult(ApiResult.DEFAULT, ...args);
   }
 
-  static initSuccess (...args) {
+  static initSuccess(...args) {
     return new ApiResult(ApiResult.SUCCESS, ...args);
   }
-  static initFetching (...args) {
+
+  static initFetching(...args) {
     return new ApiResult(ApiResult.FETCHING, ...args);
   }
-  static initFailure (...args) {
+
+  static initFailure(...args) {
     return new ApiResult(ApiResult.FAILURE, ...args);
   }
 }
@@ -65,6 +74,6 @@ export function action(type) {
       type,
       payload,
       meta
-    }
-  }
+    };
+  };
 }
