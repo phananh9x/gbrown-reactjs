@@ -13,7 +13,7 @@ class Login extends Component {
   render() {
     return (
       <Form horizontal>
-        <FormGroup controlId="formHorizontalEmail">
+        <FormGroup controlid="formHorizontalEmail">
           <Col componentClass={ControlLabel} sm={2}>
             Email
           </Col>
@@ -22,7 +22,7 @@ class Login extends Component {
           </Col>
         </FormGroup>
 
-        <FormGroup controlId="formHorizontalPassword">
+        <FormGroup controlid="formHorizontalPassword">
           <Col componentClass={ControlLabel} sm={2}>
             Password
           </Col>

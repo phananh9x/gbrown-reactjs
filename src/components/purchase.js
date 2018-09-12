@@ -145,7 +145,7 @@ function FieldGroupSelectNhanVien({
   id, label, handleChange
 }) {
   return (
-    <div controlId={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
+    <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
         <ControlLabel>{label}</ControlLabel>
       </div>
