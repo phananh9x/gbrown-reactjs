@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import logo from './logo.svg';
 import './App.css';
 import 'react-table/react-table.css'
@@ -16,37 +17,48 @@ import {
   Switch
 } from "react-router-dom";
 import { Navbar, NavItem, Nav } from 'react-bootstrap'
+import Login from './components/screen/login';
+import { showNavBar } from './actions/navBar';
 
 class App extends Component {
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+  }
+
+  componentDidMount() {
+    const { showNavBar } = this.props;
+    showNavBar(true);
+
+  }
   render() {
-    var currentLocation = window.location.pathname
-    var showNav = false;
-    if (currentLocation.includes('main') || currentLocation.includes('purchase')) {
-      showNav = true;
-    }
+    const { navBar } = this.props;
+    console.log(navBar.showNavbar);
 
     return (
       <div className="App">
-
-        <Navbar className="navbar-fixed-top" responsive>
-          {/* <Navbar.Header>
-          <Navbar.Brand>
-            <a href="/">Menu</a>
-          </Navbar.Brand>
-        </Navbar.Header> */}
-          <Nav>
-            <NavItem eventKey={1} href="/">
-              Danh sách đơn hàng
+        {navBar.showNavbar &&
+          <Navbar className="navbar-fixed-top">
+            <Navbar.Header>
+              <Navbar.Brand>
+                <a href="/">Dashboard</a>
+              </Navbar.Brand>
+            </Navbar.Header>
+            <Nav>
+              <NavItem eventKey={1} href="/">
+                Danh sách đơn hàng
           </NavItem>
-            {/* <NavItem eventKey={2} href="#">
+              {/* <NavItem eventKey={2} href="#">
             Link
           </NavItem> */}
-          </Nav>
-        </Navbar>
+            </Nav>
+          </Navbar>
+        }
 
-        <div style={{ marginTop: showNav ? 50 : 0 }}>
+        <div style={{ marginTop: navBar.showNavbar ? 50 : 0 }}>
           <Router>
             <Switch>
+              <Route exact path="/login" component={Login} />
               <Route exact path="/" component={PurchaseList} />
               <Route exact path="/baogia/:purchaseId" component={Print} />
               <Route exact path="/chitiethopdong/:purchaseId" component={PrintDetail} />
@@ -60,5 +72,11 @@ class App extends Component {
     );
   }
 }
+const mapStateToProps = state => ({
+  navBar: state.navBar
+});
+const mapDispathToProps = dispath => ({
+  showNavBar: (show) => dispath(showNavBar(show))
+})
 
-export default App;
+export default connect(mapStateToProps, mapDispathToProps)(App);
