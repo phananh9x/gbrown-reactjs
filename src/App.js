@@ -13,9 +13,8 @@ import AddPurchase from './components/addpurchase';
 import Print from './components/print';
 import PrintDetail from './components/printdetail';
 import PurchaseList from './components/purchaselist';
-
-import Login from './components/screen/login';
 import { showNavBar } from './actions/navBar';
+import Login from './screen/login';
 
 class App extends Component {
   componentWillReceiveProps(nextProps) {
