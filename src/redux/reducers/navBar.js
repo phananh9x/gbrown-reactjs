@@ -5,6 +5,8 @@ const initState = {
 };
 
 export default function NavBar(state = initState, action) {
+  console.log(action);
+
   switch (action.type) {
     case NAV_BAR.NAV_BAR_ACTION: {
       return { showNavbar: action.show };

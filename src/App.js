@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import './App.css';
 import 'react-table/react-table.css';
 import {
@@ -20,7 +19,19 @@ import NavigationBar from './components/NavigationBar';
 class App extends Component {
   componentDidMount() {
     const { dispathNavBar } = this.props;
-    dispathNavBar(true);
+    switch (window.location.pathname) {
+      case '/login':
+        dispathNavBar(false);
+        break;
+      case '/':
+        dispathNavBar(true);
+        break;
+      case '/main':
+        dispathNavBar(true);
+        break;
+      default:
+        break;
+    }
   }
 
   render() {
@@ -31,7 +42,6 @@ class App extends Component {
         <NavigationBar
           show={navBar.showNavbar}
         />
-
         <div style={{ marginTop: navBar.showNavbar ? 50 : 0 }}>
           <Router>
             <Switch>
@@ -43,7 +53,6 @@ class App extends Component {
               <Route exact path="/purchase/:purchaseId" component={Purchase} />
             </Switch>
           </Router>
-
         </div>
       </div>
     );

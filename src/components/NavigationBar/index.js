@@ -27,6 +27,11 @@ export default class NavigationBar extends Component {
                 >
                   Danh sách đơn hàng
                 </NavItem>
+                <NavItem
+                  eventKey={1}
+                  href="/login"
+                >
+                  Đăng nhập
               </Nav>
             </Navbar>
           )}

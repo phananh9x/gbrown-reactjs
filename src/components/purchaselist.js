@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import ReactTable from 'react-table';
 import * as API from '../API';
+import NavigationBar from './NavigationBar';
 
 const renderCell = (props) => {
   const { value } = props;
@@ -57,7 +58,9 @@ class PurchaseList extends Component {
   componentDidMount() {
     const { match } = this.props;
     API.getAllPurchase(match.params.purchaseId).then((data) => {
-      this.setState({ value: data.results });
+      if (data.success) {
+        this.setState({ value: data.results });
+      }
     });
   }
 
@@ -65,7 +68,11 @@ class PurchaseList extends Component {
     const { value, pageSize } = this.state;
     const { history } = this.props;
     return (
+
       <div className="app">
+        <NavigationBar
+          show
+        />
         <div className="container-fluid">
           <div className="row">
             <div className="col-xs-8">

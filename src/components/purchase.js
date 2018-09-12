@@ -511,13 +511,14 @@ class Purchase extends Component {
     // console.log(this.props.match.params.purchaseId)
     if (purchaseId) {
       API.getPurchaseDetail(match.params.purchaseId).then((data) => {
-        // console.log(data.results)
-        this.setState({
-          value: {
-            ...data.results
-          },
-          thongTinHangMuc: data.results.category
-        });
+        if (data.success) {
+          this.setState({
+            value: {
+              ...data.results
+            },
+            thongTinHangMuc: data.results.category
+          });
+        }
       });
     }
   }
