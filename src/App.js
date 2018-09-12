@@ -19,32 +19,43 @@ import { Navbar, NavItem, Nav } from 'react-bootstrap'
 
 class App extends Component {
   render() {
+    var currentLocation = window.location.pathname
+    var showNav = false;
+    if (currentLocation.includes('main') || currentLocation.includes('purchase')) {
+      showNav = true;
+    }
+
     return (
       <div className="App">
-        <Navbar>
+
+        <Navbar className="navbar-fixed-top" responsive>
           {/* <Navbar.Header>
-            <Navbar.Brand>
-              <a href="/">Menu</a>
-            </Navbar.Brand>
-          </Navbar.Header> */}
+          <Navbar.Brand>
+            <a href="/">Menu</a>
+          </Navbar.Brand>
+        </Navbar.Header> */}
           <Nav>
             <NavItem eventKey={1} href="/">
               Danh sách đơn hàng
-            </NavItem>
+          </NavItem>
             {/* <NavItem eventKey={2} href="#">
-              Link
-            </NavItem> */}
+            Link
+          </NavItem> */}
           </Nav>
-        </Navbar>;
-        <Router>
-          <Switch>
-            <Route exact path="/" component={PurchaseList} />
-            <Route exact path="/baogia/:purchaseId" component={Print} />
-            <Route exact path="/chitiethopdong/:purchaseId" component={PrintDetail} />
-            <Route exact path="/main" component={AddPurchase} />
-            <Route exact path="/purchase/:purchaseId" component={Purchase} />
-          </Switch>
-        </Router>
+        </Navbar>
+
+        <div style={{ marginTop: showNav ? 50 : 0 }}>
+          <Router>
+            <Switch>
+              <Route exact path="/" component={PurchaseList} />
+              <Route exact path="/baogia/:purchaseId" component={Print} />
+              <Route exact path="/chitiethopdong/:purchaseId" component={PrintDetail} />
+              <Route exact path="/main" component={AddPurchase} />
+              <Route exact path="/purchase/:purchaseId" component={Purchase} />
+            </Switch>
+          </Router>
+
+        </div>
       </div>
     );
   }

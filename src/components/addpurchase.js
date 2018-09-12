@@ -116,18 +116,32 @@ const nhanVien = [{
   phone: '01213638883',
   email: ''
 }]
-function FieldGroupSelect({ id, label, help, ...props }) {
+
+
+const status = {
+  s1: "Đơng hàng mới",
+  s2: "Đang chăm sóc",
+  s3: "Thành công",
+  s4: "Thất bại",
+}
+
+
+function FieldGroupSelect({ id, label, help, handleChange, ...props }) {
   return (
-    <div controlId={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
+    <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
         <ControlLabel >{label}</ControlLabel>
       </div>
       <div className="col-xs-8">
-        <FormControl id={id} componentClass="select" placeholder="Chọn">
-          <option value="nhanVien1">Đơn hàng mới</option>
-          <option value="nhanVien2">Đang chăm sóc</option>
-          <option value="nhanVien3">Thành công</option>
-          <option value="nhanVien3">Thất bại</option>
+        <FormControl id={id} componentClass="select" placeholder="Chọn" onChange={(e) => {
+          if (handleChange) {
+            handleChange(status[e.target.value])
+          }
+        }}>
+          <option value="s1">{status.s1}</option>
+          <option value="s2">{status.s2}</option>
+          <option value="s3">{status.s3}</option>
+          <option value="s4">{status.s4}</option>
         </FormControl>
       </div>
     </div>
@@ -171,7 +185,7 @@ function ShowMessage({ title, message, button, onClick }) {
 
 function FieldCheckBoxWithLabel({ id, label, help, ...props }) {
   return (
-    <div controlId={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
+    <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
         <ControlLabel >{label}</ControlLabel>
       </div>
@@ -304,8 +318,14 @@ function ThongTinHangMuc({ index, value, handleChange, handleChangeFile, ...prop
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
+        <FieldGroupFileImage
+          label="Hình Ảnh Không Gian Set-Up"
+          thongTinHangMuc={index}
+          value={value.image}
+        />
 
         <FieldGroupFile
+          handleChangeFile={handleChangeFile}
           id="imageSetup"
           type="file"
           label="Hình Ảnh Không Gian Set-Up"
@@ -336,8 +356,8 @@ function ThongTinHangMuc({ index, value, handleChange, handleChangeFile, ...prop
           handleChange={handleChange}
         />
       </div>
-      {props.phanTichHangMuc && props.phanTichHangMuc.length && props.phanTichHangMuc.map(item => {
-        return (<PhanTichHangMuc index={item} />)
+      {props.phanTichHangMuc && props.phanTichHangMuc.length && props.phanTichHangMuc.map((item, key) => {
+        return (<PhanTichHangMuc index={item} key={key} />)
       })}
       <div className="col-xs-12">
         {/*<button className="btn btn-primary" onClick={props.onClick.bind(this, index)}>Thêm Phân Tích Hạng Mục</button>*/}
@@ -411,7 +431,7 @@ function PhanTichHangMuc({ index, ...props }) {
 
 function FieldGroup({ id, label, type, value, help, disabled, textArea, handleChangeFile, handleChange, thongTinHangMuc, ...props }) {
   return (
-    <div controlId={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
+    <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
         <ControlLabel >{label}</ControlLabel>
       </div>
@@ -426,7 +446,7 @@ function FieldGroup({ id, label, type, value, help, disabled, textArea, handleCh
 
 function FieldGroupFile({ id, label, help, disabled, textArea, handleChangeFile, thongTinHangMuc, ...props }) {
   return (
-    <div controlId={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
+    <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
         <ControlLabel >{label}</ControlLabel>
       </div>
@@ -457,6 +477,7 @@ function FieldGroupFileImage({ label, value, thongTinHangMuc, ...props }) {
     </div>
   );
 }
+const RELOAD = 1, JUST_CLOSE = 0;
 class AddPurchase extends Component {
   constructor(props, context) {
     super(props, context);
@@ -475,6 +496,12 @@ class AddPurchase extends Component {
     this.addThongTinHangMuc = this.addThongTinHangMuc.bind(this);
     this.addPhanTichHangMuc = this.addPhanTichHangMuc.bind(this);
     this.savePurchase = this.savePurchase.bind(this);
+    this.message = {
+      title: '',
+      message: '',
+      button: '',
+      code: JUST_CLOSE
+    }
   }
 
   componentDidMount() {
@@ -494,6 +521,12 @@ class AddPurchase extends Component {
 
   savePurchase() {
     API.savePurchase(this.state.value).then(e => {
+      this.message = {
+        title: 'Thông báo',
+        message: 'Tạo đơn hàng thành công',
+        button: 'Đóng',
+        code: RELOAD
+      };
       this.setState({
         save: true
       })
@@ -501,6 +534,7 @@ class AddPurchase extends Component {
   }
 
   handleChange(key, value, thongTinHangMuc) {
+    console.log('status', value);
     if (thongTinHangMuc !== undefined) {
       if (key === 'saleGbrown') {
         let phoneSaleGbrown = nhanVien.filter(e => e.name === value)[0].phone;
@@ -555,23 +589,32 @@ class AddPurchase extends Component {
   }
   handleChangeFile(value, thongTinHangMuc) {
     let formdata = new FormData();
-    formdata.append("file", value[0]);
-    API.upload(formdata).then(data => {
-      var url = { url: API.server + data.results.path };
-      console.log('thongTinHangMuc', thongTinHangMuc === undefined, thongTinHangMuc)
-      if (thongTinHangMuc === undefined) {
-        this.state.value.image.push(url);
-        this.setState(this.state);
-      } else {
-        this.state.thongTinHangMuc[thongTinHangMuc].image.push(url);
-        this.setState({
-          value: {
-            ...this.state.value,
-            category: this.state.thongTinHangMuc
-          }
-        })
-      }
-    })
+    if (value[0].type !== 'image/png' && value[0].type !== 'image/jpeg') {
+      this.message = {
+        title: 'Lỗi',
+        message: 'Chỉ hỗ trợ định dạng png, jpg',
+        button: 'Đóng',
+        code: JUST_CLOSE
+      };
+      this.setState({ save: true });
+    } else {
+      formdata.append("file", value[0]);
+      API.upload(formdata).then(data => {
+        var url = { url: API.server + data.results.path };
+        if (thongTinHangMuc === undefined) {
+          this.state.value.image.push(url);
+          this.setState(this.state);
+        } else {
+          this.state.thongTinHangMuc[thongTinHangMuc].image.push(url);
+          this.setState({
+            value: {
+              ...this.state.value,
+              category: this.state.thongTinHangMuc
+            }
+          })
+        }
+      })
+    }
   }
 
   addThongTinHangMuc() {
@@ -634,7 +677,6 @@ class AddPurchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroup
-                inputType="number"
                 value={value}
                 id="phone"
                 type="number"
@@ -788,7 +830,7 @@ class AddPurchase extends Component {
           </div>
 
           {thongTinHangMuc.map((item, index) => {
-            return (<ThongTinHangMuc value={item} index={index} onClick={this.addPhanTichHangMuc.bind(this, item)} handleChange={this.handleChange} handleChangeFile={this.handleChangeFile} phanTichHangMuc={phanTichHangMuc[item]} />)
+            return (<ThongTinHangMuc key={index} value={item} index={index} onClick={this.addPhanTichHangMuc.bind(this, item)} handleChange={this.handleChange} handleChangeFile={this.handleChangeFile} phanTichHangMuc={phanTichHangMuc[item]} />)
           })}
           <div className="col-xs-12 content-center">
             <FieldCheckBox />
@@ -798,12 +840,15 @@ class AddPurchase extends Component {
         {save && <ShowMessage
           onClick={() => {
             //reload to refresh field data
-            window.location.reload();
+            if (this.message.code === RELOAD) {
+              window.location.reload();
+            }
             this.setState({ save: false });
           }}
-          title="Thông báo"
-          message="Tạo đơn hàng thành công"
-          button="Đóng lại" />}
+          title={this.message.title}
+          message={this.message.message}
+          button={this.message.button}
+        />}
       </div>
     );
   }

@@ -70,7 +70,7 @@ class PurchaseList extends Component {
               alignItems: 'center',
               height: '70px'
             }}>
-              <Link to="/main"><button class="btn btn-primary">Thêm Đơn Hàng</button></Link>
+              <Link to="/main"><button className="btn btn-primary">Thêm Đơn Hàng</button></Link>
             </div>
           </div>
           <ReactTable
