@@ -32,6 +32,7 @@ export default class NavigationBar extends Component {
                   href="/login"
                 >
                   Đăng nhập
+                </NavItem>
               </Nav>
             </Navbar>
           )}

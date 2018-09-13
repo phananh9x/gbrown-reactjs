@@ -5,6 +5,7 @@ import {
   Form, FormGroup, Col, FormControl, ControlLabel, Button, Checkbox
 } from 'react-bootstrap';
 import { showNavBar } from '../../redux/actions/navBar';
+import { loginRequest } from '../../redux/actions/login';
 
 const style = {
   container: {
@@ -17,7 +18,7 @@ const style = {
   },
   login: {
     backgroundColor: 'white',
-    width: '35%',
+    width: '30%',
     alignSelf: 'center',
     paddingLeft: '3%',
     paddingRight: '3%',
@@ -32,50 +33,81 @@ class Login extends Component {
     super(props);
     this.state = {
     };
+    this.user = {
+      email: '',
+      password: ''
+    };
+  }
+
+
+  validateLogin = () => {
+    if (!this.user.email) {
+      //
+    } else if (!this.user.password) {
+      //
+    } else {
+      //
+      const { dispathLogin } = this.props;
+      dispathLogin(this.user);
+    }
+  }
+
+  onChange = (e) => {
+    this.user[e.target.id] = e.target.value;
   }
 
   render() {
     return (
-      <Form style={style.container}>
+      <div style={style.container}>
         <Form style={style.login} horizontal>
           <FormGroup controlid="formHorizontalEmail">
-            <Col componentClass={ControlLabel} sm={2}>
-              Email
+            <Col componentClass={ControlLabel} sm={3}>
+              Tài khoản
             </Col>
-            <Col sm={10}>
-              <FormControl type="email" placeholder="Email" />
+            <Col sm={9}>
+              <FormControl id="email" type="email" placeholder="Tài khoản" onChange={this.onChange} />
             </Col>
           </FormGroup>
 
           <FormGroup controlid="formHorizontalPassword">
-            <Col componentClass={ControlLabel} sm={2}>
-              Password
+            <Col componentClass={ControlLabel} sm={3}>
+              Mật khẩu
             </Col>
-            <Col sm={10}>
-              <FormControl type="password" placeholder="Password" />
+            <Col sm={9}>
+              <FormControl id="password" type="password" placeholder="Mật khẩu" onChange={this.onChange} />
             </Col>
           </FormGroup>
 
           <FormGroup>
-            <Col smOffset={2} sm={10}>
-              <Checkbox>Remember me</Checkbox>
+            <Col sm={3} />
+            <Col sm={5}>
+              <Checkbox>Lưu mật khẩu</Checkbox>
             </Col>
-            <Col smOffset={2} sm={10}>
-              <Button className="btn-primary" type="submit">Sign in</Button>
+            <Col sm={3}>
+              <Button
+                onClick={this.validateLogin}
+                className="btn-primary"
+              >
+                Đăng nhập
+              </Button>
             </Col>
           </FormGroup>
         </Form>
-      </Form>
+      </div>
     );
   }
 }
 
 
 const mapStateToProps = state => ({
-  navBar: state.navBar
+  navBar: state.navBar,
+  login: state.login
 });
+
 const mapDispathToProps = dispath => ({
-  dispathNavBar: show => dispath(showNavBar(show))
+  dispathNavBar: show => dispath(showNavBar(show)),
+  dispathLogin: data => dispath(loginRequest(data))
 });
+
 
 export default connect(mapStateToProps, mapDispathToProps)(Login);
