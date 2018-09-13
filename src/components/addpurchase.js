@@ -111,12 +111,13 @@ const nhanVien = [{
   email: ''
 }];
 
-const status = {
-  s1: 'Đơng hàng mới',
-  s2: 'Đang chăm sóc',
-  s3: 'Thành công',
-  s4: 'Thất bại',
-};
+
+const status = [
+  { id: 1, name: 'Đơng hàng mới' },
+  { id: 2, name: 'Đơng chăm sóc' },
+  { id: 3, name: 'Thành công' },
+  { id: 4, name: 'Thất bại' },
+];
 
 function FieldGroupSelectNhanVien({
   id, label, handleChange

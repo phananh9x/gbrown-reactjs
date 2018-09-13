@@ -13,8 +13,9 @@ import AddPurchase from './components/addpurchase';
 import Print from './components/print';
 import PrintDetail from './components/printdetail';
 import PurchaseList from './components/purchaselist';
-import { showNavBar } from './actions/navBar';
+
 import Login from './screen/login';
+import { showNavBar } from './redux/actions/navBar';
 
 import { Link } from 'react-router-dom';
 

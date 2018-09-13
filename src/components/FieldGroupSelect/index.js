@@ -12,6 +12,19 @@ export default class FieldGroupSelect extends Component {
     };
   }
 
+  renderList = () => {
+    const array = [];
+    const { data } = this.props;
+    if (data && data.length) {
+      data.forEach((e) => {
+        array.push(
+          <option key={parseInt(e.id)} value={e.id}>{e.name}</option>
+        );
+      });
+    }
+    return array;
+  }
+
   render() {
     const {
       id, label, handleChange, data
@@ -33,9 +46,7 @@ export default class FieldGroupSelect extends Component {
               }
             }}
           >
-            {data && data.length && data.map((e, i) => (
-              <option key={parseInt(i.tString())} value={i}>{e.name}</option>
-            ))}
+            {this.renderList()}
           </FormControl>
         </div>
       </div>
