@@ -14,7 +14,7 @@ export default class NavigationBar extends Component {
       <div style={{ width: '100%' }}>
         {show
           && (
-            <Navbar className="navbar-fixed-top">
+            <Navbar fixedTop className="navbar-fixed-top">
               <Navbar.Header>
                 <Navbar.Brand>
                   <a href="/">Dashboard</a>

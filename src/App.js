@@ -7,6 +7,8 @@ import {
   Route,
   Switch
 } from 'react-router-dom';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faStroopwafel, faUser, faLock } from '@fortawesome/free-solid-svg-icons';
 import Purchase from './components/purchase';
 import AddPurchase from './components/addpurchase';
 import Print from './components/print';
@@ -16,6 +18,7 @@ import Login from './screen/login';
 import { showNavBar } from './redux/actions/navBar';
 import NavigationBar from './components/NavigationBar';
 
+library.add(faStroopwafel, faUser, faLock);
 class App extends Component {
   componentDidMount() {
     const { dispathNavBar } = this.props;

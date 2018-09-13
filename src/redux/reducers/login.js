@@ -15,18 +15,21 @@ export default function Login(state = initalState, action) {
         ...state,
         fetching: true,
         success: false,
-        data: action.data
+        data: action.data,
+        error: {}
       };
     case LOGIN.LOGIN_SUCCESS:
       return {
         ...state,
         fetching: false,
         success: true,
-        data: action.data
+        data: action.data,
+        error: {}
       };
     case LOGIN.LOGIN_ERROR:
       return {
         ...state,
+        data: {},
         fetching: false,
         success: false,
         error: action.error
