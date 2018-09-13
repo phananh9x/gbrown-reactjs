@@ -44,6 +44,7 @@ class App extends Component {
         />
         <div style={{ marginTop: navBar.showNavbar ? 50 : 0 }}>
           <Router>
+
             <Switch>
               <Route exact path="/login" component={Login} />
               <Route exact path="/" component={PurchaseList} />
@@ -52,6 +53,7 @@ class App extends Component {
               <Route exact path="/main" component={AddPurchase} />
               <Route exact path="/purchase/:purchaseId" component={Purchase} />
             </Switch>
+
           </Router>
         </div>
       </div>
