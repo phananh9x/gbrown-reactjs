@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import {
   FormControl, ControlLabel, Checkbox, Thumbnail, Col, Alert
 } from 'react-bootstrap';
-import moment from 'moment';
 import { withRouter, Link } from 'react-router-dom';
 import * as API from '../API';
+import FieldGroup from './FieldGroup';
 
 const nhanVien = [{
   name: 'Nguyễn Thị Na',
@@ -113,7 +113,7 @@ const status = {
 
 
 function FieldGroupSelect({
-  id, label, handleChange
+  id, label, handleChange, value
 }) {
   return (
     <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
@@ -125,16 +125,17 @@ function FieldGroupSelect({
           id={id}
           componentClass="select"
           placeholder="Chọn"
+          value={(value && value.status) || 'ĐƠN HÀNG MỚI'}
           onChange={(e) => {
             if (handleChange) {
-              handleChange(status[e.target.value]);
+              handleChange(id, e.target.value);
             }
           }}
         >
-          <option value="s1">{status.s1}</option>
-          <option value="s2">{status.s2}</option>
-          <option value="s3">{status.s3}</option>
-          <option value="s4">{status.s4}</option>
+          <option value="Đơng hàng mới">{status.s1}</option>
+          <option value="Đang chăm sóc">{status.s2}</option>
+          <option value="Thành công">{status.s3}</option>
+          <option value="Thất bại">{status.s4}</option>
         </FormControl>
       </div>
     </div>
@@ -142,7 +143,7 @@ function FieldGroupSelect({
 }
 
 function FieldGroupSelectNhanVien({
-  id, label, handleChange
+  id, label, handleChange, value
 }) {
   return (
     <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
@@ -150,7 +151,7 @@ function FieldGroupSelectNhanVien({
         <ControlLabel>{label}</ControlLabel>
       </div>
       <div className="col-xs-8">
-        <FormControl id={id} componentClass="select" placeholder="Chọn" onChange={e => handleChange(id, e.target.value)}>
+        <FormControl id={id} componentClass="select" placeholder="Chọn" value={(value && value.saleGbrown) || ''} onChange={e => handleChange(id, e.target.value)}>
           {nhanVien.map((e, i) => (
             <option key={parseInt(i.toString())} value={e.name}>
               {e.name}
@@ -399,44 +400,6 @@ function PhanTichHangMuc({ index }) {
   );
 }
 
-function FieldGroup({
-  id, label, type, value, help, disabled, textArea,
-  handleChangeFile, handleChange, thongTinHangMuc, ...props
-}) {
-  return (
-    <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
-      <div className="col-xs-4 app-label">
-        <ControlLabel>{label}</ControlLabel>
-      </div>
-      <div className="col-xs-8">
-        {textArea
-          ? (
-            <FormControl
-              type={type}
-              value={value[id] && type === 'date' && (moment(value[id]).format('YYYY-MM-DD') || value[id] || '')}
-              componentClass="textarea"
-              onChange={e => handleChange(id, e.target.value)}
-              disabled={disabled || false}
-              {...props}
-            />
-          )
-          : (
-            <FormControl
-              type={type}
-              value={value[id] && type === 'date' && (moment(value[id]).format('YYYY-MM-DD') || value[id] || '')}
-              onChange={e => (handleChangeFile
-                && handleChangeFile(e.target.files))
-                || handleChange(id, e.target.value, thongTinHangMuc)}
-              disabled={disabled || false}
-              {...props}
-            />
-          )
-        }
-      </div>
-    </div>
-  );
-}
-
 function FieldGroupFile({
   id, label, help, disabled, textArea, handleChangeFile, thongTinHangMuc, ...props
 }) {
@@ -533,60 +496,74 @@ class Purchase extends Component {
           save: false
         });
         // this.props.history.push(`/purchase/${e.results.purchaseId}`);
-      }, 1000);
+      }, 2000);
     });
   }
 
-  handleChange(key, values, thongTinHangMuclk) {
+  handleChange(key, valuek, thongTinHangMuclk) {
     const { value, thongTinHangMuc } = this.state;
     if (thongTinHangMuclk !== undefined) {
       if (key === 'saleGbrown') {
-        const phoneSaleGbrown = nhanVien.filter(e => e.name === values)[0].phone;
+        const phoneSaleGbrown = nhanVien.filter(e => e.name === valuek)[0].phone;
         this.setState({
           value: {
             ...value,
             phoneSaleGbrown,
-            [key]: values
+            [key]: valuek
           }
         });
       } else {
         /**
          * validate if number
          */
-        if (key === 'phoneSaleGbrown' || key === 'phone' || key === 'total' || key === 'deposit') {
-          const re = /^[0-9\b]+$/;
-          if (value === '' || re.test(value)) {
-            thongTinHangMuc[thongTinHangMuclk][key] = value;
-          }
-        } else {
-          thongTinHangMuc[thongTinHangMuclk][key] = value;
-        }
-        if ((key === 'price' || key === 'reducedPrice') && thongTinHangMuc[thongTinHangMuclk].price) {
-          const { price } = thongTinHangMuc[thongTinHangMuclk];
-          const { reducedPrice } = thongTinHangMuc[thongTinHangMuclk];
-          thongTinHangMuc[thongTinHangMuclk].cash = price - (reducedPrice || 0);
-        }
-        this.setState({
-          value: {
-            ...value,
-            category: thongTinHangMuc
-          }
-        });
+        this.validateData(key, thongTinHangMuc, thongTinHangMuclk, valuek, value);
       }
     } else if (key === 'saleGbrown') {
-      const phoneSaleGbrown = nhanVien.filter(e => e.name === value)[0].phone;
+      const phoneSaleGbrown = nhanVien.filter(e => e.name === valuek)[0].phone;
       this.setState({
         value: {
           ...value,
           phoneSaleGbrown,
-          [key]: value
+          [key]: valuek
         }
       });
     } else {
       this.setState({
         value: {
           ...value,
-          [key]: value
+          [key]: valuek
+        }
+      });
+    }
+  }
+
+  validateData(key, thongTinHangMuc, thongTinHangMuclk, valuek, value) {
+    if (key === 'description-hangmuc') {
+      thongTinHangMuc[thongTinHangMuclk].description = valuek;
+      this.setState({
+        value: {
+          ...value,
+          category: thongTinHangMuc
+        }
+      });
+    } else {
+      if (key === 'phoneSaleGbrown' || key === 'phone' || key === 'total' || key === 'deposit') {
+        const re = /^[0-9\b]+$/;
+        if (valuek === '' || re.test(valuek)) {
+          thongTinHangMuc[thongTinHangMuclk][key] = valuek;
+        }
+      } else {
+        thongTinHangMuc[thongTinHangMuclk][key] = valuek;
+      }
+      if ((key === 'price' || key === 'reducedPrice') && thongTinHangMuc[thongTinHangMuclk].price) {
+        const { price } = thongTinHangMuc[thongTinHangMuclk];
+        const { reducedPrice } = thongTinHangMuc[thongTinHangMuclk];
+        thongTinHangMuc[thongTinHangMuclk].cash = price - (reducedPrice || 0);
+      }
+      this.setState({
+        value: {
+          ...value,
+          category: thongTinHangMuc
         }
       });
     }
