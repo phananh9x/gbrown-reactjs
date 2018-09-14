@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Navbar, NavItem, Nav } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { showNavBar } from '../../redux/actions/navBar';
 
-export default class NavigationBar extends Component {
+class NavigationBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,3 +42,13 @@ export default class NavigationBar extends Component {
     );
   }
 }
+
+
+const mapStateToProps = state => ({
+  navBar: state.navBar
+});
+const mapDispathToProps = dispath => ({
+  dispathNavBar: show => dispath(showNavBar(show))
+});
+
+export default connect(mapStateToProps, mapDispathToProps)(NavigationBar);
