@@ -28,10 +28,6 @@ class Print extends Component {
     }
   }
 
-  componentDidMount() {
-
-  }
-
   render() {
     const { value } = this.state;
     return (
@@ -43,7 +39,7 @@ class Print extends Component {
               style={{ position: 'absolute' }}
               className="btn btn-success"
             >
-              In báo Giá
+              {'In báo Giá'}
             </button>
           )
           }
@@ -74,7 +70,7 @@ class Print extends Component {
                 <div className="section3header clearfix">
                   <div className="section3headerl">
                     <h3>GBROWN FLOWER / SIMONTU</h3>
-                    <h2>{`BÁO GIÁ TRỌN GÓI TRANG TRÍ ${value.eventName.toUpperCase() || ''} ${value.customerName.toUpperCase() || ''} `}</h2>
+                    <h2>{`BÁO GIÁ TRỌN GÓI TRANG TRÍ ${(value && value.eventName && value.eventName.toUpperCase()) || ''} ${(value && value.customerName && value.customerName.toUpperCase()) || ''} `}</h2>
                   </div>
                   <div className="section3headerr">
                     <div className="section3headerrbox">
@@ -91,14 +87,14 @@ class Print extends Component {
                 </div>
                 <div className="section3body clearfix">
                   <p className="full_line clearfix">{`Kính gửi: ${value.customerName || ''}`}</p>
-                  <p className="half_line1 clearfix">{`Tôi tên: ${value.saleGbrown.toUpperCase() || ''}`}</p>
+                  <p className="half_line1 clearfix">{`Tôi tên: ${(value.saleGbrown && value.saleGbrown.toUpperCase()) || ''}`}</p>
                   <p className="half_line2 clearfix">Thuộc: GBROWN</p>
                   <p className="full_line clearfix">Sau khi thỏa thuận giữa hai bên, tôi xin gửi đến Quý khách hàng bảng báo giá vè dịch vụ như sau:</p>
                   <div className="clear" />
                   <div className="section3bodyl clearfix" style={{ width: '28.5%' }}>
                     <h2>THÔNG TIN GBROWN</h2>
                     <div className="cont_mainbodyl clearfix">
-                      <div className="line">{`Sale phụ trách: ${value.saleGbrown.toUpperCase() || ''}`}</div>
+                      <div className="line">{`Sale phụ trách: ${(value.saleGbrown && value.saleGbrown.toUpperCase()) || ''}`}</div>
                       <div className="line">{`SĐT: ${value.phoneSaleGbrown || '0933153999'}`}</div>
                       <div className="line">{`Email: ${value.emailSaleGbrown || ''}`}</div>
                     </div>
@@ -150,18 +146,18 @@ class Print extends Component {
                             <td align="center">{`${e.reducedPrice || 0}đ`}</td>
                             <td align="center">{`${e.cash || 0}đ`}</td>
                             <td align="center">{e.size || ''}</td>
-                            <td align="center">{e.desciption || ''}</td>
+                            <td align="center">{e.description || ''}</td>
                           </tr>
                         )
                       )}
                       <tr>
                         <td colSpan="4" align="center">
-                          TỔNG SỐ TIỀN (VNĐ)
+                          {'TỔNG SỐ TIỀN (VNĐ)'}
                           <br />
                           {`${value.total}đ`}
                         </td>
                         <td style={{ background: '#e1e0e5' }} colSpan="3" align="center">
-                          (tổng số tiền ghi bằng chữ)
+                          {'(tổng số tiền ghi bằng chữ)'}
                           <br />
                         </td>
                       </tr>
@@ -212,16 +208,12 @@ class Print extends Component {
                       <div className="cont_footer_l clearfix">
                         <h2 style={{ fontWeight: 'bold' }}>{`${i + 1}. ${e.categoryName || ''} `}</h2>
                         <p>{`Giá tiền: ${e.price || '0'}đ`}</p>
-                        <p>
-                          Số lượng:
-                          {' '}
-                          {e.amount || 1}
-                        </p>
+                        <p>{`Số lượng: ${e.amount || 1}`}</p>
                       </div>
                       <div className="cont_footer_r clearfix">
                         <h2 style={{ fontWeight: 'bold' }}>MÔ TẢ CHI TIẾT:</h2>
                         <div className="cont_motachitiet clearfix">
-                          {e.desciption || ''}
+                          {e.description || ''}
                         </div>
                       </div>
                     </div>
@@ -237,37 +229,20 @@ class Print extends Component {
               <div className="cont_center">
                 <div className="tit_fullscreen">GBROWN FLOWER / SIMONTU</div>
                 <div className="cont_mota">
-                  Thân gửi đến Quý khách hàng, ước mong anh chị dành chút thời gian có
+                  {`Thân gửi đến Quý khách hàng, ước mong anh chị dành chút thời gian có
                   thể xem qua bảng báo giá này. Và nhờ anh chị xác nhận lại thông tin
-                  trên. Chân thành!
+                  trên. Chân thành!`}
                 </div>
                 <div className="cont_baogia clearfix">
                   <h2>THÔNG TIN BÁO GIÁ</h2>
                   <div className="cont_baogia_main clearfix">
                     <div className="line_baogia">{`Tên khách hàng: ${value.customerName || ''}`}</div>
+                    <div className="line_baogia">{`MSHĐ: ${value.purchaseId}`}</div>
+                    <div className="line_baogia">{`SĐT: ${value.phone}`}</div>
+                    <div className="line_baogia">{`Ngày diễn ra tiệc: ${moment(value.startDate).format('DD.MM.YYYY')}`}</div>
+                    <div className="line_baogia">{`NVKD phụ trách: ${(value.saleGbrown && value.saleGbrown.toUpperCase()) || ''}`}</div>
                     <div className="line_baogia">
-                      MSHĐ:
-                      {' '}
-                      {value.purchaseId}
-                    </div>
-                    <div className="line_baogia">
-                      SĐT:
-                      {' '}
-                      {value.phone}
-                    </div>
-                    <div className="line_baogia">
-                      Ngày diễn ra tiệc:
-                      {' '}
-                      {moment(value.startDate).format('DD.MM.YYYY')}
-                    </div>
-                    <div className="line_baogia">
-                      NVKD phụ trách:
-                      {' '}
-                      {value.saleGbrown.toUpperCase() || ''}
-                    </div>
-                    <div className="line_baogia">
-                      Địa điểm tổ chức:
-                      {' '}
+                      {'Địa điểm tổ chức:'}
                       {value.location}
                     </div>
                   </div>
@@ -329,11 +304,11 @@ class Print extends Component {
                   </ul>
                   <div className="tit_fo2">Mọi chi tiết xin liên hệ:</div>
                   <div className="tit_fo3">
-                    CÔNG TY TNH TỔ CHỨC SỰ KIỆN VÀ DỊCH VỤ TRANG TRÍ CƯỚI GBROWN
+                    {' CÔNG TY TNH TỔ CHỨC SỰ KIỆN VÀ DỊCH VỤ TRANG TRÍ CƯỚI GBROWN'}
                   </div>
                   <div className="tit_fo2">
-                    www.salegbrown.vn | www.gbrownflower.vn | 0902 079 921 - 0942 887
-                    200 | www.facebook.com/gbrownflower
+                    {`www.salegbrown.vn | www.gbrownflower.vn | 0902 079 921 - 0942 887
+                    200 | www.facebook.com/gbrownflower`}
                   </div>
                 </div>
               </div>

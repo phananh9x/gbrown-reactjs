@@ -72,6 +72,6 @@
 .fixed {
   position: fixed;
   width: 100%;
-  z-index: 10;
+  z-index: 1031;
   top: 0;
 }

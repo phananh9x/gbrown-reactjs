@@ -13,6 +13,7 @@ import * as API from '../API';
 import FieldGroupSelect from './FieldGroupSelect';
 import FieldGroup from './FieldGroup';
 
+
 const nhanVien = [{
   name: 'Nguyễn Thị Na',
   phone: '01667183543',
@@ -118,6 +119,7 @@ const status = [
   { id: 3, name: 'Thành công' },
   { id: 4, name: 'Thất bại' },
 ];
+
 
 function FieldGroupSelectNhanVien({
   id, label, handleChange
@@ -256,7 +258,7 @@ function ThongTinHangMuc({
         />
         <FieldGroup
           value={value}
-          id="description"
+          id="description-hangmuc"
           type="text"
           label="Mô Tả Chi Tiết"
           textArea
@@ -532,42 +534,56 @@ class AddPurchase extends Component {
         });
       } else {
         /**
-                 * validate if number
-                 */
-        if (key === 'phoneSaleGbrown' || key === 'phone' || key === 'total' || key === 'deposit') {
-          const re = /^[0-9\b]+$/;
-          if (value === '' || re.test(value)) {
-            thongTinHangMuc[thongTinHangMuclk][key] = value;
-          }
-        } else {
-          thongTinHangMuc[thongTinHangMuclk][key] = value;
-        }
-        if ((key === 'price' || key === 'reducedPrice') && thongTinHangMuc[thongTinHangMuclk].price) {
-          const { price } = thongTinHangMuc[thongTinHangMuclk];
-          const { reducedPrice } = thongTinHangMuc[thongTinHangMuclk];
-          thongTinHangMuc[thongTinHangMuclk].cash = price - (reducedPrice || 0);
-        }
-        this.setState({
-          value: {
-            ...value,
-            category: thongTinHangMuc
-          }
-        });
+         * validate if number
+         */
+        this.validateData(key, thongTinHangMuc, thongTinHangMuclk, valuek, value);
       }
     } else if (key === 'saleGbrown') {
-      const phoneSaleGbrown = nhanVien.filter(e => e.name === value)[0].phone;
+      const phoneSaleGbrown = nhanVien.filter(e => e.name === valuek)[0].phone;
       this.setState({
         value: {
           ...value,
           phoneSaleGbrown,
-          [key]: value
+          [key]: valuek
         }
       });
     } else {
       this.setState({
         value: {
           ...value,
-          [key]: value
+          [key]: valuek
+        }
+      });
+    }
+  }
+
+  validateData(key, thongTinHangMuc, thongTinHangMuclk, valuek, value) {
+    if (key === 'description-hangmuc') {
+      thongTinHangMuc[thongTinHangMuclk].description = valuek;
+      this.setState({
+        value: {
+          ...value,
+          category: thongTinHangMuc
+        }
+      });
+    } else {
+      if (key === 'phoneSaleGbrown' || key === 'phone' || key === 'total' || key === 'deposit') {
+        const re = /^[0-9\b]+$/;
+        if (valuek === '' || re.test(valuek)) {
+          thongTinHangMuc[thongTinHangMuclk][key] = valuek;
+        }
+      } else {
+        thongTinHangMuc[thongTinHangMuclk][key] = valuek;
+      }
+      if ((key === 'price' || key === 'reducedPrice') && thongTinHangMuc[thongTinHangMuclk].price) {
+        const { price } = thongTinHangMuc[thongTinHangMuclk];
+        const { reducedPrice } = thongTinHangMuc[thongTinHangMuclk];
+        thongTinHangMuc[thongTinHangMuclk].cash = price - (reducedPrice || 0);
+      }
+      this.setState({
+        value: {
+          ...value,
+          category: thongTinHangMuc
         }
       });
     }
@@ -722,6 +738,13 @@ class AddPurchase extends Component {
                 label="Thêm Hình Ảnh"
                 handleChangeFile={this.handleChangeFile}
               />
+              <FieldGroup
+                value={value}
+                id="totalAutoFill"
+                type="number"
+                label="Tổng tiền (Auto Fill):"
+                handleChange={this.handleChange}
+              />
             </div>
             <div className="col-xs-6">
               <FieldGroup
@@ -817,7 +840,6 @@ class AddPurchase extends Component {
                 handleChange={this.handleChange}
               />
             </div>
-
           </div>
           <div className="col-xs-12">
             <button type="button" className="btn btn-primary" onClick={this.addThongTinHangMuc}>Thêm Hạng Mục</button>

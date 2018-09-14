@@ -43,7 +43,7 @@ class PrintDetail extends Component {
               style={{ position: 'absolute' }}
               className="btn btn-success"
             >
-              In Chi Tiết Hợp Đồng
+              {'In Chi Tiết Hợp Đồng'}
             </button>
           )
           }
@@ -111,16 +111,12 @@ class PrintDetail extends Component {
                       <div className="cont_footer_l clearfix">
                         <h2 style={{ fontWeight: 'bold' }}>{`${i + 1}. ${e.categoryName || ''}`}</h2>
                         <p>{`Giá tiền: ${e.price || '0'}đ`}</p>
-                        <p>
-                          Số lượng:
-                          {' '}
-                          {e.amount || 1}
-                        </p>
+                        <p>{`Số lượng: ${e.amount || 1}`}</p>
                       </div>
                       <div className="cont_footer_r clearfix">
                         <h2 style={{ fontWeight: 'bold' }}>MÔ TẢ CHI TIẾT:</h2>
                         <div className="cont_motachitiet clearfix">
-                          {e.desciption || ''}
+                          {e.description || ''}
                         </div>
                       </div>
                     </div>
@@ -137,39 +133,19 @@ class PrintDetail extends Component {
               <div className="cont_center">
                 <div className="tit_fullscreen">GBROWN FLOWER / SIMONTU</div>
                 <div className="cont_mota">
-                  Thân gửi đến Quý khách hàng, ước mong anh chị dành chút thời gian có
+                  {`Thân gửi đến Quý khách hàng, ước mong anh chị dành chút thời gian có
                   thể xem qua bảng báo giá này. Và nhờ anh chị xác nhận lại thông tin
-                  trên. Chân thành!
+                  trên. Chân thành!`}
                 </div>
                 <div className="cont_baogia clearfix">
                   <h2>THÔNG TIN BÁO GIÁ</h2>
                   <div className="cont_baogia_main clearfix">
                     <div className="line_baogia">{`Tên khách hàng: ${value.customerName || ''}`}</div>
-                    <div className="line_baogia">
-                      MSHĐ:
-                      {' '}
-                      {value.purchaseId || ''}
-                    </div>
-                    <div className="line_baogia">
-                      SĐT:
-                      {' '}
-                      {value.phone || ''}
-                    </div>
-                    <div className="line_baogia">
-                      Ngày diễn ra tiệc:
-                      {' '}
-                      {moment(value.startDate).format('DD.MM.YYYY') || ''}
-                    </div>
-                    <div className="line_baogia">
-                      NVKD phụ trách:
-                      {' '}
-                      {value.saleGbrown.toUpperCase() || ''}
-                    </div>
-                    <div className="line_baogia">
-                      Địa điểm tổ chức:
-                      {' '}
-                      {value.location || ''}
-                    </div>
+                    <div className="line_baogia">{`MSHĐ: ${value.purchaseId || ''}`}</div>
+                    <div className="line_baogia">{`SĐT: ${value.phone || ''}`}</div>
+                    <div className="line_baogia">{`Ngày diễn ra tiệc: ${moment(value.startDate).format('DD.MM.YYYY') || ''}`}</div>
+                    <div className="line_baogia">{`NVKD phụ trách: ${(value.saleGbrown && value.saleGbrown.toUpperCase()) || ''}`}</div>
+                    <div className="line_baogia">{`Địa điểm tổ chức: ${value.location || ''}`}</div>
                   </div>
                 </div>
                 <div className="tit_center clearfix">ĐẠI DIỆN</div>
@@ -212,12 +188,10 @@ class PrintDetail extends Component {
                     </li>
                   </ul>
                   <div className="tit_fo2">Mọi chi tiết xin liên hệ:</div>
-                  <div className="tit_fo3">
-                    CÔNG TY TNH TỔ CHỨC SỰ KIỆN VÀ DỊCH VỤ TRANG TRÍ CƯỚI GBROWN
-                  </div>
+                  <div className="tit_fo3">CÔNG TY TNH TỔ CHỨC SỰ KIỆN VÀ DỊCH VỤ TRANG TRÍ CƯỚI GBROWN</div>
                   <div className="tit_fo2">
-                    www.salegbrown.vn | www.gbrownflower.vn | 0902 079 921 - 0942 887
-                    200 | www.facebook.com/gbrownflower
+                    {`www.salegbrown.vn | www.gbrownflower.vn | 0902 079 921 - 0942 887
+                    200 | www.facebook.com/gbrownflower`}
                   </div>
                 </div>
               </div>
