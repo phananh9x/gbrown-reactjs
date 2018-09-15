@@ -12,6 +12,7 @@ import { withRouter, Link } from 'react-router-dom';
 import * as API from '../API';
 import FieldGroupSelect from './FieldGroupSelect';
 import FieldGroup from './FieldGroup';
+import NavigationBar from './NavigationBar';
 
 
 const nhanVien = [{
@@ -641,7 +642,10 @@ class AddPurchase extends Component {
 
     return (
       <div className="App">
-        <div className="container-fluid">
+        <NavigationBar
+          show
+        />
+        <div className="container-fluid" style={{ marginTop: 50 }}>
           <div className="row">
             <div className="col-xs-8">
               <h1>THÔNG TIN ĐƠN HÀNG</h1>

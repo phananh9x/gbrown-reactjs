@@ -73,7 +73,7 @@ class PurchaseList extends Component {
         <NavigationBar
           show
         />
-        <div className="container-fluid">
+        <div className="container-fluid" style={{ marginTop: 50 }}>
           <div className="row">
             <div className="col-xs-8">
               <h1>DANH SÁCH ĐƠN ĐẶT HÀNG</h1>

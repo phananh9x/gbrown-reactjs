@@ -67,13 +67,14 @@ class Login extends Component {
     }
   }
 
+
   componentWillReceiveProps(nextProps) {
     const { login, history, dispathNavBar } = nextProps;
     if (!login.fetching) {
-      if (!login.success) {
-        localStorage.removeItem('@user');
-      } else {
+      if (login.success) {
         dispathNavBar(true);
+        console.log('dispath');
+
         history.push({
           pathname: '/',
         });
