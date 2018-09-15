@@ -7,6 +7,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { showNavBar } from '../../redux/actions/navBar';
 import { loginRequest } from '../../redux/actions/login';
+import { Color } from '../../constants/color';
 
 const style = {
   container: {
@@ -134,8 +135,10 @@ class Login extends Component {
           <FormGroup style={{ marginBottom: 0 }}>
             <Checkbox>Lưu mật khẩu</Checkbox>
             <Button
+              backgroundColor={Color.PRIMARY_COLOR}
+              style={{ width: '100%', marginTop: 10 }}
               onClick={this.validateLogin}
-              className="btn-primary"
+              className="btn-success"
             >
               Đăng nhập
             </Button>
