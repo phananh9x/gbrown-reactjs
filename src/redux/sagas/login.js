@@ -6,6 +6,7 @@ import { LOGIN } from '../actions/actionType';
 export function* login(param) {
   try {
     const data = yield call(loginApi, param.data);
+    localStorage.setItem('@user', JSON.stringify(Object.assign(data, param)));
     yield put(loginSuccess(data));
   } catch (e) {
     yield put(loginError(e));

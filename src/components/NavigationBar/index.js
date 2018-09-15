@@ -30,10 +30,13 @@ class NavigationBar extends Component {
                   Danh sách đơn hàng
                 </NavItem>
                 <NavItem
+                  onClick={() => {
+                    localStorage.removeItem('@user');
+                  }}
                   eventKey={1}
                   href="/login"
                 >
-                  Đăng nhập
+                  Đăng xuất
                 </NavItem>
               </Nav>
             </Navbar>
