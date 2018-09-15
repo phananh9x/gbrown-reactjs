@@ -37,7 +37,7 @@ class PurchaseList extends Component {
     super(props, context);
     this.state = {
       value: [],
-      pageSize: 20,
+      pageSize: 10,
       searchKey: '',
       map: {},
       selectAll: 0
@@ -214,8 +214,8 @@ class PurchaseList extends Component {
             </div>
           </div>
           <ReactTable
+            showPaginationBottom
             data={value}
-            defaultPageSize={10}
             columns={this.columns}
             pageSize={pageSize}
             getTrProps={(state, rowInfo) => ({
