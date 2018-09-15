@@ -67,13 +67,13 @@ class PurchaseList extends Component {
   render() {
     const { value, pageSize } = this.state;
     const { history } = this.props;
-    return (
 
+    return (
       <div className="app">
         <NavigationBar
           show
         />
-        <div className="container-fluid" style={{ marginTop: 50 }}>
+        <div className="container-fluid" style={{ paddingTop: 50 }}>
           <div className="row">
             <div className="col-xs-8">
               <h1>DANH SÁCH ĐƠN ĐẶT HÀNG</h1>
@@ -97,9 +97,6 @@ class PurchaseList extends Component {
             pageSize={pageSize}
             getTrProps={(state, rowInfo, column, instance) => ({
               onClick: (e) => {
-                console.log(e.target.className);
-                console.log(state);
-                console.log(rowInfo);
                 console.log(column);
                 console.log(instance);
                 if (e.target.className !== 'print') {
@@ -107,7 +104,6 @@ class PurchaseList extends Component {
                     pathname: `/purchase/${rowInfo.original.purchaseId}`,
                   });
                 }
-                console.log('It was in this row:', rowInfo);
               }
             })}
           />

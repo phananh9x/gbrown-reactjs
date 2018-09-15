@@ -646,7 +646,7 @@ class AddPurchase extends Component {
         <NavigationBar
           show
         />
-        <div className="container-fluid" style={{ marginTop: 50 }}>
+        <div className="container-fluid" style={{ paddingTop: 50 }}>
           <Alert bsStyle={`success ${!save ? 'hide' : ''} fixed`}>
             <strong>Cập nhật thông tin đơn hàng thành Công!</strong>
           </Alert>

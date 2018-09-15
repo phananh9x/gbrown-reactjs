@@ -34,6 +34,13 @@ export default function Login(state = initalState, action) {
         success: false,
         error: action.error
       };
+    case LOGIN.LOGOUT:
+      return {
+        ...state,
+        data: {},
+        fetching: false,
+        success: false
+      };
     default:
       return state;
   }

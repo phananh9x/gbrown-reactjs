@@ -16,12 +16,17 @@ import PrintDetail from './components/printdetail';
 import PurchaseList from './components/purchaselist';
 import Login from './screen/login';
 import { loginRequest } from './redux/actions/login';
+import Menu from './components/Menu';
 
 library.add(faStroopwafel, faUser, faLock);
 class App extends Component {
   constructor(props) {
     super(props);
     this.logined = false;
+  }
+
+  componentDidMount() {
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -49,19 +54,24 @@ class App extends Component {
   }
 
   render() {
-    return (
-      <div className="App">
+    const { navBar } = this.props;
+    console.log(navBar);
 
-        <Router>
-          <Switch>
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/" component={this.middleWareLogin(PurchaseList)} />
-            <Route exact path="/baogia/:purchaseId" component={Print} />
-            <Route exact path="/chitiethopdong/:purchaseId" component={PrintDetail} />
-            <Route exact path="/main" component={this.middleWareLogin(AddPurchase)} />
-            <Route exact path="/purchase/:purchaseId" component={this.middleWareLogin(Purchase)} />
-          </Switch>
-        </Router>
+    return (
+      <div className="App" id="outer-container">
+        <Menu pageWrapId="page-wrap" outerContainerId="outer-container" show={navBar.showNavbar} />
+        <main id="page-wrap">
+          <Router>
+            <Switch>
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/" component={this.middleWareLogin(PurchaseList)} />
+              <Route exact path="/baogia/:purchaseId" component={Print} />
+              <Route exact path="/chitiethopdong/:purchaseId" component={PrintDetail} />
+              <Route exact path="/main" component={this.middleWareLogin(AddPurchase)} />
+              <Route exact path="/purchase/:purchaseId" component={this.middleWareLogin(Purchase)} />
+            </Switch>
+          </Router>
+        </main>
       </div>
     );
   }

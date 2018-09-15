@@ -621,7 +621,7 @@ class Purchase extends Component {
         <NavigationBar
           show
         />
-        <div className="container-fluid" style={{ marginTop: 50 }}>
+        <div className="container-fluid" style={{ paddingTop: 50 }}>
           <div className="row">
             <div className="col-xs-6">
               <h1>THÔNG TIN ĐƠN HÀNG</h1>
