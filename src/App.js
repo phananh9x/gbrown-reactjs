@@ -5,7 +5,7 @@ import 'react-table/react-table.css';
 import {
   BrowserRouter as Router,
   Route,
-  Switch
+  Switch,
 } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faStroopwafel, faUser, faLock } from '@fortawesome/free-solid-svg-icons';
@@ -17,9 +17,15 @@ import PurchaseList from './components/purchaselist';
 import Login from './screen/login';
 import { showNavBar } from './redux/actions/navBar';
 import NavigationBar from './components/NavigationBar';
+import { loginRequest } from './redux/actions/login';
 
 library.add(faStroopwafel, faUser, faLock);
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.logined = false;
+  }
+
   componentDidMount() {
     const { dispathNavBar } = this.props;
     switch (window.location.pathname) {
@@ -37,9 +43,32 @@ class App extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { login } = nextProps;
+    if (!login.fetching) {
+      if (!login.success) {
+        localStorage.removeItem('@user');
+      }
+    }
+  }
+
+  middleWareLogin = (component) => {
+    const { login, dispathLogin } = this.props;
+    if (!login.success) {
+      const user = localStorage.getItem('@user');
+      if (!user) {
+        return Login;
+      }
+      if (!this.logined) {
+        dispathLogin(JSON.parse(user).data);
+        this.logined = true;
+      }
+    }
+    return component;
+  }
+
   render() {
     const { navBar } = this.props;
-
     return (
       <div className="App">
         <NavigationBar
@@ -47,16 +76,14 @@ class App extends Component {
         />
         <div style={{ marginTop: navBar.showNavbar ? 50 : 0 }}>
           <Router>
-
             <Switch>
               <Route exact path="/login" component={Login} />
-              <Route exact path="/" component={PurchaseList} />
+              <Route exact path="/" component={this.middleWareLogin(PurchaseList)} />
               <Route exact path="/baogia/:purchaseId" component={Print} />
               <Route exact path="/chitiethopdong/:purchaseId" component={PrintDetail} />
-              <Route exact path="/main" component={AddPurchase} />
-              <Route exact path="/purchase/:purchaseId" component={Purchase} />
+              <Route exact path="/main" component={this.middleWareLogin(AddPurchase)} />
+              <Route exact path="/purchase/:purchaseId" component={this.middleWareLogin(Purchase)} />
             </Switch>
-
           </Router>
         </div>
       </div>
@@ -64,10 +91,12 @@ class App extends Component {
   }
 }
 const mapStateToProps = state => ({
-  navBar: state.navBar
+  navBar: state.navBar,
+  login: state.login
 });
 const mapDispathToProps = dispath => ({
-  dispathNavBar: show => dispath(showNavBar(show))
+  dispathNavBar: show => dispath(showNavBar(show)),
+  dispathLogin: data => dispath(loginRequest(data))
 });
 
 export default connect(mapStateToProps, mapDispathToProps)(App);

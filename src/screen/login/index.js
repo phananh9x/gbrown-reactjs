@@ -11,7 +11,7 @@ import { loginRequest } from '../../redux/actions/login';
 const style = {
   container: {
     width: '100%',
-    backgroundColor: 'black',
+    backgroundColor: '#f2f2f2',
     display: 'flex',
     height: '100vh',
     justifyContent: 'center',
@@ -67,6 +67,20 @@ class Login extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { login, history, dispathNavBar } = nextProps;
+    if (!login.fetching) {
+      if (!login.success) {
+        localStorage.removeItem('@user');
+      } else {
+        dispathNavBar(true);
+        history.push({
+          pathname: '/',
+        });
+      }
+    }
+  }
+
   onChange = (e) => {
     this.user[e.target.id] = e.target.value;
   }
@@ -84,10 +98,7 @@ class Login extends Component {
     const { login } = this.props;
     return (
       <div style={style.container}>
-
         <Form style={style.login} horizontal>
-
-
           <div style={style.logo}>
             <img
               style={{ width: '100%' }}
@@ -95,8 +106,6 @@ class Login extends Component {
               alt="no_image"
             />
           </div>
-
-
           <FormGroup
             validationState={this.validateEmail()}
             controlid="formHorizontalEmail"
@@ -108,7 +117,6 @@ class Login extends Component {
               <FormControl id="email" type="email" placeholder="Tài khoản" onChange={this.onChange} />
             </InputGroup>
           </FormGroup>
-
           <FormGroup
             validationState={this.validatePassword()}
             controlid="formHorizontalPassword"
@@ -130,7 +138,6 @@ class Login extends Component {
             >
               Đăng nhập
             </Button>
-
           </FormGroup>
         </Form>
       </div>
