@@ -5,8 +5,7 @@ import {
   Checkbox,
   Thumbnail,
   Col,
-  Modal,
-  Button
+  Alert
 } from 'react-bootstrap';
 import { withRouter, Link } from 'react-router-dom';
 import * as API from '../API';
@@ -141,25 +140,25 @@ function FieldGroupSelectNhanVien({
   );
 }
 
-function ShowMessage({
-  title, message, button, onClick
-}) {
-  return (
-    <div className="static-modal">
-      <Modal.Dialog>
-        <Modal.Header>
-          <Modal.Title>{title}</Modal.Title>
-        </Modal.Header>
+// function ShowMessage({
+//   title, message, button, onClick
+// }) {
+//   return (
+//     <div className="static-modal">
+//       <Modal.Dialog>
+//         <Modal.Header>
+//           <Modal.Title>{title}</Modal.Title>
+//         </Modal.Header>
 
-        <Modal.Body>{message}</Modal.Body>
+//         <Modal.Body>{message}</Modal.Body>
 
-        <Modal.Footer>
-          <Button onClick={onClick}>{button}</Button>
-        </Modal.Footer>
-      </Modal.Dialog>
-    </div>
-  );
-}
+//         <Modal.Footer>
+//           <Button onClick={onClick}>{button}</Button>
+//         </Modal.Footer>
+//       </Modal.Dialog>
+//     </div>
+//   );
+// }
 
 function FieldCheckBoxWithLabel({
   id, label
@@ -460,8 +459,7 @@ function FieldGroupFileImage({
     </div>
   );
 }
-const RELOAD = 1; const
-  JUST_CLOSE = 0;
+const JUST_CLOSE = 0;
 class AddPurchase extends Component {
   constructor(props, context) {
     super(props, context);
@@ -508,16 +506,19 @@ class AddPurchase extends Component {
 
   savePurchase() {
     const { value } = this.state;
-    API.savePurchase(value).then(() => {
-      this.message = {
-        title: 'Thông báo',
-        message: 'Tạo đơn hàng thành công',
-        button: 'Đóng',
-        code: RELOAD
-      };
+    const { history } = this.props;
+    API.savePurchase(value).then((data) => {
       this.setState({
         save: true
       });
+      setTimeout(() => {
+        this.setState({
+          save: false
+        });
+        history.push(`/purchase/${data.results.purchaseId}`);
+      }, 1000);
+    }).catch(() => {
+      alert('Lưu đơn hàng thất bại vui lòng thử lại!');
     });
   }
 
@@ -646,6 +647,9 @@ class AddPurchase extends Component {
           show
         />
         <div className="container-fluid" style={{ marginTop: 50 }}>
+          <Alert bsStyle={`success ${!save ? 'hide' : ''} fixed`}>
+            <strong>Cập nhật thông tin đơn hàng thành Công!</strong>
+          </Alert>
           <div className="row">
             <div className="col-xs-8">
               <h1>THÔNG TIN ĐƠN HÀNG</h1>
@@ -864,7 +868,7 @@ class AddPurchase extends Component {
             <button type="button" className="btn btn-primary w10" onClick={this.savePurchase}>Lưu Đơn Hàng</button>
           </div>
         </div>
-        {save && (
+        {/* {save && (
           <ShowMessage
             onClick={() => {
               // reload to refresh field data
@@ -877,7 +881,7 @@ class AddPurchase extends Component {
             message={this.message.message}
             button={this.message.button}
           />
-        )}
+        )} */}
       </div>
     );
   }
