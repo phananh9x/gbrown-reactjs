@@ -16,8 +16,7 @@ class PrintDetail extends Component {
   }
 
   componentWillMount() {
-    const { match, dispathNavBar } = this.props;
-    dispathNavBar(false);
+    const { match } = this.props;
     if (match.params && match.params.purchaseId) {
       // console.log(this.props.match.params.purchaseId)
       API.getPurchaseDetail(match.params.purchaseId).then((data) => {

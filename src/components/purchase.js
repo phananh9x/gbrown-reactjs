@@ -7,6 +7,7 @@ import { withRouter, Link } from 'react-router-dom';
 import * as API from '../API';
 import FieldGroup from './FieldGroup';
 import { showNavBar } from '../redux/actions/navBar';
+import NavigationBar from './NavigationBar';
 
 const nhanVien = [{
   name: 'Nguyễn Thị Na',
@@ -471,7 +472,7 @@ class Purchase extends Component {
   }
 
   componentDidMount() {
-    const { match, dispathNavBar } = this.props;
+    const { match } = this.props;
     const { purchaseId } = this.state;
     // console.log(this.props.match.params.purchaseId)
     if (purchaseId) {
@@ -486,7 +487,6 @@ class Purchase extends Component {
         }
       });
     }
-    dispathNavBar(true);
   }
 
   savePurchase() {
@@ -618,7 +618,10 @@ class Purchase extends Component {
         <Alert bsStyle={`success ${!save ? 'hide' : ''} fixed`}>
           <strong>Cập nhật thông tin đơn hàng thành Công!</strong>
         </Alert>
-        <div className="container-fluid">
+        <NavigationBar
+          show
+        />
+        <div className="container-fluid" style={{ marginTop: 50 }}>
           <div className="row">
             <div className="col-xs-6">
               <h1>THÔNG TIN ĐƠN HÀNG</h1>
