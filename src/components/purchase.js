@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import {
   FormControl, ControlLabel, Checkbox, Thumbnail, Col, Alert
 } from 'react-bootstrap';
+import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import * as API from '../API';
 import FieldGroup from './FieldGroup';
+import { showNavBar } from '../redux/actions/navBar';
 
 const nhanVien = [{
   name: 'Nguyễn Thị Na',
@@ -469,8 +471,8 @@ class Purchase extends Component {
   }
 
   componentDidMount() {
+    const { match, dispathNavBar } = this.props;
     const { purchaseId } = this.state;
-    const { match } = this.props;
     // console.log(this.props.match.params.purchaseId)
     if (purchaseId) {
       API.getPurchaseDetail(match.params.purchaseId).then((data) => {
@@ -484,6 +486,7 @@ class Purchase extends Component {
         }
       });
     }
+    dispathNavBar(true);
   }
 
   savePurchase() {
@@ -842,4 +845,11 @@ class Purchase extends Component {
   }
 }
 
-export default withRouter(Purchase);
+const mapStateToProps = state => ({
+  navBar: state.navBar
+});
+const mapDispathToProps = dispath => ({
+  dispathNavBar: show => dispath(showNavBar(show))
+});
+
+export default connect(mapStateToProps, mapDispathToProps)(withRouter(Purchase));
