@@ -643,13 +643,13 @@ class AddPurchase extends Component {
 
     return (
       <div className="App">
-        <Alert bsStyle={`success ${!save ? 'hide' : ''} fixed`}>
-          <strong>Cập nhật thông tin đơn hàng thành Công!</strong>
-        </Alert>
         <NavigationBar
           show
         />
         <div className="container-fluid" style={{ marginTop: 50 }}>
+          <Alert bsStyle={`success ${!save ? 'hide' : ''} fixed`}>
+            <strong>Cập nhật thông tin đơn hàng thành Công!</strong>
+          </Alert>
           <div className="row">
             <div className="col-xs-8">
               <h1>THÔNG TIN ĐƠN HÀNG</h1>
