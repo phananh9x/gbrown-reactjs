@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { FormControl } from 'react-bootstrap';
 import moment from 'moment';
 import ReactTable from 'react-table';
 import * as API from '../API';
@@ -10,9 +11,20 @@ const renderCell = (props) => {
   return <Link to={`/print/${value}`}><span className="print">In Báo Giá</span></Link>;
 };
 
+const menuList = [
+  {
+    name: 'Danh sách đơn hàng',
+    path: '/'
+  },
+  {
+    name: 'Tạo đơn hàng',
+    path: '/main'
+  }
+];
+
 const columns = [{
   accessor: 'purchaseId',
-  Header: 'Mã Đơn Đặt Sự Kiện'
+  Header: 'MSHĐ'
 }, {
   accessor: 'eventName',
   Header: 'Tên Sự Kiện'
@@ -51,7 +63,8 @@ class PurchaseList extends Component {
     super(props, context);
     this.state = {
       value: [],
-      pageSize: 10
+      pageSize: 10,
+      searchKey: ''
     };
   }
 
@@ -64,28 +77,47 @@ class PurchaseList extends Component {
     });
   }
 
+
+  onSearch = (e) => {
+    this.setState({ searchKey: e.target.value });
+  }
+
   render() {
-    const { value, pageSize } = this.state;
+    const { value, pageSize, searchKey } = this.state;
     const { history } = this.props;
 
     return (
       <div className="app">
         <NavigationBar
+          menus={menuList}
           show
         />
         <div className="container-fluid" style={{ paddingTop: 50 }}>
-          <div className="row">
-            <div className="col-xs-8">
-              <h1>DANH SÁCH ĐƠN ĐẶT HÀNG</h1>
+          <div
+            className="row"
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '70px'
+            }}
+          >
+            <div className="col-xs-3">
+              <h3>
+                Đơn hàng
+              </h3>
+
+            </div>
+            <div className="col-xs-7">
+              <FormControl
+                type="text"
+                value={searchKey}
+                placeholder="Enter text"
+                onChange={this.onSearch}
+              />
             </div>
             <div
-              className="col-xs-4"
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '70px'
-              }}
+              className="col-xs-2"
             >
               <Link to="/main"><button type="button" className="btn btn-primary">Thêm Đơn Hàng</button></Link>
             </div>

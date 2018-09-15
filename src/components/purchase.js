@@ -9,6 +9,14 @@ import FieldGroup from './FieldGroup';
 import { showNavBar } from '../redux/actions/navBar';
 import NavigationBar from './NavigationBar';
 
+
+const menuList = [
+  {
+    name: 'Danh sách đơn hàng',
+    path: '/'
+  }
+];
+
 const nhanVien = [{
   name: 'Nguyễn Thị Na',
   phone: '01667183543',
@@ -619,6 +627,7 @@ class Purchase extends Component {
           <strong>Cập nhật thông tin đơn hàng thành Công!</strong>
         </Alert>
         <NavigationBar
+          menus={menuList}
           show
         />
         <div className="container-fluid" style={{ paddingTop: 50 }}>

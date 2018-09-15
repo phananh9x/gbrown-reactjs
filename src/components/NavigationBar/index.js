@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import {
-  Navbar, NavItem, NavDropdown, MenuItem, Nav
+  Navbar, NavItem, NavDropdown, MenuItem, Nav, Image, Badge
 } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { showNavBar } from '../../redux/actions/navBar';
 import { loginLogout } from '../../redux/actions/login';
+import { Color } from '../../constants/color';
 
 class NavigationBar extends Component {
   constructor(props) {
@@ -21,9 +23,24 @@ class NavigationBar extends Component {
 
   render() {
     const {
-      show, dispathNavBar, navBar, login
+      show, dispathNavBar, navBar, login, menus
     } = this.props;
-    console.log();
+    const path = window.location.pathname;
+    const menuArray = [];
+    if (menus) {
+      menus.forEach((element, key) => {
+        menuArray.push(
+          <NavItem
+            eventKey={key}
+          >
+            <Link to={element.path}>
+              <div style={{ color: path === element.path ? Color.PRIMARY_COLOR : '#777' }}>{element.name}</div>
+            </Link>
+          </NavItem>
+
+        );
+      });
+    }
 
     return (
       <div style={{ width: '100%' }}>
@@ -40,17 +57,21 @@ class NavigationBar extends Component {
                   >
                     Menu
                   </NavItem>
-                  <NavItem
-                    eventKey={1}
-                    href="/"
-                  >
-                    Danh sách đơn hàng
-                  </NavItem>
-
+                  {menuArray}
                 </Nav>
                 <Nav pullRight>
+                  <NavItem>
+                    <p>
+                      <Badge> 42 </Badge>
+                      {' '}
+                      Thông báo
+                    </p>
+                  </NavItem>
                   <NavItem eventKey={1} href="#">
-                    Link Right
+                    <div style={{ width: 24, height: 24 }}>
+                      <Image alt="Avatar" size="small" src={require('../../assets/logo/gbrown.png')} circle />
+                    </div>
+
                   </NavItem>
                   <NavDropdown eventKey={3} title={login.data.data ? login.data.data.email : ''} id="basic-nav-dropdown">
                     <MenuItem eventKey={3.1}>Thông tin</MenuItem>
