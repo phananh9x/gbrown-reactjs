@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import moment from 'moment';
+import { connect } from 'react-redux';
 import ReactToPrint from 'react-to-print';
 import * as API from '../API';
 import '../styles/print.css';
+import { showNavBar } from '../redux/actions/navBar';
 
 class PrintDetail extends Component {
   constructor(props, context) {
@@ -14,7 +16,8 @@ class PrintDetail extends Component {
   }
 
   componentWillMount() {
-    const { match } = this.props;
+    const { match, dispathNavBar } = this.props;
+    dispathNavBar(false);
     if (match.params && match.params.purchaseId) {
       // console.log(this.props.match.params.purchaseId)
       API.getPurchaseDetail(match.params.purchaseId).then((data) => {
@@ -203,4 +206,12 @@ class PrintDetail extends Component {
   }
 }
 
-export default PrintDetail;
+
+const mapStateToProps = state => ({
+  navBar: state.navBar
+});
+const mapDispathToProps = dispath => ({
+  dispathNavBar: show => dispath(showNavBar(show))
+});
+
+export default connect(mapStateToProps, mapDispathToProps)(PrintDetail);
