@@ -31,6 +31,7 @@ class NavigationBar extends Component {
       menus.forEach((element, key) => {
         menuArray.push(
           <NavItem
+            key={parseInt(key.toString())}
             eventKey={key}
           >
             <Link to={element.path}>
