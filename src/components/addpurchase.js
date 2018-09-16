@@ -13,6 +13,12 @@ import FieldGroupSelect from './FieldGroupSelect';
 import FieldGroup from './FieldGroup';
 import NavigationBar from './NavigationBar';
 
+const menuList = [
+  {
+    name: 'Danh sách đơn hàng',
+    path: '/'
+  }
+];
 
 const nhanVien = [{
   name: 'Nguyễn Thị Na',
@@ -644,9 +650,10 @@ class AddPurchase extends Component {
     return (
       <div className="App">
         <NavigationBar
+          menus={menuList}
           show
         />
-        <div className="container-fluid" style={{ marginTop: 50 }}>
+        <div className="container-fluid" style={{ paddingTop: 50 }}>
           <Alert bsStyle={`success ${!save ? 'hide' : ''} fixed`}>
             <strong>Cập nhật thông tin đơn hàng thành Công!</strong>
           </Alert>
