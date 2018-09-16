@@ -18,7 +18,7 @@ export default class FieldGroupSelect extends Component {
     if (data && data.length) {
       data.forEach((e) => {
         array.push(
-          <option key={parseInt(e.id)} value={e.id}>{e.name}</option>
+          <option key={parseInt(e.id)} value={e.name}>{e.name}</option>
         );
       });
     }
@@ -27,7 +27,7 @@ export default class FieldGroupSelect extends Component {
 
   render() {
     const {
-      id, label, handleChange, data
+      id, label, handleChange, value
     } = this.props;
 
     return (
@@ -38,11 +38,12 @@ export default class FieldGroupSelect extends Component {
         <div className="col-xs-8">
           <FormControl
             id={id}
+            value={value.status}
             componentClass="select"
             placeholder="Chọn"
             onChange={(e) => {
               if (handleChange) {
-                handleChange(data[e.target.value]);
+                handleChange(id, e.target.value);
               }
             }}
           >

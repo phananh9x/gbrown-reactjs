@@ -11,6 +11,7 @@ import { withRouter, Link } from 'react-router-dom';
 import * as API from '../API';
 import FieldGroupSelect from './FieldGroupSelect';
 import FieldGroup from './FieldGroup';
+import FieldGroupDate from './FieldGroupDate';
 import NavigationBar from './NavigationBar';
 
 const menuList = [
@@ -118,12 +119,12 @@ const nhanVien = [{
   email: ''
 }];
 
-
 const status = [
-  { id: 1, name: 'Đơng hàng mới' },
-  { id: 2, name: 'Đơng chăm sóc' },
-  { id: 3, name: 'Thành công' },
-  { id: 4, name: 'Thất bại' },
+  { id: 1, name: 'Đơn Hàng Mới' },
+  { id: 2, name: 'Đã Gọi' },
+  { id: 3, name: 'Đang Chăm Sóc' },
+  { id: 4, name: 'Đã Huỷ Bỏ' },
+  { id: 5, name: 'Đã Kí Hợp Đồng' },
 ];
 
 
@@ -187,8 +188,8 @@ function FieldCheckBox() {
     <div>
       <Checkbox id="vipPurchase">Đơn Hàng VIP</Checkbox>
       <Checkbox id="customerInfoCompleted">Hoàn Tất Thông Tin Khách Hàng</Checkbox>
-      <Checkbox id="depositColected">Thu Tiền Cọc</Checkbox>
-      <Checkbox id="eventPriceColected">Thu Tiền Tiệc</Checkbox>
+      <Checkbox id="depositColected">Đã Thu tiền Cọc</Checkbox>
+      <Checkbox id="eventPriceColected">Đã thu tiền Tiệc</Checkbox>
     </div>
   );
 }
@@ -248,17 +249,17 @@ function ThongTinHangMuc({
         />
         <FieldGroup
           value={value}
-          id="size"
-          type="text"
-          label="Kích Thước"
+          id="amount"
+          type="number"
+          label="Số Lượng"
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
         <FieldGroup
           value={value}
-          id="amount"
+          id="size"
           type="text"
-          label="Số Lượng"
+          label="Kích Thước"
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
@@ -371,17 +372,17 @@ function PhanTichHangMuc({ index }) {
           />
         </div>
         <div className="col-xs-6">
-          <FieldGroup
+          <FieldGroupDate
             id="formControlsEmail"
             type="date"
             label="Thời Gian Yêu Cầu Của CV"
           />
-          <FieldGroup
+          <FieldGroupDate
             id="formControlsEmail"
             type="date"
             label="Thời Gian Dự Kiến Đặt Đơn Hàng"
           />
-          <FieldGroup
+          <FieldGroupDate
             id="formControlsEmail"
             type="date"
             label="Thời Gian Dự Kiến Bàn Giao"
@@ -473,7 +474,10 @@ class AddPurchase extends Component {
     this.state = {
       value: {
         image: [],
-        phoneSaleGbrown: nhanVien[0].phone
+        phoneSaleGbrown: nhanVien[0].phone,
+        deposit: 0,
+        saleGbrown: nhanVien[0].name,
+        status: 'Đơn hàng mới'
       },
       thongTinHangMuc: [],
       phanTichHangMuc: {},
@@ -555,6 +559,27 @@ class AddPurchase extends Component {
           [key]: valuek
         }
       });
+    } else if ((key === 'deposit' || key === 'total') && (value.total || value.deposit)) {
+      let totalWriteAutoFill = 0;
+      if (key === 'deposit') {
+        if (thongTinHangMuc.length) {
+          let total = 0;
+          thongTinHangMuc.forEach((e) => {
+            total += e.cash;
+          });
+          value.totalAutoFill = total - parseFloat(valuek || 0);
+        }
+        totalWriteAutoFill = value.total - parseFloat(valuek || 0);
+      } else {
+        totalWriteAutoFill = parseFloat(valuek || 0) - parseFloat(value.deposit || 0);
+      }
+      this.setState({
+        value: {
+          ...value,
+          totalWriteAutoFill,
+          [key]: valuek
+        }
+      });
     } else {
       this.setState({
         value: {
@@ -583,10 +608,15 @@ class AddPurchase extends Component {
       } else {
         thongTinHangMuc[thongTinHangMuclk][key] = valuek;
       }
-      if ((key === 'price' || key === 'reducedPrice') && thongTinHangMuc[thongTinHangMuclk].price) {
+      if ((key === 'price' || key === 'reducedPrice' || key === 'amount' || key === 'deposit') && thongTinHangMuc[thongTinHangMuclk].price) {
         const { price } = thongTinHangMuc[thongTinHangMuclk];
         const { reducedPrice } = thongTinHangMuc[thongTinHangMuclk];
-        thongTinHangMuc[thongTinHangMuclk].cash = price - (reducedPrice || 0);
+        thongTinHangMuc[thongTinHangMuclk].cash = price - parseFloat(reducedPrice || 0);
+        let total = 0;
+        thongTinHangMuc.forEach((e) => {
+          total += e.cash * (e.amount || 1);
+        });
+        value.totalAutoFill = total - parseFloat(value.deposit || 0);
       }
       this.setState({
         value: {
@@ -708,7 +738,7 @@ class AddPurchase extends Component {
                 label="Số Điện Thoại"
                 handleChange={this.handleChange}
               />
-              <FieldGroup
+              <FieldGroupDate
                 value={value}
                 id="startDate"
                 type="date"
@@ -755,14 +785,23 @@ class AddPurchase extends Component {
               />
               <FieldGroup
                 value={value}
+                id="totalWriteAutoFill"
+                type="number"
+                disabled
+                label="Tổng tiền tự ghi sau khi cọc:"
+                handleChange={this.handleChange}
+              />
+              <FieldGroup
+                value={value}
                 id="totalAutoFill"
                 type="number"
-                label="Tổng tiền (Auto Fill):"
+                disabled
+                label="Tổng tiền sau khi cọc (Auto Fill):"
                 handleChange={this.handleChange}
               />
             </div>
             <div className="col-xs-6">
-              <FieldGroup
+              <FieldGroupDate
                 value={value}
                 id="agreementDate"
                 type="date"
@@ -783,7 +822,7 @@ class AddPurchase extends Component {
                 label="Email Khách Hàng"
                 handleChange={this.handleChange}
               />
-              <FieldGroup
+              <FieldGroupDate
                 value={value}
                 id="setupDate"
                 type="date"
@@ -832,14 +871,23 @@ class AddPurchase extends Component {
                 label="Đặt Cọc"
                 handleChange={this.handleChange}
               />
+              <FieldGroup
+                textArea
+                value={value}
+                id="depositDescription"
+                type="text"
+                label="Note Chi Tiết đặt cọc"
+                handleChange={this.handleChange}
+              />
               <FieldGroupSelect
                 data={status}
+                value={value}
                 id="status"
                 type="text"
                 label="Trạng thái"
                 handleChange={this.handleChange}
               />
-              <FieldGroup
+              <FieldGroupDate
                 value={value}
                 id="acceptanceDate"
                 type="date"
