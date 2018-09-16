@@ -161,6 +161,9 @@ class PurchaseList extends Component {
     const {
       value, pageSize, searchKey, selectAll
     } = this.state;
+    const {
+      history
+    } = this.props;
     return (
       <div className="app">
         <NavigationBar
@@ -222,6 +225,11 @@ class PurchaseList extends Component {
               onClick: (e) => {
                 if (e.target.name === 'checkbox') {
                   this.toggleRow(rowInfo.original.purchaseId);
+                }
+                if (e.target.className !== 'print' && e.target.name !== 'checkbox') {
+                  history.push({
+                    pathname: `/purchase/${rowInfo.original.purchaseId}`,
+                  });
                 }
               }
             })}
