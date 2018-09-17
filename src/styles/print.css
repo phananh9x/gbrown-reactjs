@@ -1809,6 +1809,7 @@ footer p span {
   display: block;
   margin: auto;
   width: 100%;
+  max-height: 565px;
 }
 
 .autozoom { overflow: hidden; }

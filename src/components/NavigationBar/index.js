@@ -56,16 +56,23 @@ class NavigationBar extends Component {
                     }}
                     eventKey={1}
                   >
-                    Menu
+                    {'Menu'}
                   </NavItem>
                   {menuArray}
                 </Nav>
                 <Nav pullRight>
+                  <NavItem onClick={() => {
+                    window.open('http://quanli.salegbrown.vn', '_blank');
+                  }}
+                  >
+                    <p>
+                      {'Quản lý Gbrown'}
+                    </p>
+                  </NavItem>
                   <NavItem>
                     <p>
                       <Badge> 42 </Badge>
-                      {' '}
-                      Thông báo
+                      {'Thông báo'}
                     </p>
                   </NavItem>
                   <NavItem eventKey={1} href="#">

@@ -195,12 +195,17 @@ function FieldCheckBox() {
 }
 
 function ThongTinHangMuc({
-  index, value, handleChange, handleChangeFile, phanTichHangMuc,
+  index, value, handleChange, handleChangeFile, phanTichHangMuc, remove
 }) {
   return (
     <div className="row">
       <div className="col-xs-12">
-        <h1>{`THÔNG TIN HẠNG MỤC ${index + 1}`}</h1>
+        <div className="col-xs-10">
+          <h1>{`THÔNG TIN HẠNG MỤC ${index + 1}`}</h1>
+        </div>
+        <div className="col-xs-2">
+          <button type="button" className="btn btn-danger" id={index} onClick={e => remove(e.target.id)}>Xóa hạng mục</button>
+        </div>
       </div>
       <div className="col-xs-6">
         <FieldGroup
@@ -489,6 +494,7 @@ class AddPurchase extends Component {
     this.addThongTinHangMuc = this.addThongTinHangMuc.bind(this);
     this.addPhanTichHangMuc = this.addPhanTichHangMuc.bind(this);
     this.savePurchase = this.savePurchase.bind(this);
+    this.remove = this.remove.bind(this);
     this.message = {
       title: '',
       message: '',
@@ -671,6 +677,20 @@ class AddPurchase extends Component {
     this.setState(phanTichHangMuc);
   }
 
+  remove(index) {
+    const { value } = this.state;
+    let { thongTinHangMuc } = this.state;
+    value.category = value && value.category
+    && value.category.length && value.category.filter((_e, i) => i !== index);
+    thongTinHangMuc = thongTinHangMuc && thongTinHangMuc.length
+    && thongTinHangMuc.filter((_e, i) => i !== index);
+    this.setState({
+      value: {
+        ...value
+      },
+      thongTinHangMuc
+    });
+  }
 
   render() {
     const {
@@ -917,6 +937,7 @@ class AddPurchase extends Component {
               handleChange={this.handleChange}
               handleChangeFile={this.handleChangeFile}
               phanTichHangMuc={phanTichHangMuc[item]}
+              remove={this.remove}
             />))}
           <div className="col-xs-12 content-center">
             <FieldCheckBox />

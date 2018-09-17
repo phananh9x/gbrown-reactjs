@@ -72,6 +72,114 @@ class PrintDetail extends Component {
             <h4>Design by Simon Tứ </h4>
           </div>
         </div>
+        <div className="A4 page">
+          <div className="section">
+            <div className="cont_fullscreen">
+              <div className="cont_center">
+                <div className="section3header clearfix">
+                  <div className="section3headerl">
+                    <h3>GBROWN FLOWER / SIMONTU</h3>
+                    <h2>{`BÁO GIÁ TRỌN GÓI TRANG TRÍ ${(value && value.eventName && value.eventName.toUpperCase()) || ''}`}</h2>
+                    <h2>{`${(value && value.customerName && value.customerName.toUpperCase()) || ''} `}</h2>
+                  </div>
+                  <div className="section3headerr">
+                    <div className="section3headerrbox">
+                      <div className="section3headerrboxl">
+                        <p>NGÀY:</p>
+                        <p>MSHĐ:</p>
+                      </div>
+                      <div className="section3headerrboxr">
+                        <p>{moment().format('DD - MM - YYYY') || ''}</p>
+                        <p>{value.purchaseId || ''}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="section3body clearfix">
+                  <p className="full_line clearfix">{`Kính gửi: ${value.customerName || ''}`}</p>
+                  <p className="half_line1 clearfix">{`Tôi tên: ${(value.saleGbrown && value.saleGbrown.toUpperCase()) || ''}`}</p>
+                  <p className="half_line2 clearfix">Thuộc: GBROWN</p>
+                  <p className="full_line clearfix">Sau khi thỏa thuận giữa hai bên, tôi xin gửi đến Quý khách hàng bảng báo giá vè dịch vụ như sau:</p>
+                  <div className="clear" />
+                  <div className="section3bodyl clearfix" style={{ width: '28.5%' }}>
+                    <h2>THÔNG TIN GBROWN</h2>
+                    <div className="cont_mainbodyl clearfix">
+                      <div className="line">{`Sale phụ trách: ${(value.saleGbrown && value.saleGbrown.toUpperCase()) || ''}`}</div>
+                      <div className="line">{`SĐT: ${value.phoneSaleGbrown || '0933153999'}`}</div>
+                      <div className="line">{`Email: ${value.emailSaleGbrown || ''}`}</div>
+                    </div>
+                  </div>
+                  <div className="section3bodyr clearfix" style={{ width: '70%' }}>
+                    <h2>THÔNG TIN KHÁCH HÀNG</h2>
+                    <div className="cont_mainbodyl clearfix">
+                      <table style={{ width: '100%' }}>
+                        <tr>
+                          <th><div className="line25">{`Sự kiện: ${value.eventName || ''}`}</div></th>
+                          <th><div className="line25">{`Tên khách: ${value.customerName || ''}`}</div></th>
+                          <th><div className="line25">{`SĐT: ${value.phone || '0933153999'}`}</div></th>
+                        </tr>
+                        <tr>
+                          <th><div className="line25">{`Email: ${value.email || ''}`}</div></th>
+                          <th><div className="line25">{`Địa chỉ: ${value.customerAddress || ''}`}</div></th>
+                          <th><div className="line25">{`Tổng giá trị trang trí: ${value.total || ''} VNĐ`}</div></th>
+                        </tr>
+                        <tr>
+                          <th><div className="line25">{`Ngày diễn ra tiệc:${moment(value.startDate).format('DD.MM.YYYY') || ''}`}</div></th>
+                          <th><div className="line25">{`Thời gian bàn giao: ${moment(value.agreementDate).format('DD.MM.YYYY') || ''}`}</div></th>
+                          <th><div className="line25">{`Địa điểm tổ chức: ${value.location || ''}`}</div></th>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div className="section3footer clearfix">
+                  <p>Hạng mục thống nhất bao gồm</p>
+                  <table id="customers">
+                    <tbody>
+                      <tr>
+                        <th width="30">STT</th>
+                        <th width="250">HẠNG MỤC</th>
+                        <th width="60">SỐ LƯỢNG</th>
+                        <th width="100">ĐƠN GIÁ</th>
+                        <th width="100">GIÁ GIẢM</th>
+                        <th width="100">THÀNH TIỀN</th>
+                        <th width="120">KÍCH THƯỚC</th>
+                        <th>GHI CHÚ</th>
+                      </tr>
+                      {value.category && value.category.map((e, i) =>
+                        (
+                          <tr key={parseInt(i.toString())}>
+                            <td align="center">{i + 1}</td>
+                            <td align="center">{e.categoryName || ''}</td>
+                            <td align="center">{e.amount || 1}</td>
+                            <td align="center">{`${e.price || 0}đ`}</td>
+                            <td align="center">{`${e.reducedPrice || 0}đ`}</td>
+                            <td align="center">{`${e.cash || 0}đ`}</td>
+                            <td align="center">{e.size || ''}</td>
+                            <td align="center">{e.description || ''}</td>
+                          </tr>
+                        )
+                      )}
+                      <tr>
+                        <td colSpan="4" align="center">
+                          {'TỔNG SỐ TIỀN (VNĐ)'}
+                          <br />
+                          {`${value.totalAutoFill}đ`}
+                        </td>
+                        <td style={{ background: '#e1e0e5' }} colSpan="3" align="center">
+                          {'(tổng số tiền ghi bằng chữ)'}
+                          <br />
+                        </td>
+                      </tr>
+                    </tbody>
+
+                  </table>
+                  <div className="wrap_titfo clearfix">Bảng Giá trên chưa bao gồm Thuế VAT</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         {value.category && value.category.map((e, i) => (
           <div className="A4 page" key={parseInt(i.toString())}>
             <div className="section">
@@ -83,10 +191,7 @@ class PrintDetail extends Component {
                       <div className="cont_image_l clearfix">
                         {e.image.length && e.image[0] && (
                           <a href className="autozoom">
-                            <img
-                              src={e.image[0].url}
-                              alt="no_image"
-                            />
+                            <img src={e.image[0].url} alt="no_image" />
                           </a>
                         )}
                       </div>
@@ -111,7 +216,7 @@ class PrintDetail extends Component {
                   <div className="cont_footer clearfix">
                     <div className="cont_center clearfix">
                       <div className="cont_footer_l clearfix">
-                        <h2 style={{ fontWeight: 'bold' }}>{`${i + 1}. ${e.categoryName || ''}`}</h2>
+                        <h2 style={{ fontWeight: 'bold' }}>{`${i + 1}. ${e.categoryName || ''} `}</h2>
                         <p>{`Giá tiền: ${e.price || '0'}đ`}</p>
                         <p>{`Số lượng: ${e.amount || 1}`}</p>
                       </div>
@@ -127,8 +232,7 @@ class PrintDetail extends Component {
               </div>
             </div>
           </div>
-        ))
-        }
+        ))}
         <div className="A4 page">
           <div className="section">
             <div className="cont_fullscreen">
@@ -143,11 +247,14 @@ class PrintDetail extends Component {
                   <h2>THÔNG TIN BÁO GIÁ</h2>
                   <div className="cont_baogia_main clearfix">
                     <div className="line_baogia">{`Tên khách hàng: ${value.customerName || ''}`}</div>
-                    <div className="line_baogia">{`MSHĐ: ${value.purchaseId || ''}`}</div>
-                    <div className="line_baogia">{`SĐT: ${value.phone || ''}`}</div>
-                    <div className="line_baogia">{`Ngày diễn ra tiệc: ${moment(value.startDate).format('DD.MM.YYYY') || ''}`}</div>
+                    <div className="line_baogia">{`MSHĐ: ${value.purchaseId}`}</div>
+                    <div className="line_baogia">{`SĐT: ${value.phone}`}</div>
+                    <div className="line_baogia">{`Ngày diễn ra tiệc: ${moment(value.startDate).format('DD.MM.YYYY')}`}</div>
                     <div className="line_baogia">{`NVKD phụ trách: ${(value.saleGbrown && value.saleGbrown.toUpperCase()) || ''}`}</div>
-                    <div className="line_baogia">{`Địa điểm tổ chức: ${value.location || ''}`}</div>
+                    <div className="line_baogia">
+                      {'Địa điểm tổ chức:'}
+                      {value.location}
+                    </div>
                   </div>
                 </div>
                 <div className="tit_center clearfix">ĐẠI DIỆN</div>
@@ -157,7 +264,11 @@ class PrintDetail extends Component {
                 <div className="cont_center clearfix">
                   <ul className="mangxahoi clearfix">
                     <li>
-                      <a href="/" target="_blank" title="Mạng xã hội 1">
+                      <a
+                        href="/"
+                        target="_blank"
+                        title="Mạng xã hội 1"
+                      >
                         <img
                           src="http://gbrownflowerquanlynoibo.info/upload/hinhanh/icon_1-6704.png"
                           alt="Mạng xã hội 1"
@@ -165,7 +276,11 @@ class PrintDetail extends Component {
                       </a>
                     </li>
                     <li>
-                      <a href="/" target="_blank" title="Mạng xã hội 2">
+                      <a
+                        href="/"
+                        target="_blank"
+                        title="Mạng xã hội 2"
+                      >
                         <img
                           src="http://gbrownflowerquanlynoibo.info/upload/hinhanh/icon_2-2740.png"
                           alt="Mạng xã hội 2"
@@ -173,7 +288,11 @@ class PrintDetail extends Component {
                       </a>
                     </li>
                     <li>
-                      <a href="/" target="_blank" title="Mạng xã hội 3">
+                      <a
+                        href="/"
+                        target="_blank"
+                        title="Mạng xã hội 3"
+                      >
                         <img
                           src="http://gbrownflowerquanlynoibo.info/upload/hinhanh/icon_3-8084.png"
                           alt="Mạng xã hội 3"
@@ -181,7 +300,11 @@ class PrintDetail extends Component {
                       </a>
                     </li>
                     <li>
-                      <a href="/" target="_blank" title="Mạng xã hội 4">
+                      <a
+                        href="/"
+                        target="_blank"
+                        title="Mạng xã hội 4"
+                      >
                         <img
                           src="http://gbrownflowerquanlynoibo.info/upload/hinhanh/icon_4-2977.png"
                           alt="Mạng xã hội 4"
@@ -190,7 +313,9 @@ class PrintDetail extends Component {
                     </li>
                   </ul>
                   <div className="tit_fo2">Mọi chi tiết xin liên hệ:</div>
-                  <div className="tit_fo3">CÔNG TY TNH TỔ CHỨC SỰ KIỆN VÀ DỊCH VỤ TRANG TRÍ CƯỚI GBROWN</div>
+                  <div className="tit_fo3">
+                    {' CÔNG TY TNH TỔ CHỨC SỰ KIỆN VÀ DỊCH VỤ TRANG TRÍ CƯỚI GBROWN'}
+                  </div>
                   <div className="tit_fo2">
                     {`www.salegbrown.vn | www.gbrownflower.vn | 0902 079 921 - 0942 887
                     200 | www.facebook.com/gbrownflower`}

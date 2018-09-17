@@ -74,7 +74,8 @@ class Print extends Component {
                 <div className="section3header clearfix">
                   <div className="section3headerl">
                     <h3>GBROWN FLOWER / SIMONTU</h3>
-                    <h2>{`BÁO GIÁ TRỌN GÓI TRANG TRÍ ${(value && value.eventName && value.eventName.toUpperCase()) || ''} ${(value && value.customerName && value.customerName.toUpperCase()) || ''} `}</h2>
+                    <h2>{`BÁO GIÁ TRỌN GÓI TRANG TRÍ ${(value && value.eventName && value.eventName.toUpperCase()) || ''}`}</h2>
+                    <h2>{`${(value && value.customerName && value.customerName.toUpperCase()) || ''} `}</h2>
                   </div>
                   <div className="section3headerr">
                     <div className="section3headerrbox">
@@ -158,7 +159,7 @@ class Print extends Component {
                         <td colSpan="4" align="center">
                           {'TỔNG SỐ TIỀN (VNĐ)'}
                           <br />
-                          {`${value.total}đ`}
+                          {`${value.totalAuto}đ`}
                         </td>
                         <td style={{ background: '#e1e0e5' }} colSpan="3" align="center">
                           {'(tổng số tiền ghi bằng chữ)'}
@@ -319,7 +320,6 @@ class Print extends Component {
             </div>
           </div>
         </div>
-
       </div>
     );
   }
