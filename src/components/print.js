@@ -136,8 +136,9 @@ class Print extends Component {
                         <th width="250">HẠNG MỤC</th>
                         <th width="60">SỐ LƯỢNG</th>
                         <th width="100">ĐƠN GIÁ</th>
-                        <th width="100">GIÁ GIẢM</th>
+                        <th width="100">GIÁ GIẢM trên 1 sản phẩm</th>
                         <th width="100">THÀNH TIỀN</th>
+                        <th width="100">TỔNG TIỀN</th>
                         <th width="120">KÍCH THƯỚC</th>
                         <th>GHI CHÚ</th>
                       </tr>
@@ -150,6 +151,7 @@ class Print extends Component {
                             <td align="center">{`${e.price || 0}đ`}</td>
                             <td align="center">{`${e.reducedPrice || 0}đ`}</td>
                             <td align="center">{`${e.cash || 0}đ`}</td>
+                            <td align="center">{`${e.cash * (e.amount || 1) || 0}đ`}</td>
                             <td align="center">{e.size || ''}</td>
                             <td align="center">{e.description || ''}</td>
                           </tr>
@@ -159,7 +161,7 @@ class Print extends Component {
                         <td colSpan="4" align="center">
                           {'TỔNG SỐ TIỀN (VNĐ)'}
                           <br />
-                          {`${value.totalAuto}đ`}
+                          {`${value.totalAutoFill}đ`}
                         </td>
                         <td style={{ background: '#e1e0e5' }} colSpan="3" align="center">
                           {'(tổng số tiền ghi bằng chữ)'}
