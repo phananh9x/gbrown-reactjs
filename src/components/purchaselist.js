@@ -2,12 +2,120 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {
   FormControl, ButtonToolbar, Button, Glyphicon, ButtonGroup,
+  DropdownButton, MenuItem,
 } from 'react-bootstrap';
 import moment from 'moment';
 import ReactTable from 'react-table';
+import { DatePicker } from 'antd';
 import * as API from '../API';
 import NavigationBar from './NavigationBar';
 
+
+const nhanVien = [{
+  name: 'Nguyễn Thị Na',
+  phone: '01667183543',
+  email: ''
+}, {
+  name: 'TRẦN THỊ YẾN NHI',
+  phone: '01636763482',
+  email: ''
+}, {
+  name: 'NGUYỄN THỊ BÍCH HỒNG',
+  phone: '01662262818',
+  email: ''
+}, {
+  name: 'CAO THỊ LIÊN HƯƠNG',
+  phone: '0908720570',
+  email: ''
+}, {
+  name: 'VÕ THỊ THU HIẾU',
+  phone: '01687894341',
+  email: ''
+}, {
+  name: 'DƯƠNG QUỐC BẢO',
+  phone: '01676567750',
+  email: ''
+}, {
+  name: 'LÊ QUỐC BẢO',
+  phone: '0968675073',
+  email: ''
+}, {
+  name: 'BẠCH THANH QUỐC HƯNG',
+  phone: '01647294699',
+  email: ''
+}, {
+  name: 'BẠCH THANH QUỐC BỬU',
+  phone: '0962362841',
+  email: ''
+}, {
+  name: 'NGUYỄN HUỲNH THẢO NGUYÊN',
+  phone: '01682192892',
+  email: ''
+}, {
+  name: 'NGÔ THỊ THU',
+  phone: '01694655380',
+  email: ''
+}, {
+  name: 'NGÔ VĂN CHIẾN',
+  phone: '01694649446',
+  email: ''
+}, {
+  name: 'ĐẶNG HOÀNG TRUNG HIẾU',
+  phone: '01689281550',
+  email: ''
+}, {
+  name: 'TRẦN THỊ THU THẢO',
+  phone: '01299-12879 ',
+  email: ''
+}, {
+  name: 'NGUYỄN CỬU QUÝ',
+  phone: '0915733607',
+  email: ''
+}, {
+  name: 'NGUYỄN VĂN ẨN',
+  phone: '01694992535',
+  email: ''
+}, {
+  name: 'NGUYỄN NGỌC NON',
+  phone: '0898548144',
+  email: ''
+}, {
+  name: 'NGUYỄN THANH DUY ',
+  phone: '0901916494',
+  email: ''
+}, {
+  name: 'NGUYỄN CỬU QUÝ',
+  phone: '0915733607',
+  email: ''
+}, {
+  name: 'HUỲNH THỊ TRÚC QUYÊN ',
+  phone: '0987636964',
+  email: ''
+}, {
+  name: 'TRẦN ĐẶNG MINH QUÝ ',
+  phone: '0928041332',
+  email: ''
+}, {
+  name: 'LÊ THÚY HOA',
+  phone: '01677149396',
+  email: ''
+}, {
+  name: 'PHAN NHẬT MINH',
+  phone: '0901428284',
+  email: ''
+}, {
+  name: 'ĐẶNG THANH NAM ',
+  phone: '01213638883',
+  email: ''
+}];
+
+const status = [
+  { id: 1, name: 'Đơn Hàng Mới' },
+  { id: 2, name: 'Đã Gọi' },
+  { id: 3, name: 'Đang Chăm Sóc' },
+  { id: 4, name: 'Đã Huỷ Bỏ' },
+  { id: 5, name: 'Đã Kí Hợp Đồng' },
+];
 
 const renderCell = (props) => {
   const { value } = props;
@@ -40,7 +148,12 @@ class PurchaseList extends Component {
       pageSize: 10,
       searchKey: '',
       map: {},
-      selectAll: 0
+      selectAll: 0,
+      staffFilter: {
+        name: 'Tất cả',
+        id: 0
+      },
+      statusFilter: status[0]
     };
 
     this.columns = [{
@@ -88,6 +201,36 @@ class PurchaseList extends Component {
     ];
   }
 
+  selectStaff = (e) => {
+    this.setState({ staffFilter: e });
+  }
+
+  renderStaff = (e, i) => (
+    <MenuItem
+      onClick={() =>
+        this.selectStaff(e)}
+      key={i}
+      value={e.name}
+    >
+      {e.name}
+
+    </MenuItem>
+  )
+
+  selectStatus = (e) => {
+    this.setState({ statusFilter: e });
+  }
+
+  renderStatus = (e, i) => (
+    <MenuItem
+      onClick={() =>
+        this.selectStatus(e)}
+      key={i}
+      value={e.name}
+    >
+      {e.name}
+    </MenuItem>
+  )
 
   renderCheckBox = (props) => {
     const { value } = props;
@@ -157,13 +300,19 @@ class PurchaseList extends Component {
     this.setState({ searchKey: e.target.value });
   }
 
+  handleChangeDate = (date) => {
+    console.log(date);
+  }
+
   render() {
     const {
-      value, pageSize, searchKey, selectAll
+      value, pageSize, searchKey, selectAll, staffFilter, statusFilter
     } = this.state;
     const {
       history
     } = this.props;
+
+    console.log(statusFilter);
     return (
       <div className="app">
         <NavigationBar
@@ -181,7 +330,7 @@ class PurchaseList extends Component {
             }}
           >
 
-            <div className="col-xs-12">
+            <div className="col-xs-6">
               <ButtonToolbar>
                 <ButtonGroup>
                   <Link to="/main">
@@ -193,9 +342,6 @@ class PurchaseList extends Component {
                   <Button>
                     <Glyphicon glyph="glyphicon glyphicon-refresh" />
                   </Button>
-                  <Button>
-                    <Glyphicon glyph="glyphicon glyphicon-filter" />
-                  </Button>
                   {selectAll === 1
                     ? (
                       <Button bsStyle="danger">
@@ -206,8 +352,53 @@ class PurchaseList extends Component {
                 </ButtonGroup>
               </ButtonToolbar>
             </div>
-            <div className="col-xs-10" />
-            <div className="col-xs-10">
+            <div className="col-xs-1 bold">
+              Từ
+            </div>
+            <div className="col-xs-2">
+              <DatePicker
+                value={moment()}
+                showTime
+                format="YYYY-MM-DD"
+                placeholder="Từ ngày"
+                onChange={e => this.handleChangeDate(new Date(e))}
+                onOk={e => this.handleChangeDate(new Date(e))}
+              />
+            </div>
+            <div className="col-xs-1 bold">
+              Đến
+            </div>
+            <div className="col-xs-2">
+              <DatePicker
+                value={moment()}
+                showTime
+                format="YYYY-MM-DD"
+                placeholder="Đến ngày"
+                onChange={e => this.handleChangeDate(new Date(e))}
+                onOk={e => this.handleChangeDate(new Date(e))}
+              />
+            </div>
+            <div className="col-xs-2 bold">
+              Nhân viên
+            </div>
+            <div className="col-xs-4">
+              <DropdownButton
+                title={staffFilter.name}
+              >
+                {nhanVien.map((e, i) => this.renderStaff(e, i))}
+              </DropdownButton>
+            </div>
+            {/* <div className="col-xs-2 bold">
+              Nhân viên
+            </div> */}
+            {/* <div className="col-xs-4">
+              <DropdownButton
+                title={statusFilter}
+              >
+                {status.map((e, i) => this.renderStatus(e, i))}
+              </DropdownButton>
+            </div> */}
+            <div className="col-xs-5">
               <FormControl
                 type="text"
                 value={searchKey}
@@ -215,6 +406,7 @@ class PurchaseList extends Component {
                 onChange={this.onSearch}
               />
             </div>
+
           </div>
           <ReactTable
             showPaginationBottom
