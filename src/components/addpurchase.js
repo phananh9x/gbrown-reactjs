@@ -681,9 +681,9 @@ class AddPurchase extends Component {
     const { value } = this.state;
     let { thongTinHangMuc } = this.state;
     value.category = value && value.category
-    && value.category.length && value.category.filter((_e, i) => i !== index);
+    && value.category.length && value.category.filter((_e, i) => i !== parseInt(index));
     thongTinHangMuc = thongTinHangMuc && thongTinHangMuc.length
-    && thongTinHangMuc.filter((_e, i) => i !== index);
+    && thongTinHangMuc.filter((_e, i) => i !== parseInt(index));
     this.setState({
       value: {
         ...value

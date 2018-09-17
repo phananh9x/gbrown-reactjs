@@ -669,10 +669,10 @@ class Purchase extends Component {
   remove(index) {
     const { value } = this.state;
     let { thongTinHangMuc } = this.state;
-    value.category = value && value.category
-    && value.category.length && value.category.filter((_e, i) => i !== index);
+    value.category = value && value.category && value.category.length
+    && value.category.filter((e, i) => i !== parseInt(index));
     thongTinHangMuc = thongTinHangMuc && thongTinHangMuc.length
-    && thongTinHangMuc.filter((_e, i) => i !== index);
+    && thongTinHangMuc.filter((e, i) => i !== parseInt(index));
     this.setState({
       value: {
         ...value
