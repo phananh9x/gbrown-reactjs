@@ -183,13 +183,13 @@ function FieldCheckBoxWithLabel({
 }
 
 
-function FieldCheckBox() {
+function FieldCheckBox({ onChangeCheckBox, value }) {
   return (
     <div>
-      <Checkbox id="vipPurchase">Đơn Hàng VIP</Checkbox>
-      <Checkbox id="customerInfoCompleted">Hoàn Tất Thông Tin Khách Hàng</Checkbox>
-      <Checkbox id="depositColected">Đã Thu tiền Cọc</Checkbox>
-      <Checkbox id="eventPriceColected">Đã thu tiền Tiệc</Checkbox>
+      <Checkbox id="vipPurchase" checked={value.vipPurchase} onChange={e => onChangeCheckBox(e.target.id, e.target.checked)}>Đơn Hàng VIP</Checkbox>
+      <Checkbox id="customerInfoCompleted" checked={value.customerInfoCompleted} onChange={e => onChangeCheckBox(e.target.id, e.target.checked)}>Hoàn Tất Thông Tin Khách Hàng</Checkbox>
+      <Checkbox id="depositColected" checked={value.depositColected} onChange={e => onChangeCheckBox(e.target.id, e.target.checked)}>Đã Thu tiền Cọc</Checkbox>
+      <Checkbox id="eventPriceColected" checked={value.eventPriceColected} onChange={e => onChangeCheckBox(e.target.id, e.target.checked)}>Đã thu tiền Tiệc</Checkbox>
     </div>
   );
 }
@@ -495,6 +495,7 @@ class AddPurchase extends Component {
     this.addPhanTichHangMuc = this.addPhanTichHangMuc.bind(this);
     this.savePurchase = this.savePurchase.bind(this);
     this.remove = this.remove.bind(this);
+    this.onChangeCheckBox = this.onChangeCheckBox.bind(this);
     this.message = {
       title: '',
       message: '',
@@ -675,6 +676,16 @@ class AddPurchase extends Component {
     const { phanTichHangMuc } = this.state;
     phanTichHangMuc[index].push({});
     this.setState(phanTichHangMuc);
+  }
+
+  onChangeCheckBox(id, checked) {
+    const { value } = this.state;
+    this.setState({
+      value: {
+        ...value,
+        [id]: checked
+      }
+    });
   }
 
   remove(index) {
@@ -940,7 +951,7 @@ class AddPurchase extends Component {
               remove={this.remove}
             />))}
           <div className="col-xs-12 content-center">
-            <FieldCheckBox />
+            <FieldCheckBox value={value} onChangeCheckBox={this.onChangeCheckBox} />
             <button type="button" className="btn btn-primary w10" onClick={this.savePurchase}>Lưu Đơn Hàng</button>
           </div>
         </div>
