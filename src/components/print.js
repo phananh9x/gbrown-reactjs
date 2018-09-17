@@ -216,6 +216,9 @@ class Print extends Component {
                         <h2 style={{ fontWeight: 'bold' }}>{`${i + 1}. ${e.categoryName || ''} `}</h2>
                         <p>{`Giá tiền: ${e.price || '0'}đ`}</p>
                         <p>{`Số lượng: ${e.amount || 1}`}</p>
+                        <p>{`Giá giảm: ${e.reducedPrice || '0'}đ`}</p>
+                        <p>{`Thành tiền: ${e.cash || '0'}đ`}</p>
+                        <p>{`Tổng tiền: ${e.cash * (e.amount || 1) || '0'}đ`}</p>
                       </div>
                       <div className="cont_footer_r clearfix">
                         <h2 style={{ fontWeight: 'bold' }}>MÔ TẢ CHI TIẾT:</h2>
