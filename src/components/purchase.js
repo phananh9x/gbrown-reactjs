@@ -270,14 +270,6 @@ function ThongTinHangMuc({
         />
         <FieldGroup
           value={value}
-          id="total"
-          type="number"
-          label="Số Lượng"
-          thongTinHangMuc={index}
-          handleChange={handleChange}
-        />
-        <FieldGroup
-          value={value}
           id="size"
           type="text"
           label="Kích Thước"
@@ -323,7 +315,7 @@ function ThongTinHangMuc({
           value={value}
           id="employeeComments"
           type="text"
-          label="Góp Ý Nhân Viên"
+          label="Yêu cầu thu mua"
           thongTinHangMuc={index}
           handleChange={handleChange}
         />

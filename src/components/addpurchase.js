@@ -307,7 +307,7 @@ function ThongTinHangMuc({
           value={value}
           id="employeeComments"
           type="text"
-          label="Góp Ý Nhân Viên"
+          label="Yêu cầu thu mua"
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
