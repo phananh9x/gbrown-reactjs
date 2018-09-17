@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  Navbar, NavItem, NavDropdown, MenuItem, Nav, Image, Badge
+  Navbar, NavItem, NavDropdown, MenuItem, Nav
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -23,7 +23,7 @@ class NavigationBar extends Component {
 
   render() {
     const {
-      show, dispathNavBar, navBar, login, menus
+      show, login, menus
     } = this.props;
     const path = window.location.pathname;
     const menuArray = [];
@@ -49,7 +49,7 @@ class NavigationBar extends Component {
           && (
             <Navbar fixedTop className="navbar-fixed-top">
               <Navbar.Collapse>
-                <Nav>
+                {/* <Nav>
                   <NavItem
                     onClick={() => {
                       dispathNavBar(!navBar.showNavbar);
@@ -59,14 +59,30 @@ class NavigationBar extends Component {
                     {'Menu'}
                   </NavItem>
                   {menuArray}
-                </Nav>
+                </Nav> */}
                 <Nav pullRight>
+                  <NavItem onClick={() => {
+                    window.open('http://studio.gbrownflower.com', '_blank');
+                  }}
+                  >
+                    <p>
+                      {'Orange Studio'}
+                    </p>
+                  </NavItem>
+                  <NavItem onClick={() => {
+                    window.open('http://gbrownflower.com/admin', '_blank');
+                  }}
+                  >
+                    <p>
+                      {'Phần Mềm Gbrown Photo'}
+                    </p>
+                  </NavItem>
                   <NavItem onClick={() => {
                     window.open('http://kichbanct.gbrownflower.com', '_blank');
                   }}
                   >
                     <p>
-                      {'Phần Mềm Kịch Bản'}
+                      {'Phần Mềm Kịch Bản Và Báo Giá'}
                     </p>
                   </NavItem>
                   <NavItem onClick={() => {
@@ -84,18 +100,6 @@ class NavigationBar extends Component {
                     <p>
                       {'Phần Mềm Quản lý Hệ Thống'}
                     </p>
-                  </NavItem>
-                  <NavItem>
-                    <p>
-                      <Badge> 42 </Badge>
-                      {'Thông báo'}
-                    </p>
-                  </NavItem>
-                  <NavItem eventKey={1} href="#">
-                    <div style={{ width: 24, height: 24 }}>
-                      <Image alt="Avatar" size="small" src={require('../../assets/logo/gbrown.png')} circle />
-                    </div>
-
                   </NavItem>
                   <NavDropdown eventKey={3} title={login.data.data ? login.data.data.email : ''} id="basic-nav-dropdown">
                     <MenuItem eventKey={3.1}>Thông tin</MenuItem>
