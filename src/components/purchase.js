@@ -206,7 +206,7 @@ function ThongTinHangMuc({
   index, value, handleChange, handleChangeFile, phanTichHangMuc, remove
 }) {
   return (
-    <div className="row">
+    <div className="row" style={{ marginTop: 50 }}>
       <div className="col-xs-12">
         <div className="col-xs-10">
           <h1>{`THÔNG TIN HẠNG MỤC ${index + 1}`}</h1>
@@ -694,7 +694,7 @@ class Purchase extends Component {
           menus={menuList}
           show
         />
-        <div className="container-fluid" style={{ paddingTop: 50 }}>
+        <div className="container-fluid" style={{ paddingTop: 80 }}>
           <div className="row">
             <div className="col-xs-6">
               <h1>THÔNG TIN ĐƠN HÀNG</h1>
@@ -922,7 +922,7 @@ class Purchase extends Component {
             </div>
 
           </div>
-          <div className="col-xs-12">
+          <div className="col-xs-12" style={{ marginTop: 50, marginBottom: 50 }}>
             <button type="button" className="btn btn-primary" onClick={this.addThongTinHangMuc}>Thêm Hạng Mục</button>
           </div>
 
