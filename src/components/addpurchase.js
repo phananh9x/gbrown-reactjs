@@ -272,7 +272,7 @@ function ThongTinHangMuc({
           value={value}
           id="description-hangmuc"
           type="text"
-          label="Mô Tả Chi Tiết"
+          label="Chát giữa lãnh đạo, Khách hàng và Sale."
           textArea
           thongTinHangMuc={index}
           handleChange={handleChange}
@@ -291,7 +291,7 @@ function ThongTinHangMuc({
           value={value}
           id="customerRequirements"
           type="text"
-          label="Yêu Cầu Khách Hàng"
+          label="Nhân Viên Làm Cùng"
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
@@ -299,7 +299,7 @@ function ThongTinHangMuc({
           value={value}
           id="proposedPurchase"
           type="text"
-          label="Đề Xuất Thu Mua"
+          label="Mô tả hạng mục (Yêu cầu của khách hàng và yêu cầu quy chuẩn sản phẩm của công ty)"
           thongTinHangMuc={index}
           handleChange={handleChange}
         />

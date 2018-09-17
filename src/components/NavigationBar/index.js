@@ -62,11 +62,19 @@ class NavigationBar extends Component {
                 </Nav>
                 <Nav pullRight>
                   <NavItem onClick={() => {
+                    window.open('http://kichbanct.gbrownflower.com', '_blank');
+                  }}
+                  >
+                    <p>
+                      {'Phần Mềm Kịch Bản'}
+                    </p>
+                  </NavItem>
+                  <NavItem onClick={() => {
                     window.open('http://work.gbrownflower.com', '_blank');
                   }}
                   >
                     <p>
-                      {'Gbrown Chia Việc'}
+                      {'Phần Mềm Chia Việc'}
                     </p>
                   </NavItem>
                   <NavItem onClick={() => {
@@ -74,7 +82,7 @@ class NavigationBar extends Component {
                   }}
                   >
                     <p>
-                      {'Quản lý Gbrown'}
+                      {'Phần Mềm Quản lý Hệ Thống'}
                     </p>
                   </NavItem>
                   <NavItem>

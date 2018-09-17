@@ -261,8 +261,16 @@ function ThongTinHangMuc({
           handleChange={handleChange}
         />
         <FieldGroup
-          value={value}
+          value={value || 1}
           id="amount"
+          type="number"
+          label="Số Lượng"
+          thongTinHangMuc={index}
+          handleChange={handleChange}
+        />
+        <FieldGroup
+          value={value}
+          id="total"
           type="number"
           label="Số Lượng"
           thongTinHangMuc={index}
@@ -278,9 +286,9 @@ function ThongTinHangMuc({
         />
         <FieldGroup
           value={value}
-          id="description"
+          id="description-hangmuc"
           type="text"
-          label="Mô Tả Chi Tiết"
+          label="Chát giữa lãnh đạo, Khách hàng và Sale."
           textArea
           thongTinHangMuc={index}
           handleChange={handleChange}
@@ -299,7 +307,7 @@ function ThongTinHangMuc({
           value={value}
           id="customerRequirements"
           type="text"
-          label="Yêu Cầu Khách Hàng"
+          label="Nhân Viên Làm Cùng"
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
@@ -307,7 +315,7 @@ function ThongTinHangMuc({
           value={value}
           id="proposedPurchase"
           type="text"
-          label="Đề Xuất Thu Mua"
+          label="Mô tả hạng mục (Yêu cầu của khách hàng và yêu cầu quy chuẩn sản phẩm của công ty)"
           thongTinHangMuc={index}
           handleChange={handleChange}
         />

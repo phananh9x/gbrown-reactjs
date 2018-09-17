@@ -79,8 +79,8 @@ class PrintDetail extends Component {
                 <div className="section3header clearfix">
                   <div className="section3headerl">
                     <h3>GBROWN FLOWER / SIMONTU</h3>
-                    <h2>{`BÁO GIÁ TRỌN GÓI TRANG TRÍ ${(value && value.eventName && value.eventName.toUpperCase()) || ''}`}</h2>
-                    <h2>{`${(value && value.customerName && value.customerName.toUpperCase()) || ''} `}</h2>
+                    <h2>BẢN MÔ TẢ CHI TIÊT HỢP ĐỒNG</h2>
+                    <h2>{`${(value && value.eventName && value.eventName.toUpperCase()) || ''} `}</h2>
                   </div>
                   <div className="section3headerr">
                     <div className="section3headerrbox">
