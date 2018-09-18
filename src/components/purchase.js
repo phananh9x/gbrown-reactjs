@@ -4,6 +4,8 @@ import {
 } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
+import { Input, DatePicker } from 'antd';
+import moment from 'moment';
 import * as API from '../API';
 import FieldGroup from './FieldGroup';
 import FieldGroupDate from './FieldGroupDate';
@@ -11,6 +13,7 @@ import { showNavBar } from '../redux/actions/navBar';
 import NavigationBar from './NavigationBar';
 import FieldGroupSelect from './FieldGroupSelect';
 
+const { Search, TextArea } = Input;
 
 const menuList = [
   {
@@ -203,7 +206,8 @@ function FieldCheckBox({ onChangeCheckBox, value }) {
 }
 
 function ThongTinHangMuc({
-  index, value, handleChange, handleChangeFile, phanTichHangMuc, remove, purchaseId
+  index, value, handleChange, handleChangeFile, phanTichHangMuc,
+  remove, purchaseId, updateChatMessage, updatePreparationDay, addNgayChuanBi
 }) {
   return (
     <div className="row" style={{ marginTop: 50 }}>
@@ -260,6 +264,7 @@ function ThongTinHangMuc({
           label="Còn lại"
           thongTinHangMuc={index}
           handleChange={handleChange}
+          disabled
         />
         <FieldGroup
           value={value || 1}
@@ -268,6 +273,14 @@ function ThongTinHangMuc({
           label="Số Lượng"
           thongTinHangMuc={index}
           handleChange={handleChange}
+        />
+        <FieldGroup
+          valueDefault={(value.cash || 0) * (value.amount || 1)}
+          value={value}
+          id="totalcash"
+          type="number"
+          label={`Tổng tiền của ${value.amount} sản phẩm:`}
+          disabled
         />
         <FieldGroup
           value={value}
@@ -281,11 +294,37 @@ function ThongTinHangMuc({
           value={value}
           id="description-hangmuc"
           type="text"
-          label="Chát giữa lãnh đạo, Khách hàng và Sale."
+          label="Mô tả chi tiết hạng mục"
           textArea
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
+        {
+          value && value.ngayChuanBi && value.ngayChuanBi.map((e, i) => (
+            <div key={e.id || new Date().valueOf()} className="col-xs-12">
+              <div className="col-xs-4">
+                <ControlLabel>{`Ngày chuẩn bị ${i + 1}:`}</ControlLabel>
+              </div>
+              <div className="col-xs-8">
+                <DatePicker
+                  value={moment(e.date || new Date())}
+                  showTime
+                  format="YYYY-MM-DD HH:mm"
+                  placeholder="Chọn ngày giờ"
+                  onChange={el => updatePreparationDay('date', new Date(el), i, index)}
+                  onOk={el => updatePreparationDay('date', new Date(el), i, index)}
+                />
+              </div>
+              <div className="col-xs-4">
+                <ControlLabel>{`Công Việc ${i + 1}:`}</ControlLabel>
+              </div>
+              <div className="col-xs-8">
+                <TextArea value={e.congviec || ''} rows={4} onChange={el => updatePreparationDay('congviec', el.target.value, i, index)} />
+              </div>
+            </div>
+          ))
+        }
+        <button type="button" className="btn btn-success" onClick={() => addNgayChuanBi(index)}>Thêm Ngày Chuẩn Bị</button>
       </div>
       <div className="col-xs-6">
         <FieldGroup
@@ -351,6 +390,35 @@ function ThongTinHangMuc({
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
+        <div className="col-xs-12">
+          <h3>Chát giữa lãnh đạo, Khách hàng và Sale.</h3>
+          <div
+            style={{
+              maxHeight: '300px', overflow: 'auto', border: '1px solid gray', minHeight: '300px'
+            }}
+          >
+            {
+            value.chat && value.chat.map((e, i) => (
+              <div key={e.id || new Date().valueOf()} style={{ borderBottom: (i !== (value.chat.length - 1) && '1px solid gray') || 'none', margin: '0 10px' }}>
+                <div style={{ justifyContent: 'space-between', display: 'flex' }}>
+                  <b>{e.name.toUpperCase()}</b>
+                  <p>{e.date}</p>
+                </div>
+                <div>
+                  <p>{e.message}</p>
+                </div>
+              </div>
+            ))
+          }
+          </div>
+          <Search
+            style={{ marginTop: '10px' }}
+            placeholder="Nhập gì đó ở đây..."
+            enterButton="GỬI"
+            size="large"
+            onSearch={val => updateChatMessage(index, val)}
+          />
+        </div>
       </div>
       {phanTichHangMuc && phanTichHangMuc.map((item, k) => (
         <PhanTichHangMuc index={item} key={parseInt(k.toString())} />))}
@@ -492,6 +560,52 @@ class Purchase extends Component {
     this.addPhanTichHangMuc = this.addPhanTichHangMuc.bind(this);
     this.savePurchase = this.savePurchase.bind(this);
     this.remove = this.remove.bind(this);
+    this.updateChatMessage = this.updateChatMessage.bind(this);
+    this.updatePreparationDay = this.updatePreparationDay.bind(this);
+    this.addNgayChuanBi = this.addNgayChuanBi.bind(this);
+  }
+
+  addNgayChuanBi = (index) => {
+    const { thongTinHangMuc } = this.state;
+    if (!thongTinHangMuc[index].ngayChuanBi) {
+      thongTinHangMuc[index].ngayChuanBi = [{ id: `${new Date().valueOf()}-${Math.floor(Math.random() * 900000) + 100000}`, date: new Date(), congviec: '' }];
+    } else {
+      thongTinHangMuc[index].ngayChuanBi.push({ id: `${new Date().valueOf()}-${Math.floor(Math.random() * 900000) + 100000}`, date: new Date(), congviec: '' });
+    }
+    this.setState({ thongTinHangMuc });
+  }
+
+  updatePreparationDay(key, val, index, indexHangMuc) {
+    const { value, thongTinHangMuc } = this.state;
+    thongTinHangMuc[indexHangMuc].ngayChuanBi[index][key] = val;
+    this.setState({
+      value: {
+        ...value,
+        category: thongTinHangMuc
+      }
+    });
+  }
+
+  updateChatMessage(index, msg) {
+    const { value, purchaseId } = this.state;
+    const { login } = this.props;
+    const obj = {
+      id: `${new Date().valueOf()}-${Math.floor(Math.random() * 900000) + 100000}`,
+      message: msg,
+      name: login.email,
+      date: moment().format('DD/MM/YYYY HH:mm:ss')
+    };
+    if (value.category[index] && !value.category[index].chat) {
+      value.category[index].chat = [];
+    }
+    value.category[index].chat.push(obj);
+    API.updatePurchase({ category: value.category }, purchaseId).then(() => {
+      this.setState({
+        value: {
+          ...value
+        }
+      });
+    });
   }
 
   componentDidMount() {
@@ -647,7 +761,7 @@ class Purchase extends Component {
   addThongTinHangMuc = () => {
     const { thongTinHangMuc, phanTichHangMuc } = this.state;
     phanTichHangMuc[thongTinHangMuc.length] = [];
-    thongTinHangMuc.push({ image: [] });
+    thongTinHangMuc.push({ image: [], chat: [], ngayChuanBi: [{ id: `${new Date().valueOf()}-${Math.floor(Math.random() * 900000) + 100000}`, date: new Date(), congviec: '' }] });
     this.setState({ phanTichHangMuc, thongTinHangMuc });
   }
 
@@ -938,6 +1052,9 @@ class Purchase extends Component {
               phanTichHangMuc={phanTichHangMuc[item]}
               remove={this.remove}
               purchaseId={purchaseId}
+              updateChatMessage={this.updateChatMessage}
+              updatePreparationDay={this.updatePreparationDay}
+              addNgayChuanBi={this.addNgayChuanBi}
             />))}
           <div className="col-xs-12 content-center">
             <FieldCheckBox value={value} onChangeCheckBox={this.onChangeCheckBox} />
@@ -950,7 +1067,8 @@ class Purchase extends Component {
 }
 
 const mapStateToProps = state => ({
-  navBar: state.navBar
+  navBar: state.navBar,
+  login: state.login.data.results
 });
 const mapDispathToProps = dispath => ({
   dispathNavBar: show => dispath(showNavBar(show))

@@ -8,11 +8,15 @@ import {
   Alert
 } from 'react-bootstrap';
 import { withRouter, Link } from 'react-router-dom';
+import moment from 'moment';
+import { Input, DatePicker } from 'antd';
 import * as API from '../API';
 import FieldGroupSelect from './FieldGroupSelect';
 import FieldGroup from './FieldGroup';
 import FieldGroupDate from './FieldGroupDate';
 import NavigationBar from './NavigationBar';
+
+const { TextArea } = Input;
 
 const menuList = [
   {
@@ -195,7 +199,8 @@ function FieldCheckBox({ onChangeCheckBox, value }) {
 }
 
 function ThongTinHangMuc({
-  index, value, handleChange, handleChangeFile, phanTichHangMuc, remove
+  index, value, handleChange, handleChangeFile, phanTichHangMuc,
+  remove, updatePreparationDay, addNgayChuanBi
 }) {
   return (
     <div className="row" style={{ marginTop: 50 }}>
@@ -251,6 +256,7 @@ function ThongTinHangMuc({
           label="Còn lại"
           thongTinHangMuc={index}
           handleChange={handleChange}
+          disabled
         />
         <FieldGroup
           value={value}
@@ -259,6 +265,14 @@ function ThongTinHangMuc({
           label="Số Lượng"
           thongTinHangMuc={index}
           handleChange={handleChange}
+        />
+        <FieldGroup
+          valueDefault={(value.cash || 0) * (value.amount || 1)}
+          value={value}
+          id="totalcash"
+          type="number"
+          label={`Tổng tiền của ${value.amount} sản phẩm:`}
+          disabled
         />
         <FieldGroup
           value={value}
@@ -272,11 +286,37 @@ function ThongTinHangMuc({
           value={value}
           id="description-hangmuc"
           type="text"
-          label="Chát giữa lãnh đạo, Khách hàng và Sale."
+          label="Mô tả chi tiết danh mục:"
           textArea
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
+        {
+          value && value.ngayChuanBi && value.ngayChuanBi.map((e, i) => (
+            <div key={e.id || new Date().valueOf()} className="col-xs-12">
+              <div className="col-xs-4">
+                <ControlLabel>{`Ngày chuẩn bị ${i + 1}:`}</ControlLabel>
+              </div>
+              <div className="col-xs-8">
+                <DatePicker
+                  value={moment(e.date || new Date())}
+                  showTime
+                  format="YYYY-MM-DD HH:mm"
+                  placeholder="Chọn ngày giờ"
+                  onChange={el => updatePreparationDay('date', new Date(el), i, index)}
+                  onOk={el => updatePreparationDay('date', new Date(el), i, index)}
+                />
+              </div>
+              <div className="col-xs-4">
+                <ControlLabel>{`Công Việc ${i + 1}:`}</ControlLabel>
+              </div>
+              <div className="col-xs-8">
+                <TextArea value={e.congviec || ''} rows={4} onChange={el => updatePreparationDay('congviec', el.target.value, i, index)} />
+              </div>
+            </div>
+          ))
+        }
+        <button type="button" className="btn btn-success" onClick={() => addNgayChuanBi(index)}>Thêm Ngày Chuẩn Bị</button>
       </div>
       <div className="col-xs-6">
         <FieldGroup
@@ -496,12 +536,35 @@ class AddPurchase extends Component {
     this.savePurchase = this.savePurchase.bind(this);
     this.remove = this.remove.bind(this);
     this.onChangeCheckBox = this.onChangeCheckBox.bind(this);
+    this.updatePreparationDay = this.updatePreparationDay.bind(this);
+    this.addNgayChuanBi = this.addNgayChuanBi.bind(this);
     this.message = {
       title: '',
       message: '',
       button: '',
       code: JUST_CLOSE
     };
+  }
+
+  addNgayChuanBi = (index) => {
+    const { thongTinHangMuc } = this.state;
+    if (!thongTinHangMuc[index].ngayChuanBi) {
+      thongTinHangMuc[index].ngayChuanBi = [{ id: `${new Date().valueOf()}-${Math.floor(Math.random() * 900000) + 100000}`, date: new Date(), congviec: '' }];
+    } else {
+      thongTinHangMuc[index].ngayChuanBi.push({ id: `${new Date().valueOf()}-${Math.floor(Math.random() * 900000) + 100000}`, date: new Date(), congviec: '' });
+    }
+    this.setState({ thongTinHangMuc });
+  }
+
+  updatePreparationDay(key, val, index, indexHangMuc) {
+    const { value, thongTinHangMuc } = this.state;
+    thongTinHangMuc[indexHangMuc].ngayChuanBi[index][key] = val;
+    this.setState({
+      value: {
+        ...value,
+        category: thongTinHangMuc
+      }
+    });
   }
 
   componentDidMount() {
@@ -668,7 +731,7 @@ class AddPurchase extends Component {
   addThongTinHangMuc = () => {
     const { thongTinHangMuc, phanTichHangMuc } = this.state;
     phanTichHangMuc[thongTinHangMuc.length] = [];
-    thongTinHangMuc.push({ image: [] });
+    thongTinHangMuc.push({ image: [], ngayChuanBi: [{ id: `${new Date().valueOf()}-${Math.floor(Math.random() * 900000) + 100000}`, date: new Date(), congviec: '' }] });
     this.setState({ thongTinHangMuc, phanTichHangMuc });
   }
 
@@ -949,6 +1012,9 @@ class AddPurchase extends Component {
               handleChangeFile={this.handleChangeFile}
               phanTichHangMuc={phanTichHangMuc[item]}
               remove={this.remove}
+              purchaseId={purchaseId}
+              updatePreparationDay={this.updatePreparationDay}
+              addNgayChuanBi={this.addNgayChuanBi}
             />))}
           <div className="col-xs-12 content-center">
             <FieldCheckBox value={value} onChangeCheckBox={this.onChangeCheckBox} />
