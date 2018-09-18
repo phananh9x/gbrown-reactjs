@@ -10,6 +10,7 @@ import FieldGroupDate from './FieldGroupDate';
 import { showNavBar } from '../redux/actions/navBar';
 import NavigationBar from './NavigationBar';
 import FieldGroupSelect from './FieldGroupSelect';
+import { requestUserList } from '../redux/actions/userAction';
 
 
 const menuList = [
@@ -18,104 +19,6 @@ const menuList = [
     path: '/'
   }
 ];
-
-const nhanVien = [{
-  name: 'Nguyễn Thị Na',
-  phone: '01667183543',
-  email: ''
-}, {
-  name: 'TRẦN THỊ YẾN NHI',
-  phone: '01636763482',
-  email: ''
-}, {
-  name: 'NGUYỄN THỊ BÍCH HỒNG',
-  phone: '01662262818',
-  email: ''
-}, {
-  name: 'CAO THỊ LIÊN HƯƠNG',
-  phone: '0908720570',
-  email: ''
-}, {
-  name: 'VÕ THỊ THU HIẾU',
-  phone: '01687894341',
-  email: ''
-}, {
-  name: 'DƯƠNG QUỐC BẢO',
-  phone: '01676567750',
-  email: ''
-}, {
-  name: 'LÊ QUỐC BẢO',
-  phone: '0968675073',
-  email: ''
-}, {
-  name: 'BẠCH THANH QUỐC HƯNG',
-  phone: '01647294699',
-  email: ''
-}, {
-  name: 'BẠCH THANH QUỐC BỬU',
-  phone: '0962362841',
-  email: ''
-}, {
-  name: 'NGUYỄN HUỲNH THẢO NGUYÊN',
-  phone: '01682192892',
-  email: ''
-}, {
-  name: 'NGÔ THỊ THU',
-  phone: '01694655380',
-  email: ''
-}, {
-  name: 'NGÔ VĂN CHIẾN',
-  phone: '01694649446',
-  email: ''
-}, {
-  name: 'ĐẶNG HOÀNG TRUNG HIẾU',
-  phone: '01689281550',
-  email: ''
-}, {
-  name: 'TRẦN THỊ THU THẢO',
-  phone: '01299-12879 ',
-  email: ''
-}, {
-  name: 'NGUYỄN CỬU QUÝ',
-  phone: '0915733607',
-  email: ''
-}, {
-  name: 'NGUYỄN VĂN ẨN',
-  phone: '01694992535',
-  email: ''
-}, {
-  name: 'NGUYỄN NGỌC NON',
-  phone: '0898548144',
-  email: ''
-}, {
-  name: 'NGUYỄN THANH DUY ',
-  phone: '0901916494',
-  email: ''
-}, {
-  name: 'NGUYỄN CỬU QUÝ',
-  phone: '0915733607',
-  email: ''
-}, {
-  name: 'HUỲNH THỊ TRÚC QUYÊN ',
-  phone: '0987636964',
-  email: ''
-}, {
-  name: 'TRẦN ĐẶNG MINH QUÝ ',
-  phone: '0928041332',
-  email: ''
-}, {
-  name: 'LÊ THÚY HOA',
-  phone: '01677149396',
-  email: ''
-}, {
-  name: 'PHAN NHẬT MINH',
-  phone: '0901428284',
-  email: ''
-}, {
-  name: 'ĐẶNG THANH NAM ',
-  phone: '01213638883',
-  email: ''
-}];
 
 const status = [
   { id: 1, name: 'Đơn Hàng Mới' },
@@ -157,18 +60,19 @@ const status = [
 // }
 
 function FieldGroupSelectNhanVien({
-  id, label, handleChange, value
+  id, label, handleChange, value, userList
 }) {
+  const saleGbrown = userList.filter(e => e._id === value.saleGbrown)[0];
   return (
     <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
         <ControlLabel>{label}</ControlLabel>
       </div>
       <div className="col-xs-8">
-        <FormControl id={id} componentClass="select" placeholder="Chọn" value={(value && value.saleGbrown) || ''} onChange={e => handleChange(id, e.target.value)}>
-          {nhanVien.map((e, i) => (
-            <option key={parseInt(i.toString())} value={e.name}>
-              {e.name}
+        <FormControl id={id} componentClass="select" placeholder="Chọn" value={(saleGbrown !== undefined ? saleGbrown._id : '')} onChange={e => handleChange(id, e.target.value)}>
+          {userList.map((e, i) => (
+            <option key={parseInt(i.toString())} value={e._id}>
+              {e.firstname}
             </option>
           ))}
         </FormControl>
@@ -475,9 +379,9 @@ class Purchase extends Component {
     this.state = {
       value: {
         image: [],
-        phoneSaleGbrown: nhanVien[0].phone,
+        phoneSaleGbrown: '',
         deposit: 0,
-        saleGbrown: nhanVien[0].name,
+        saleGbrown: '',
         status: 'ĐƠN HÀNG MỚI'
       },
       thongTinHangMuc: [],
@@ -492,6 +396,20 @@ class Purchase extends Component {
     this.addPhanTichHangMuc = this.addPhanTichHangMuc.bind(this);
     this.savePurchase = this.savePurchase.bind(this);
     this.remove = this.remove.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { login } = nextProps;
+    if (login.success) {
+      this.getUserList();
+    }
+  }
+
+  getUserList = () => {
+    const { dispathUserList, user } = this.props;
+    if (user.data.length === 0 && !user.fetching) {
+      dispathUserList();
+    }
   }
 
   componentDidMount() {
@@ -529,9 +447,10 @@ class Purchase extends Component {
 
   handleChange(key, valuek, thongTinHangMuclk) {
     const { value, thongTinHangMuc } = this.state;
+    const { user } = this.props;
     if (thongTinHangMuclk !== undefined) {
       if (key === 'saleGbrown') {
-        const phoneSaleGbrown = nhanVien.filter(e => e.name === valuek)[0].phone;
+        const phoneSaleGbrown = user.data.filter(e => e._id === valuek)[0].email;
         this.setState({
           value: {
             ...value,
@@ -546,7 +465,7 @@ class Purchase extends Component {
         this.validateData(key, thongTinHangMuc, thongTinHangMuclk, valuek, value);
       }
     } else if (key === 'saleGbrown') {
-      const phoneSaleGbrown = nhanVien.filter(e => e.name === valuek)[0].phone;
+      const phoneSaleGbrown = user.data.filter(e => e._id === valuek)[0].email;
       this.setState({
         value: {
           ...value,
@@ -671,9 +590,9 @@ class Purchase extends Component {
     const { value } = this.state;
     let { thongTinHangMuc } = this.state;
     value.category = value && value.category && value.category.length
-    && value.category.filter((e, i) => i !== parseInt(index));
+      && value.category.filter((e, i) => i !== parseInt(index));
     thongTinHangMuc = thongTinHangMuc && thongTinHangMuc.length
-    && thongTinHangMuc.filter((e, i) => i !== parseInt(index));
+      && thongTinHangMuc.filter((e, i) => i !== parseInt(index));
     this.setState({
       value: {
         ...value
@@ -686,6 +605,7 @@ class Purchase extends Component {
     const {
       thongTinHangMuc, phanTichHangMuc, save, value, purchaseId
     } = this.state;
+    const { user } = this.props;
     return (
       <div className="App">
         <Alert bsStyle={`success ${!save ? 'hide' : ''} fixed`}>
@@ -855,6 +775,7 @@ class Purchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroupSelectNhanVien
+                userList={user.data}
                 value={value}
                 id="saleGbrown"
                 type="text"
@@ -950,10 +871,13 @@ class Purchase extends Component {
 }
 
 const mapStateToProps = state => ({
-  navBar: state.navBar
+  navBar: state.navBar,
+  user: state.userReducer,
+  login: state.login
 });
 const mapDispathToProps = dispath => ({
-  dispathNavBar: show => dispath(showNavBar(show))
+  dispathNavBar: show => dispath(showNavBar(show)),
+  dispathUserList: () => dispath(requestUserList())
 });
 
 export default connect(mapStateToProps, mapDispathToProps)(withRouter(Purchase));
