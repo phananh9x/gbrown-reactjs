@@ -57,6 +57,16 @@
   margin-bottom: 0.5cm;
 }
 
+.A4.vertical {
+  width: 21cm;
+  height: 29.7cm;
+}
+
+.vertical {
+  position: relative;
+  height: 29.7cm;
+}
+
 .section {
   position: relative;
   height: 21cm;

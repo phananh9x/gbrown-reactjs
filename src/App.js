@@ -17,6 +17,8 @@ import PurchaseList from './components/purchaselist';
 import Login from './screen/login';
 import { loginRequest } from './redux/actions/login';
 import Menu from './components/Menu';
+import ShareWork from './components/sharework';
+
 
 library.add(faStroopwafel, faUser, faLock);
 class App extends Component {
@@ -69,6 +71,7 @@ class App extends Component {
               <Route exact path="/chitiethopdong/:purchaseId" component={PrintDetail} />
               <Route exact path="/main" component={this.middleWareLogin(AddPurchase)} />
               <Route exact path="/purchase/:purchaseId" component={this.middleWareLogin(Purchase)} />
+              <Route exact path="/purchase/:purchaseId/chiaviec/:categoryIndex" component={this.middleWareLogin(ShareWork)} />
             </Switch>
           </Router>
         </main>

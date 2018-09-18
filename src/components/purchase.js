@@ -203,7 +203,7 @@ function FieldCheckBox({ onChangeCheckBox, value }) {
 }
 
 function ThongTinHangMuc({
-  index, value, handleChange, handleChangeFile, phanTichHangMuc, remove
+  index, value, handleChange, handleChangeFile, phanTichHangMuc, remove, purchaseId
 }) {
   return (
     <div className="row" style={{ marginTop: 50 }}>
@@ -212,6 +212,7 @@ function ThongTinHangMuc({
           <h1>{`THÔNG TIN HẠNG MỤC ${index + 1}`}</h1>
         </div>
         <div className="col-xs-2">
+          <Link to={`/purchase/${purchaseId}/chiaviec/${index}`}><button style={{ marginRight: '10px' }} type="button" className="btn btn-success">Chia Việc</button></Link>
           <button type="button" className="btn btn-danger" id={index} onClick={e => remove(e.target.id)}>Xóa hạng mục</button>
         </div>
       </div>
@@ -936,6 +937,7 @@ class Purchase extends Component {
               handleChangeFile={this.handleChangeFile}
               phanTichHangMuc={phanTichHangMuc[item]}
               remove={this.remove}
+              purchaseId={purchaseId}
             />))}
           <div className="col-xs-12 content-center">
             <FieldCheckBox value={value} onChangeCheckBox={this.onChangeCheckBox} />
