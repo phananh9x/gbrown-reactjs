@@ -31,9 +31,19 @@ const status = [
   { id: 5, name: 'Đã Kí Hợp Đồng' },
 ];
 
+const stylesSelected = {
+  backgroundColor: 'blue',
+  color: 'white'
+};
+
+const stylesUnSelected = {
+  backgroundColor: 'white',
+  color: 'black'
+};
+
 
 function FieldGroupSelectNhanVien({
-  id, label, handleChange, userList
+  id, label, handleChange, userList, thongTinHangMuc, kind = 0, multiple, value
 }) {
   return (
     <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
@@ -41,10 +51,26 @@ function FieldGroupSelectNhanVien({
         <ControlLabel>{label}</ControlLabel>
       </div>
       <div className="col-xs-8">
-        <FormControl id={id} componentClass="select" placeholder="Chọn" onChange={e => handleChange(id, e.target.value)}>
-          {userList.map((e, i) =>
-            <option key={parseInt(i.toString())} value={e._id}>{e.firstname}</option>
-          )}
+        <FormControl
+          multiple={multiple}
+          id={id}
+          componentClass="select"
+          placeholder="Chọn"
+          onChange={e => handleChange(id, (userList.filter(s => s._id === e.target.value))[0],
+            kind === 0 ? undefined : thongTinHangMuc)}
+        >
+          {userList.map((e, i) => (
+            <option
+              style={multiple
+                && value.implementationOfficerGroup
+                && value.implementationOfficerGroup.filter(s => s._id === e._id)[0]
+                ? stylesSelected : stylesUnSelected}
+              key={parseInt(i.toString())}
+              value={e._id}
+            >
+              {e.firstname}
+            </option>
+          ))}
         </FormControl>
       </div>
     </div>
@@ -99,7 +125,7 @@ function FieldCheckBox({ onChangeCheckBox, value }) {
 }
 
 function ThongTinHangMuc({
-  index, value, handleChange, handleChangeFile, phanTichHangMuc, remove
+  index, value, handleChange, handleChangeFile, phanTichHangMuc, remove, userList
 }) {
   return (
     <div className="row" style={{ marginTop: 50 }}>
@@ -183,18 +209,23 @@ function ThongTinHangMuc({
         />
       </div>
       <div className="col-xs-6">
-        <FieldGroup
+        <FieldGroupSelectNhanVien
           value={value}
+          userList={userList}
           id="implementationOfficer"
           type="text"
+          kind={1}
           label="Nhân Viên Thực Hiện"
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
-        <FieldGroup
+        <FieldGroupSelectNhanVien
+          userList={userList}
           value={value}
-          id="customerRequirements"
+          multiple
+          id="implementationOfficerGroup"
           type="text"
+          kind={2}
           label="Nhân Viên Làm Cùng"
           thongTinHangMuc={index}
           handleChange={handleChange}
@@ -457,13 +488,13 @@ class AddPurchase extends Component {
   }
 
   handleChange(key, valuek, thongTinHangMuclk) {
-    console.log(valuek);
-
     const { value, thongTinHangMuc } = this.state;
     const { user } = this.props;
+    console.log(thongTinHangMuclk, valuek);
+
     if (thongTinHangMuclk !== undefined) {
       if (key === 'saleGbrown') {
-        const phoneSaleGbrown = user.data.filter(e => e._id === valuek)[0].email;
+        const phoneSaleGbrown = user.data.filter(e => e._id === valuek._id)[0].email;
         this.setState({
           value: {
             ...value,
@@ -478,7 +509,7 @@ class AddPurchase extends Component {
         this.validateData(key, thongTinHangMuc, thongTinHangMuclk, valuek, value);
       }
     } else if (key === 'saleGbrown') {
-      const phoneSaleGbrown = user.data.filter(e => e._id === valuek)[0].email;
+      const phoneSaleGbrown = user.data.filter(e => e._id === valuek._id)[0].email;
       this.setState({
         value: {
           ...value,
@@ -518,7 +549,32 @@ class AddPurchase extends Component {
   }
 
   validateData(key, thongTinHangMuc, thongTinHangMuclk, valuek, value) {
-    if (key === 'description-hangmuc') {
+    if (key === 'implementationOfficerGroup') {
+      if (!thongTinHangMuc[thongTinHangMuclk][key]) {
+        thongTinHangMuc[thongTinHangMuclk][key] = [valuek];
+      } else {
+        const found = thongTinHangMuc[thongTinHangMuclk][key].filter(e => e._id === valuek._id)[0];
+        if (!found) {
+          thongTinHangMuc[thongTinHangMuclk][key].push(valuek);
+        } else {
+          thongTinHangMuc[thongTinHangMuclk][key].forEach((e, i) => {
+            if (e._id === valuek._id) {
+              if (thongTinHangMuc[thongTinHangMuclk][key][i]) {
+                thongTinHangMuc[thongTinHangMuclk][key].splice(i, 1);
+              }
+            }
+          });
+        }
+      }
+      console.log(thongTinHangMuc[thongTinHangMuclk][key]);
+
+      this.setState({
+        value: {
+          ...value,
+          category: thongTinHangMuc
+        }
+      });
+    } else if (key === 'description-hangmuc') {
       thongTinHangMuc[thongTinHangMuclk].description = valuek;
       this.setState({
         value: {
@@ -864,6 +920,7 @@ class AddPurchase extends Component {
 
           {thongTinHangMuc.map((item, index) => (
             <ThongTinHangMuc
+              userList={user.data}
               key={parseInt(index.toString())}
               value={item}
               index={index}
