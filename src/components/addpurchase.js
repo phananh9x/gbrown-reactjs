@@ -10,11 +10,13 @@ import {
 import { withRouter, Link } from 'react-router-dom';
 import moment from 'moment';
 import { Input, DatePicker } from 'antd';
+import { connect } from 'react-redux';
 import * as API from '../API';
 import FieldGroupSelect from './FieldGroupSelect';
 import FieldGroup from './FieldGroup';
 import FieldGroupDate from './FieldGroupDate';
 import NavigationBar from './NavigationBar';
+import { requestUserList } from '../redux/actions/userAction';
 
 const { TextArea } = Input;
 
@@ -25,104 +27,6 @@ const menuList = [
   }
 ];
 
-const nhanVien = [{
-  name: 'Nguyễn Thị Na',
-  phone: '01667183543',
-  email: ''
-}, {
-  name: 'TRẦN THỊ YẾN NHI',
-  phone: '01636763482',
-  email: ''
-}, {
-  name: 'NGUYỄN THỊ BÍCH HỒNG',
-  phone: '01662262818',
-  email: ''
-}, {
-  name: 'CAO THỊ LIÊN HƯƠNG',
-  phone: '0908720570',
-  email: ''
-}, {
-  name: 'VÕ THỊ THU HIẾU',
-  phone: '01687894341',
-  email: ''
-}, {
-  name: 'DƯƠNG QUỐC BẢO',
-  phone: '01676567750',
-  email: ''
-}, {
-  name: 'LÊ QUỐC BẢO',
-  phone: '0968675073',
-  email: ''
-}, {
-  name: 'BẠCH THANH QUỐC HƯNG',
-  phone: '01647294699',
-  email: ''
-}, {
-  name: 'BẠCH THANH QUỐC BỬU',
-  phone: '0962362841',
-  email: ''
-}, {
-  name: 'NGUYỄN HUỲNH THẢO NGUYÊN',
-  phone: '01682192892',
-  email: ''
-}, {
-  name: 'NGÔ THỊ THU',
-  phone: '01694655380',
-  email: ''
-}, {
-  name: 'NGÔ VĂN CHIẾN',
-  phone: '01694649446',
-  email: ''
-}, {
-  name: 'ĐẶNG HOÀNG TRUNG HIẾU',
-  phone: '01689281550',
-  email: ''
-}, {
-  name: 'TRẦN THỊ THU THẢO',
-  phone: '01299-12879 ',
-  email: ''
-}, {
-  name: 'NGUYỄN CỬU QUÝ',
-  phone: '0915733607',
-  email: ''
-}, {
-  name: 'NGUYỄN VĂN ẨN',
-  phone: '01694992535',
-  email: ''
-}, {
-  name: 'NGUYỄN NGỌC NON',
-  phone: '0898548144',
-  email: ''
-}, {
-  name: 'NGUYỄN THANH DUY ',
-  phone: '0901916494',
-  email: ''
-}, {
-  name: 'NGUYỄN CỬU QUÝ',
-  phone: '0915733607',
-  email: ''
-}, {
-  name: 'HUỲNH THỊ TRÚC QUYÊN ',
-  phone: '0987636964',
-  email: ''
-}, {
-  name: 'TRẦN ĐẶNG MINH QUÝ ',
-  phone: '0928041332',
-  email: ''
-}, {
-  name: 'LÊ THÚY HOA',
-  phone: '01677149396',
-  email: ''
-}, {
-  name: 'PHAN NHẬT MINH',
-  phone: '0901428284',
-  email: ''
-}, {
-  name: 'ĐẶNG THANH NAM ',
-  phone: '01213638883',
-  email: ''
-}];
-
 const status = [
   { id: 1, name: 'Đơn Hàng Mới' },
   { id: 2, name: 'Đã Gọi' },
@@ -131,9 +35,19 @@ const status = [
   { id: 5, name: 'Đã Kí Hợp Đồng' },
 ];
 
+const stylesSelected = {
+  backgroundColor: 'blue',
+  color: 'white'
+};
+
+const stylesUnSelected = {
+  backgroundColor: 'white',
+  color: 'black'
+};
+
 
 function FieldGroupSelectNhanVien({
-  id, label, handleChange
+  id, label, handleChange, userList, thongTinHangMuc, kind = 0, multiple, value
 }) {
   return (
     <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
@@ -141,10 +55,26 @@ function FieldGroupSelectNhanVien({
         <ControlLabel>{label}</ControlLabel>
       </div>
       <div className="col-xs-8">
-        <FormControl id={id} componentClass="select" placeholder="Chọn" onChange={e => handleChange(id, e.target.value)}>
-          {nhanVien.map((e, i) =>
-            <option key={parseInt(i.toString())} value={e.name}>{e.name}</option>
-          )}
+        <FormControl
+          multiple={multiple}
+          id={id}
+          componentClass="select"
+          placeholder="Chọn"
+          onChange={e => handleChange(id, (userList.filter(s => s._id === e.target.value))[0],
+            kind === 0 ? undefined : thongTinHangMuc)}
+        >
+          {userList.map((e, i) => (
+            <option
+              style={multiple
+                && value.implementationOfficerGroup
+                && value.implementationOfficerGroup.filter(s => s._id === e._id)[0]
+                ? stylesSelected : stylesUnSelected}
+              key={parseInt(i.toString())}
+              value={e._id}
+            >
+              {e.firstname}
+            </option>
+          ))}
         </FormControl>
       </div>
     </div>
@@ -200,7 +130,7 @@ function FieldCheckBox({ onChangeCheckBox, value }) {
 
 function ThongTinHangMuc({
   index, value, handleChange, handleChangeFile, phanTichHangMuc,
-  remove, updatePreparationDay, addNgayChuanBi
+  remove, updatePreparationDay, addNgayChuanBi, userList
 }) {
   return (
     <div className="row" style={{ marginTop: 50 }}>
@@ -319,18 +249,23 @@ function ThongTinHangMuc({
         <button type="button" className="btn btn-success" onClick={() => addNgayChuanBi(index)}>Thêm Ngày Chuẩn Bị</button>
       </div>
       <div className="col-xs-6">
-        <FieldGroup
+        <FieldGroupSelectNhanVien
           value={value}
+          userList={userList}
           id="implementationOfficer"
           type="text"
+          kind={1}
           label="Nhân Viên Thực Hiện"
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
-        <FieldGroup
+        <FieldGroupSelectNhanVien
+          userList={userList}
           value={value}
-          id="customerRequirements"
+          multiple
+          id="implementationOfficerGroup"
           type="text"
+          kind={2}
           label="Nhân Viên Làm Cùng"
           thongTinHangMuc={index}
           handleChange={handleChange}
@@ -519,9 +454,9 @@ class AddPurchase extends Component {
     this.state = {
       value: {
         image: [],
-        phoneSaleGbrown: nhanVien[0].phone,
+        phoneSaleGbrown: '',
         deposit: 0,
-        saleGbrown: nhanVien[0].name,
+        saleGbrown: '',
         status: 'Đơn hàng mới'
       },
       thongTinHangMuc: [],
@@ -567,13 +502,25 @@ class AddPurchase extends Component {
     });
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { login } = nextProps;
+    if (login.success) {
+      this.getUserList();
+    }
+  }
+
+  getUserList = () => {
+    const { dispathUserList, user } = this.props;
+    if (user.data.length === 0 && !user.fetching) {
+      dispathUserList();
+    }
+  }
+
   componentDidMount() {
     const { purchaseId } = this.state;
     const { match } = this.props;
-    // console.log(this.props.match.params.purchaseId)
     if (purchaseId) {
       API.getPurchaseDetail(match.params.purchaseId).then((data) => {
-        // console.log(data.results)
         this.setState({
           value: {
             ...data.results
@@ -604,9 +551,12 @@ class AddPurchase extends Component {
 
   handleChange(key, valuek, thongTinHangMuclk) {
     const { value, thongTinHangMuc } = this.state;
+    const { user } = this.props;
+    console.log(thongTinHangMuclk, valuek);
+
     if (thongTinHangMuclk !== undefined) {
       if (key === 'saleGbrown') {
-        const phoneSaleGbrown = nhanVien.filter(e => e.name === valuek)[0].phone;
+        const phoneSaleGbrown = user.data.filter(e => e._id === valuek._id)[0].email;
         this.setState({
           value: {
             ...value,
@@ -621,7 +571,7 @@ class AddPurchase extends Component {
         this.validateData(key, thongTinHangMuc, thongTinHangMuclk, valuek, value);
       }
     } else if (key === 'saleGbrown') {
-      const phoneSaleGbrown = nhanVien.filter(e => e.name === valuek)[0].phone;
+      const phoneSaleGbrown = user.data.filter(e => e._id === valuek._id)[0].email;
       this.setState({
         value: {
           ...value,
@@ -661,7 +611,32 @@ class AddPurchase extends Component {
   }
 
   validateData(key, thongTinHangMuc, thongTinHangMuclk, valuek, value) {
-    if (key === 'description-hangmuc') {
+    if (key === 'implementationOfficerGroup') {
+      if (!thongTinHangMuc[thongTinHangMuclk][key]) {
+        thongTinHangMuc[thongTinHangMuclk][key] = [valuek];
+      } else {
+        const found = thongTinHangMuc[thongTinHangMuclk][key].filter(e => e._id === valuek._id)[0];
+        if (!found) {
+          thongTinHangMuc[thongTinHangMuclk][key].push(valuek);
+        } else {
+          thongTinHangMuc[thongTinHangMuclk][key].forEach((e, i) => {
+            if (e._id === valuek._id) {
+              if (thongTinHangMuc[thongTinHangMuclk][key][i]) {
+                thongTinHangMuc[thongTinHangMuclk][key].splice(i, 1);
+              }
+            }
+          });
+        }
+      }
+      console.log(thongTinHangMuc[thongTinHangMuclk][key]);
+
+      this.setState({
+        value: {
+          ...value,
+          category: thongTinHangMuc
+        }
+      });
+    } else if (key === 'description-hangmuc') {
       thongTinHangMuc[thongTinHangMuclk].description = valuek;
       this.setState({
         value: {
@@ -755,9 +730,9 @@ class AddPurchase extends Component {
     const { value } = this.state;
     let { thongTinHangMuc } = this.state;
     value.category = value && value.category
-    && value.category.length && value.category.filter((_e, i) => i !== parseInt(index));
+      && value.category.length && value.category.filter((_e, i) => i !== parseInt(index));
     thongTinHangMuc = thongTinHangMuc && thongTinHangMuc.length
-    && thongTinHangMuc.filter((_e, i) => i !== parseInt(index));
+      && thongTinHangMuc.filter((_e, i) => i !== parseInt(index));
     this.setState({
       value: {
         ...value
@@ -770,6 +745,8 @@ class AddPurchase extends Component {
     const {
       thongTinHangMuc, phanTichHangMuc, save, value, purchaseId
     } = this.state;
+
+    const { user } = this.props;
 
     return (
       <div className="App">
@@ -931,6 +908,7 @@ class AddPurchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroupSelectNhanVien
+                userList={user.data}
                 value={value}
                 id="saleGbrown"
                 type="text"
@@ -1004,6 +982,7 @@ class AddPurchase extends Component {
 
           {thongTinHangMuc.map((item, index) => (
             <ThongTinHangMuc
+              userList={user.data}
               key={parseInt(index.toString())}
               value={item}
               index={index}
@@ -1040,4 +1019,13 @@ class AddPurchase extends Component {
   }
 }
 
-export default withRouter(AddPurchase);
+
+const mapStateToProps = state => ({
+  user: state.userReducer,
+  login: state.login
+});
+const mapDispathToProps = dispath => ({
+  dispathUserList: () => dispath(requestUserList())
+});
+
+export default connect(mapStateToProps, mapDispathToProps)(withRouter(AddPurchase));

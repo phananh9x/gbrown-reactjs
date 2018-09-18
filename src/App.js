@@ -27,10 +27,6 @@ class App extends Component {
     this.logined = false;
   }
 
-  componentDidMount() {
-
-  }
-
   componentWillReceiveProps(nextProps) {
     const { login } = nextProps;
     if (!login.fetching) {
@@ -57,7 +53,6 @@ class App extends Component {
 
   render() {
     const { navBar } = this.props;
-    console.log(navBar);
 
     return (
       <div className="App" id="outer-container">
@@ -81,10 +76,10 @@ class App extends Component {
 }
 const mapStateToProps = state => ({
   navBar: state.navBar,
-  login: state.login
+  login: state.login,
 });
 const mapDispathToProps = dispath => ({
-  dispathLogin: data => dispath(loginRequest(data))
+  dispathLogin: data => dispath(loginRequest(data)),
 });
 
 export default connect(mapStateToProps, mapDispathToProps)(App);

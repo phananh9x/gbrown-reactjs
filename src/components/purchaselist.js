@@ -4,110 +4,14 @@ import {
   FormControl, ButtonToolbar, Button, Glyphicon, ButtonGroup,
   DropdownButton, MenuItem,
 } from 'react-bootstrap';
+import { connect } from 'react-redux';
 import moment from 'moment';
 import ReactTable from 'react-table';
 import { DatePicker } from 'antd';
 import * as API from '../API';
 import NavigationBar from './NavigationBar';
+import { requestUserList } from '../redux/actions/userAction';
 
-
-const nhanVien = [{
-  name: 'Nguyễn Thị Na',
-  phone: '01667183543',
-  email: ''
-}, {
-  name: 'TRẦN THỊ YẾN NHI',
-  phone: '01636763482',
-  email: ''
-}, {
-  name: 'NGUYỄN THỊ BÍCH HỒNG',
-  phone: '01662262818',
-  email: ''
-}, {
-  name: 'CAO THỊ LIÊN HƯƠNG',
-  phone: '0908720570',
-  email: ''
-}, {
-  name: 'VÕ THỊ THU HIẾU',
-  phone: '01687894341',
-  email: ''
-}, {
-  name: 'DƯƠNG QUỐC BẢO',
-  phone: '01676567750',
-  email: ''
-}, {
-  name: 'LÊ QUỐC BẢO',
-  phone: '0968675073',
-  email: ''
-}, {
-  name: 'BẠCH THANH QUỐC HƯNG',
-  phone: '01647294699',
-  email: ''
-}, {
-  name: 'BẠCH THANH QUỐC BỬU',
-  phone: '0962362841',
-  email: ''
-}, {
-  name: 'NGUYỄN HUỲNH THẢO NGUYÊN',
-  phone: '01682192892',
-  email: ''
-}, {
-  name: 'NGÔ THỊ THU',
-  phone: '01694655380',
-  email: ''
-}, {
-  name: 'NGÔ VĂN CHIẾN',
-  phone: '01694649446',
-  email: ''
-}, {
-  name: 'ĐẶNG HOÀNG TRUNG HIẾU',
-  phone: '01689281550',
-  email: ''
-}, {
-  name: 'TRẦN THỊ THU THẢO',
-  phone: '01299-12879 ',
-  email: ''
-}, {
-  name: 'NGUYỄN CỬU QUÝ',
-  phone: '0915733607',
-  email: ''
-}, {
-  name: 'NGUYỄN VĂN ẨN',
-  phone: '01694992535',
-  email: ''
-}, {
-  name: 'NGUYỄN NGỌC NON',
-  phone: '0898548144',
-  email: ''
-}, {
-  name: 'NGUYỄN THANH DUY ',
-  phone: '0901916494',
-  email: ''
-}, {
-  name: 'NGUYỄN CỬU QUÝ',
-  phone: '0915733607',
-  email: ''
-}, {
-  name: 'HUỲNH THỊ TRÚC QUYÊN ',
-  phone: '0987636964',
-  email: ''
-}, {
-  name: 'TRẦN ĐẶNG MINH QUÝ ',
-  phone: '0928041332',
-  email: ''
-}, {
-  name: 'LÊ THÚY HOA',
-  phone: '01677149396',
-  email: ''
-}, {
-  name: 'PHAN NHẬT MINH',
-  phone: '0901428284',
-  email: ''
-}, {
-  name: 'ĐẶNG THANH NAM ',
-  phone: '01213638883',
-  email: ''
-}];
 
 const status = [
   { id: 1, name: 'Đơn Hàng Mới' },
@@ -205,17 +109,17 @@ class PurchaseList extends Component {
     this.setState({ staffFilter: e });
   }
 
-  renderStaff = (e, i) => (
-    <MenuItem
-      onClick={() =>
-        this.selectStaff(e)}
-      key={i}
-      value={e.name}
-    >
-      {e.name}
-
-    </MenuItem>
-  )
+  renderStaff = (e, i) => {
+    return (
+      <MenuItem
+        onClick={() =>
+          this.selectStaff(e)}
+        key={i}
+      >
+        {e.firstname}
+      </MenuItem>
+    );
+  }
 
   selectStatus = (e) => {
     this.setState({ statusFilter: e });
@@ -263,6 +167,20 @@ class PurchaseList extends Component {
     );
   };
 
+  componentWillReceiveProps(nextProps) {
+    const { login } = nextProps;
+    if (login.success) {
+      this.getUserList();
+    }
+  }
+
+  getUserList = () => {
+    const { dispathUserList, user } = this.props;
+    if (user.data.length === 0 && !user.fetching) {
+      dispathUserList();
+    }
+  }
+
   componentDidMount() {
     const { match } = this.props;
     API.getAllPurchase(match.params.purchaseId).then((data) => {
@@ -309,7 +227,7 @@ class PurchaseList extends Component {
       value, pageSize, searchKey, selectAll, staffFilter, statusFilter
     } = this.state;
     const {
-      history
+      history, user
     } = this.props;
 
     console.log(statusFilter);
@@ -352,9 +270,7 @@ class PurchaseList extends Component {
                 </ButtonGroup>
               </ButtonToolbar>
             </div>
-            <div className="col-xs-1 bold">
-              Từ
-            </div>
+            <div className="col-xs-1 bold">Từ</div>
             <div className="col-xs-2">
               <DatePicker
                 value={moment()}
@@ -365,9 +281,7 @@ class PurchaseList extends Component {
                 onOk={e => this.handleChangeDate(new Date(e))}
               />
             </div>
-            <div className="col-xs-1 bold">
-              Đến
-            </div>
+            <div className="col-xs-1 bold">Đến</div>
             <div className="col-xs-2">
               <DatePicker
                 value={moment()}
@@ -378,14 +292,12 @@ class PurchaseList extends Component {
                 onOk={e => this.handleChangeDate(new Date(e))}
               />
             </div>
-            <div className="col-xs-2 bold">
-              Nhân viên
-            </div>
+            <div className="col-xs-2 bold">Nhân viên</div>
             <div className="col-xs-4">
               <DropdownButton
                 title={staffFilter.name}
               >
-                {nhanVien.map((e, i) => this.renderStaff(e, i))}
+                {user.success && user.data.map((e, i) => this.renderStaff(e, i))}
               </DropdownButton>
             </div>
             {/* <div className="col-xs-2 bold">
@@ -431,5 +343,12 @@ class PurchaseList extends Component {
     );
   }
 }
+const mapStateToProps = state => ({
+  user: state.userReducer,
+  login: state.login
+});
+const mapDispathToProps = dispath => ({
+  dispathUserList: () => dispath(requestUserList())
+});
 
-export default PurchaseList;
+export default connect(mapStateToProps, mapDispathToProps)(PurchaseList);
