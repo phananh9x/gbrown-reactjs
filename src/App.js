@@ -8,7 +8,9 @@ import {
   Switch,
 } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faStroopwafel, faUser, faLock } from '@fortawesome/free-solid-svg-icons';
+import {
+  faStroopwafel, faUser, faLock, faCheck
+} from '@fortawesome/free-solid-svg-icons';
 import Purchase from './components/purchase';
 import AddPurchase from './components/addpurchase';
 import Print from './components/print';
@@ -20,7 +22,7 @@ import Menu from './components/Menu';
 import ShareWork from './components/sharework';
 
 
-library.add(faStroopwafel, faUser, faLock);
+library.add(faStroopwafel, faUser, faLock, faCheck);
 class App extends Component {
   constructor(props) {
     super(props);

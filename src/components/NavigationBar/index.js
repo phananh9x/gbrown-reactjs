@@ -62,12 +62,15 @@ class NavigationBar extends Component {
                 </Nav> */}
                 <Nav pullRight>
                   <NavItem onClick={() => {
-                    window.open('http://studio.gbrownflower.com', '_blank');
+
                   }}
                   >
-                    <p>
-                      {'Orange Studio'}
-                    </p>
+                    <Link to="/">
+                      <p>
+                        {'Danh sách PO'}
+                      </p>
+                    </Link>
+
                   </NavItem>
                   <NavItem onClick={() => {
                     window.open('http://gbrownflower.com/admin', '_blank');
