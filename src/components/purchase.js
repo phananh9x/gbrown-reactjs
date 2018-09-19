@@ -68,16 +68,64 @@ const status = [
 
 const stylesSelected = {
   backgroundColor: 'blue',
-  color: 'white'
+  color: 'white',
+  flexDirection: 'row',
 };
 
 const stylesUnSelected = {
+  flexDirection: 'row',
   backgroundColor: 'white',
   color: 'black'
 };
 
 
 function FieldGroupSelectNhanVien({
+  id, label, handleChange, value, userList, kind = 0, thongTinHangMuc, multiple = false
+}) {
+  let optionValue = '';
+  if (kind === 0 && value.saleGbrown) {
+    const saleGbrown = userList.filter(e => e._id === value.saleGbrown)[0];
+    optionValue = (saleGbrown !== undefined ? saleGbrown._id : value.saleGbrown._id);
+  } else if (kind === 1 && value.implementationOfficer) {
+    const saleGbrown = userList.filter(e => e._id === value.implementationOfficer._id)[0];
+    optionValue = (saleGbrown !== undefined ? saleGbrown._id : value.implementationOfficer._id);
+  }
+
+  return (
+    <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
+      <div className="col-xs-4 app-label">
+        <ControlLabel>{label}</ControlLabel>
+      </div>
+      <div className="col-xs-8">
+        <FormControl
+          id={id}
+          multiple={multiple}
+          componentClass="select"
+          placeholder="Chọn"
+          value={optionValue}
+          onChange={e => handleChange(id, (userList.filter(s => s._id === e.target.value))[0],
+            kind === 0 ? undefined : thongTinHangMuc)}
+        >
+          {userList.map((e, i) => (
+            <option
+              style={multiple
+                && value.implementationOfficerGroup
+                && value.implementationOfficerGroup.filter(s => s._id === e._id)[0]
+                ? stylesSelected : stylesUnSelected}
+              key={parseInt(i.toString())}
+              value={e._id}
+            >
+              {e.firstname}
+            </option>
+          ))}
+        </FormControl>
+      </div>
+    </div>
+  );
+}
+
+
+function FieldGroupMultiSelectNhanVien({
   id, label, handleChange, value, userList, kind = 0, thongTinHangMuc, multiple = false
 }) {
   let optionValue = '';
@@ -232,6 +280,7 @@ function ThongTinHangMuc({
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
+
         <FieldGroup
           value={value}
           id="description-hangmuc"
@@ -279,7 +328,7 @@ function ThongTinHangMuc({
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
-        <FieldGroupSelectNhanVien
+        <FieldGroupMultiSelectNhanVien
           userList={userList}
           value={value}
           kind={2}
@@ -345,18 +394,18 @@ function ThongTinHangMuc({
             }}
           >
             {
-            value.chat && value.chat.map((e, i) => (
-              <div key={e.id || new Date().valueOf()} style={{ borderBottom: (i !== (value.chat.length - 1) && '1px solid gray') || 'none', margin: '0 10px' }}>
-                <div style={{ justifyContent: 'space-between', display: 'flex' }}>
-                  <b>{e.name.toUpperCase()}</b>
-                  <p>{e.date}</p>
+              value.chat && value.chat.map((e, i) => (
+                <div key={e.id || new Date().valueOf()} style={{ borderBottom: (i !== (value.chat.length - 1) && '1px solid gray') || 'none', margin: '0 10px' }}>
+                  <div style={{ justifyContent: 'space-between', display: 'flex' }}>
+                    <b>{e.name.toUpperCase()}</b>
+                    <p>{e.date}</p>
+                  </div>
+                  <div>
+                    <p>{e.message}</p>
+                  </div>
                 </div>
-                <div>
-                  <p>{e.message}</p>
-                </div>
-              </div>
-            ))
-          }
+              ))
+            }
           </div>
           <Search
             style={{ marginTop: '10px' }}
@@ -659,8 +708,6 @@ class Purchase extends Component {
           ...value,
           [key]: valuek
         }
-      }, () => {
-        console.log(key, valuek, value);
       });
     }
   }
@@ -676,7 +723,7 @@ class Purchase extends Component {
         } else {
           thongTinHangMuc[thongTinHangMuclk][key].forEach((e, i) => {
             if (e._id === valuek._id) {
-              thongTinHangMuc[thongTinHangMuclk][key].split(i, 1);
+              thongTinHangMuc[thongTinHangMuclk][key].splice(i, 1);
             }
           });
         }
