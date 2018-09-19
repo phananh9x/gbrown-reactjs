@@ -279,6 +279,15 @@ function ThongTinHangMuc({
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
+        <FieldGroup
+          value={value}
+          id="noteImplementationOfficer"
+          type="text"
+          label="Note Chi Tiết Nhân Viên Thực Hiện"
+          thongTinHangMuc={index}
+          handleChange={handleChange}
+          textArea
+        />
         <FieldGroupSelectNhanVien
           userList={userList}
           value={value}
@@ -539,7 +548,7 @@ class Purchase extends Component {
     const obj = {
       id: `${new Date().valueOf()}-${Math.floor(Math.random() * 900000) + 100000}`,
       message: msg,
-      name: (login && login.data && login.data.results && login.data.results.email) || 'ADMIN',
+      name: (login && login.data && login.data.results && login.data.results.firstname) || 'ADMIN',
       date: moment().format('DD/MM/YYYY HH:mm:ss')
     };
     if (value.category[index] && !value.category[index].chat) {
