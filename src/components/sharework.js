@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -56,11 +57,25 @@ class ShareWork extends Component {
     const { user } = this.props;
     console.log(user.data);
     const saleGbrown = value.saleGbrown
-    && value.saleGbrown 
-    && user.data.length 
-    && user.data.filter(e => e._id === value.saleGbrown)[0].firstname;
-    const nvLamCung = category && category.implementationOfficerGroup.length
-    && category.implementationOfficerGroup.map(e => e.firstname).join(', ');
+      && value.saleGbrown
+      && user.data.length
+      && user.data.filter(e => e._id === value.saleGbrown)[0].firstname;
+    const nvLamCung = category && category.implementationOfficerGroup && category.implementationOfficerGroup.length
+      && category.implementationOfficerGroup.map(e => e.firstname).join(', ');
+    let image = []
+    if (category && category.image && category.image.length) {
+      let temp = [];
+      let count = 0;
+      for (let index = 0; index < category.image.length; index++) {
+        temp.push(category.image[index]);
+        count++;
+        if ((index > 0 && count % 4 === 0) || count === category.image.length) {
+          image.push(temp);
+          temp = [];
+        }
+      }
+    }
+    console.log(image)
     return (
       <div className="App" ref={el => (this.componentRef = el)} style={{ backgroundColor: 'gray' }}>
         {/* <ReactToPrint
@@ -156,25 +171,53 @@ class ShareWork extends Component {
                   <b>{value.setupDate && moment(new Date(value.setupDate)).format('HH:mm DD/MM/YYYY')}</b>
                 </div>
               </div>
-              <div className="col-xs-12" style={{ flexDirection: 'row', display: 'flex', height: '300px'}}>
+              <div className="col-xs-12" style={{ flexDirection: 'row', display: 'flex', minHeight: '300px', flexWrap: 'wrap' }}>
                 {
-                  category && category.image.length &&
-                  category.image.map(e =>
-                    <div className="col-xs-12">
+                  image.length && image[0].map((e, i) =>
+                    <div className="col-xs-6" style={{ marginTop: i >= 2 && '10px' || 0 }}>
                       <img src={e.url} />
                     </div>
                   )
                 }
               </div>
-              <div className="col-xs-12" style={{ border: '1px solid #000', marginTop: '0.5cm' }}>
-                <div className="col-xs-6" style={{ padding: 0 }}>
-                  <div style={{ fontSize: 15, fontWeight: 600 }}>Ngày Chuẩn bị:</div>
-                  {category && category.ngayChuanBi.length
-                    && category.ngayChuanBi.map((e, i) =>
-                    <div key={e.id} style={{ 
+            </div>
+          </div>
+        </div>
+        {image.length > 1 && image.map((e, i) => {
+          if (i > 0) {
+            return (
+              <div className="A4 page vertical">
+                <div className="vertical" style={{ margin: '0.5cm' }}>
+                  <div className="row" style={{ border: '1px solid #000', marginTop: '0.5cm', minHeight: '750px', padding: '15px' }}>
+                    <div className="col-xs-12" style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 0 }}>
+                      <div style={{ fontWeight: 600, fontSize: '28px' }}>HÌNH ẢNH</div>
+
+                    </div>
+                    <div className="col-xs-12" style={{ flexDirection: 'row', display: 'flex', minHeight: '300px', flexWrap: 'wrap' }}>
+                      {
+                        e.map((item, i) =>
+                          <div className="col-xs-6" style={{ marginTop: i >= 2 && '10px' || 0 }}>
+                            <img src={item.url} />
+                          </div>)
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )
+          }
+        })}
+        <div className="A4 page vertical">
+          <div className="vertical" style={{ margin: '0.5cm' }}>
+            <div className="col-xs-12" style={{ border: '1px solid #000', marginTop: '0.5cm' }}>
+              <div className="col-xs-6" style={{ padding: 0 }}>
+                <div style={{ fontSize: 15, fontWeight: 600 }}>Ngày Chuẩn bị:</div>
+                {category && category.ngayChuanBi.length
+                  && category.ngayChuanBi.map((e, i) =>
+                    <div key={e.id} style={{
                       borderBottom: ((category.ngayChuanBi.length - 1 !== i)
-                      && '1px solid #000') || 'none', marginRight: '15px' 
-                      }}
+                        && '1px solid #000') || 'none', marginRight: '15px'
+                    }}
                     >
                       <div>
                         {`Ngày ${i + 1}:    `}
@@ -185,48 +228,49 @@ class ShareWork extends Component {
                         <b>{e.congviec}</b>
                       </div>
                     </div>
-                    )}
-                </div>
-                <div className="col-xs-6" style={{ borderLeft: '1px solid #000' }}>
-                  <div style={{ fontSize: 14, fontWeight: '600' }}>Chat với lãnh đạo khách hàng, sale và nhân viên sản xuất:</div>
-                    {
-                      category && category.chat.length && category.chat.map((e, i) => 
-                      <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <div style={{ fontWeight: 500, fontSize: 12, width: '58%' }}><b>{`${e.name} : `}</b>{e.message}</div>
-                          <div><b>{e.date}</b></div>
-                        </div>
-                      </div>
-                      )
-                    }
-                    
-                  </div>
+                  )}
               </div>
-              <div className="col-xs-12" style={{ display: 'flex', justifyContent: 'space-around', marginTop: '50px' }}>
-                <div style={{ height: '70px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>Quản lý</div>
-                  <div><b>{ value.manager }</b></div>
-                </div>
-                <div style={{ height: '70px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>Nhân Viên Thực Hiện</div>
-                  <div><b>{ category && category.implementationOfficer && category.implementationOfficer.firstname}</b></div>
-                </div>
-                <div style={{ height: '70px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>Nhân Viên Làm Cùng</div>
-                  <div><b>{ category && category.implementationOfficer && category.implementationOfficerGroup.length && category.implementationOfficerGroup[0].firstname }</b></div>
-                </div>
-                <div style={{ height: '70px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>Sale</div>
-                  <div><b>{ saleGbrown }</b></div>
-                </div>
-                <div style={{ height: '70px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>Giám dốc</div>
-                  <div><b>Đặng Thanh Tứ</b></div>
-                </div>
+              <div className="col-xs-6" style={{ borderLeft: '1px solid #000' }}>
+                <div style={{ fontSize: 14, fontWeight: '600' }}>Chat với lãnh đạo khách hàng, sale và nhân viên sản xuất:</div>
+                {
+                  category && category.chat.length && category.chat.map((e, i) =>
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div style={{ fontWeight: 500, fontSize: 12, width: '58%' }}><b>{`${e.name} : `}</b>{e.message}</div>
+                        <div><b>{e.date}</b></div>
+                      </div>
+                    </div>
+                  )
+                }
+
               </div>
             </div>
+            <div className="col-xs-12" style={{ display: 'flex', justifyContent: 'space-around', marginTop: '50px' }}>
+              <div style={{ height: '70px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>Quản lý</div>
+                <div><b>{value.manager}</b></div>
+              </div>
+              <div style={{ height: '70px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>Nhân Viên Thực Hiện</div>
+                <div><b>{category && category.implementationOfficer && category.implementationOfficer.firstname}</b></div>
+              </div>
+              <div style={{ height: '70px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>Nhân Viên Làm Cùng</div>
+                <div><b>{category && category.implementationOfficer && category.implementationOfficerGroup.length && category.implementationOfficerGroup[0].firstname}</b></div>
+              </div>
+              <div style={{ height: '70px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>Sale</div>
+                <div><b>{saleGbrown}</b></div>
+              </div>
+              <div style={{ height: '70px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>Giám dốc</div>
+                <div><b>Đặng Thanh Tứ</b></div>
+              </div>
+            </div>
+
           </div>
         </div>
+
       </div>
     );
   }
