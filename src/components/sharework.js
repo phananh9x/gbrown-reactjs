@@ -99,7 +99,7 @@ class ShareWork extends Component {
               </div>
               <div className="col-xs-8" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ fontWeight: 600, fontSize: '28px' }}>CHIA VIỆC LÀM</div>
-                <div>{`Hôm nay: Ngày ${new Date().getDay()} tháng ${new Date().getMonth() + 1} năm ${new Date().getFullYear()}`}</div>
+                <div>{`Hôm nay: Ngày ${new Date().getDate()} tháng ${new Date().getMonth() + 1} năm ${new Date().getFullYear()}`}</div>
               </div>
             </div>
             <div className="row" style={{ border: '1px solid #000', display: 'flex', alignItems: 'start', marginTop: '0.5cm' }}>
