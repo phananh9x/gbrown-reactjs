@@ -31,7 +31,7 @@ const renderCell = (props) => {
         style={{ marginTop: 5 }}
         id="confirm_schedule"
       >
-        Chưa chia việc
+        {original.chiaViec ? 'Đã chia việc' : 'Chưa chia việc'}
       </Button>
     </div>
   );
@@ -46,7 +46,9 @@ class WorkSchedule extends Component {
       map: {},
       selectAll: 0,
       showConfirm: false
+      showConfirm: false,
     };
+    this.valueForSave = {};
     this.modal = {};
     this.purchaseChatId = {};
     this.toDay = moment(new Date()).format('DD/MM/YYYY');
@@ -205,20 +207,6 @@ class WorkSchedule extends Component {
     );
   };
 
-  showConfirm = (modal, onClick) => (
-    <div className="static-modal">
-      <Modal.Dialog>
-        <Modal.Header>
-          <Modal.Title>{modal.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{modal.body}</Modal.Body>
-        <Modal.Footer>
-          <Button>{modal.cancel}</Button>
-          <Button bsStyle="primary" onClick={onClick}>{modal.accept}</Button>
-        </Modal.Footer>
-      </Modal.Dialog>
-    </div>)
-
 
   componentWillReceiveProps(nextProps) {
     const { match, user, chat } = nextProps;
@@ -277,7 +265,17 @@ class WorkSchedule extends Component {
   };
 
   confirmSchedule = () => {
-
+    this.valueForSave.chiaViec = true;
+    API.updatePurchase(this.valueForSave, this.valueForSave.purchaseId).then(() => {
+      const { value } = this.state;
+      const newValue = JSON.parse(JSON.stringify(value));
+      newValue.forEach((e) => {
+        if (e.purchaseId === this.valueForSave.purchaseChatId) {
+          e.chiaViec = true;
+        }
+      });
+      this.setState({ value: newValue });
+    });
   }
 
   render() {
@@ -322,6 +320,7 @@ class WorkSchedule extends Component {
                     accept: 'Xác nhận',
                     key: e.target.id
                   };
+                  this.valueForSave = rowInfo.original;
                   this.setState({ showConfirm: true });
                 }
               }
@@ -342,7 +341,7 @@ class WorkSchedule extends Component {
                     bsStyle="primary"
                     onClick={() => {
                       if (this.modal.key === 'confirm_schedule') {
-                        console.log('do confirm');
+                        this.setState({ showConfirm: false }, () => this.confirmSchedule());
                       }
                     }}
                   >
