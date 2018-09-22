@@ -8,6 +8,7 @@ import { showNavBar } from '../../redux/actions/navBar';
 import { loginLogout } from '../../redux/actions/login';
 import { Color } from '../../constants/color';
 
+const group = 2;
 class NavigationBar extends Component {
   constructor(props) {
     super(props);
@@ -21,10 +22,22 @@ class NavigationBar extends Component {
     dispathLogout();
   }
 
+  groupTitle = () => {
+    if (group === 1) {
+      return 'GBrown';
+    } if (group === 2) {
+      return 'Nhắc nhở công việc';
+    } if (group === 3) {
+      return 'Công việc của Sale';
+    }
+    return '';
+  }
+
   render() {
     const {
       show, login, menus
     } = this.props;
+
     const path = window.location.pathname;
     const menuArray = [];
     if (menus) {
@@ -49,8 +62,8 @@ class NavigationBar extends Component {
           && (
             <Navbar fixedTop className="navbar-fixed-top">
               <Navbar.Collapse>
-                <Nav>
-                  {/* <NavItem
+
+                {/* <NavItem
                     onClick={() => {
                       dispathNavBar(!navBar.showNavbar);
                     }}
@@ -59,14 +72,58 @@ class NavigationBar extends Component {
                     {'Menu'}
                   </NavItem>
                   {menuArray} */}
-                  <NavItem>
-                    <Link to="/">
-                      <p>
-                        {'Danh sách PO'}
-                      </p>
-                    </Link>
-                  </NavItem>
-                </Nav>
+                <Navbar.Brand>
+                  <a href="#home">{this.groupTitle()}</a>
+                </Navbar.Brand>
+
+
+                {group === 1
+                  && (
+                    <Nav>
+                      <NavItem>
+                        <Link to="/">
+                          Danh sách PO
+                        </Link>
+                      </NavItem>
+                    </Nav>
+                  )
+                }
+
+                {group === 2
+                  && (
+                    <Nav>
+                      <NavItem>
+                        <Link to="/">
+                          Chia việc nhân viên
+                        </Link>
+                      </NavItem>
+                      <NavItem>
+                        <Link to="/">
+                          Lịch họp với Sale
+                        </Link>
+                      </NavItem>
+                      <NavItem>
+                        <Link to="/">
+                          Lịch họp với Ekip
+                        </Link>
+                      </NavItem>
+                    </Nav>
+                  )
+                }
+
+
+                {group === 3
+                  && (
+                    <Nav>
+                      <NavItem>
+                        <Link to="/aaa">
+                          Công việc của Sale
+                        </Link>
+                      </NavItem>
+                    </Nav>
+                  )
+                }
+
 
                 <Nav pullRight>
                   <NavDropdown title="Liên kết Web">
