@@ -10,3 +10,8 @@ export const userListApi = () => {
   const url = `${server}user/all`;
   return http.get(url, {});
 };
+
+export const chatPurchaseApi = (data) => {
+  const url = `${server}chat/purchase/${data.purchaseId}/create`;
+  return http.post(url, data);
+};

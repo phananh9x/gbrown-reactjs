@@ -9,6 +9,7 @@ import ReactTable from 'react-table';
 import { Input } from 'antd';
 import * as API from '../../API';
 import NavigationBar from '../../components/NavigationBar';
+import { chatPurchaseAction } from '../../redux/actions/chatAction';
 
 const { Search } = Input;
 
@@ -134,38 +135,31 @@ class WorkSchedule extends Component {
   renderChatList = (p) => {
     const list = [];
     console.log(p);
-    const chat = [
-      {
-        message: 'test chat message',
-        name: 'Admin',
-        date: '19/09/2018 23:05:12'
-      },
-      {
-        message: 'test chat message',
-        name: 'Sale 1',
-        date: '19/09/2018 23:05:12'
-      },
-    ];
-
-    chat.forEach((e, i) => {
+    p.chat.forEach((e, i) => {
       list.push(
         <div style={{ marginTop: 5 }} key={parseInt(i.toString())}>
           <div style={{ flexDirection: 'row', display: 'flex' }}>
-            <div style={{ fontWeight: 'bold' }}>{`${e.name}: `}</div>
+            <div style={{ fontWeight: 'bold' }}>{`${e.user.firstname}: `}</div>
             <div>{e.message}</div>
           </div>
-          <div>{e.date}</div>
+          <div>{moment(e.created).format('DD-MM-YYYY HH:mm:ss')}</div>
         </div>
       );
     });
     list.push(<Search
+      key={p.chat.length}
       style={{ marginTop: '10px' }}
       placeholder="Nhập gì đó ở đây..."
       enterButton="GỬI"
       size="small"
       onChange={e => console.log(e.target.value)}
       onSearch={(val) => {
-        console.log(val);
+        const { dispathChatPurchase } = this.props;
+        dispathChatPurchase({
+          message: val,
+          category: '',
+          purchaseId: p.purchaseId
+        });
       }}
     />);
     return list;
@@ -209,7 +203,6 @@ class WorkSchedule extends Component {
     if (user.success && value.length === 0) {
       API.getAllPurchase(match.params.purchaseId).then((data) => {
         if (data.success) {
-          console.log(data.results);
           this.setState({ value: data.results });
         }
       });
@@ -301,4 +294,8 @@ const mapStateToProps = state => ({
   login: state.login
 });
 
-export default connect(mapStateToProps, null)(WorkSchedule);
+const mapDispathToProps = dispath => ({
+  dispathChatPurchase: data => dispath(chatPurchaseAction(data))
+});
+
+export default connect(mapStateToProps, mapDispathToProps)(WorkSchedule);
