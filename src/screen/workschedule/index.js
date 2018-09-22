@@ -9,6 +9,7 @@ import { Input } from 'antd';
 import * as API from '../../API';
 import NavigationBar from '../../components/NavigationBar';
 import { chatPurchaseAction } from '../../redux/actions/chatAction';
+import { WORK_MANAGER } from '../../constants/string';
 
 const { Search } = Input;
 
@@ -145,7 +146,7 @@ class WorkSchedule extends Component {
         <div style={{ marginTop: 5 }} key={parseInt(i.toString())}>
           <div style={{ flexDirection: 'row', display: 'flex' }}>
             <div style={{ fontWeight: 'bold' }}>{`${e.user.firstname}: `}</div>
-            <div>{e.message}</div>
+            <div style={{ width: 100 }}>{e.message}</div>
           </div>
           <div>{moment(e.created).format('DD-MM-YYYY HH:mm:ss')}</div>
         </div>
@@ -216,6 +217,7 @@ class WorkSchedule extends Component {
       const listPurchase = JSON.parse(JSON.stringify(value));
       listPurchase.forEach((e) => {
         if (e.purchaseId === this.purchaseChatId) {
+          console.log('okee');
           e.chat.push(chat.data);
           this.setState({ value: listPurchase });
         }
@@ -258,14 +260,26 @@ class WorkSchedule extends Component {
     this.setState({ map: newSelected, selectAll: 2 });
   };
 
+
   confirmSchedule = () => {
     this.valueForSave.chiaViec = true;
     API.updatePurchase(this.valueForSave, this.valueForSave.purchaseId).then(() => {
       const { value } = this.state;
       const newValue = JSON.parse(JSON.stringify(value));
       newValue.forEach((e) => {
-        if (e.purchaseId === this.valueForSave.purchaseChatId) {
+        if (e.purchaseId === this.valueForSave.purchaseId) {
           e.chiaViec = true;
+          const { dispathChatPurchase } = this.props;
+          /**
+           * also send message to CHAT when you update schedule
+           * save the key for pushing to chat array correctly
+           */
+          this.purchaseChatId = this.valueForSave.purchaseId;
+          dispathChatPurchase({
+            message: WORK_MANAGER.schedule_completed,
+            category: '',
+            purchaseId: this.valueForSave.purchaseId
+          });
         }
       });
       this.setState({ value: newValue });
@@ -315,6 +329,8 @@ class WorkSchedule extends Component {
                     key: e.target.id
                   };
                   this.valueForSave = rowInfo.original;
+                  console.log('origin', this.valueForSave);
+
                   this.setState({ showConfirm: true });
                 }
               }

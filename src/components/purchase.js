@@ -15,6 +15,8 @@ import NavigationBar from './NavigationBar';
 import FieldGroupSelect from './FieldGroupSelect';
 import { requestUserList } from '../redux/actions/userAction';
 import { ROLE } from '../constants/role';
+import { WORK_MANAGER } from '../constants/string';
+import { chatPurchaseAction } from '../redux/actions/chatAction';
 
 const { Search, TextArea } = Input;
 
@@ -567,7 +569,6 @@ function FieldGroupFile({
 }
 
 function FieldGroupFileImage({ label, value, removeHinh, thongTinHangMuc, hasPermission }) {
-  console.log(thongTinHangMuc)
   return (
     <div style={{ marginBottom: 10, heigh: '200px' }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
@@ -602,6 +603,7 @@ class Purchase extends Component {
       save: false,
       purchaseId: match.params.purchaseId,
     };
+    this.holderThongTinHangMuc = [];
     this._chatInput = new Map();
     this._chatMessage = new Map();
     this.handleChange = this.handleChange.bind(this);
@@ -701,17 +703,51 @@ class Purchase extends Component {
             },
             thongTinHangMuc: data.results ? data.results.category : []
           });
+          this.holderThongTinHangMuc = JSON.parse(JSON.stringify(data.results ? data.results.category : []));
         }
       });
     }
   }
 
   savePurchase() {
+    /**
+       * detect when worker manager makes schedule changes
+       */
+    const { dispathChatPurchase } = this.props;
     const { value, purchaseId } = this.state;
+    value.category.forEach((e, index) => {
+
+      let implementationOfficerName = '';
+
+      if (this.holderThongTinHangMuc[index].implementationOfficer !== e.implementationOfficer
+        || this.holderThongTinHangMuc[index].implementationOfficerGroup !== e.implementationOfficerGroup) {
+        implementationOfficerName = e.implementationOfficer ? e.implementationOfficer.firstname : '';
+
+        if (implementationOfficerName.length > 0) {
+          implementationOfficerName += ', ';
+        }
+
+        if (e.implementationOfficerGroup && e.implementationOfficerGroup.length > 0) {
+          e.implementationOfficerGroup.forEach(p => {
+            implementationOfficerName += p.firstname + ',';
+          })
+        }
+
+        dispathChatPurchase({
+          message: WORK_MANAGER.schedule_changes + implementationOfficerName,
+          category: e.categoryName || '',
+          purchaseId: value.purchaseId
+        });
+        value.chiaViec = false;
+      }
+    })
+
+
     API.updatePurchase(value, purchaseId).then(() => {
       this.setState({
         save: true
       });
+      this.holderThongTinHangMuc = JSON.parse(JSON.stringify(value.category));
       setTimeout(() => {
         this.setState({
           save: false
@@ -921,7 +957,6 @@ class Purchase extends Component {
   }
 
   removeHinh(indexHinh, index) {
-    console.log(indexHinh, index)
     const { value } = this.state;
     let { thongTinHangMuc } = this.state;
     let confirm = window.confirm("Bạn có thực sự muốn xóa ?")
@@ -948,7 +983,7 @@ class Purchase extends Component {
     const hasPermission = role && role.groupId !== ROLE.WORK_MANAGER;
     return (
       <div className="App">
-        <Alert bsStyle={`success ${!save ? 'hide' : ''} fixed`}>
+        <Alert bsStyle={`success ${!save ? 'hide' : ''}`} className="fixed">
           <strong>Cập nhật thông tin đơn hàng thành Công!</strong>
         </Alert>
         <NavigationBar
@@ -1227,7 +1262,8 @@ class Purchase extends Component {
 
           </div>
           <div className="col-xs-12" style={{ marginTop: 50, marginBottom: 50 }}>
-            <button type="button" className="btn btn-primary" onClick={this.addThongTinHangMuc}>Thêm Hạng Mục</button>
+            {hasPermission
+              && <button type="button" className="btn btn-primary" onClick={this.addThongTinHangMuc}>Thêm Hạng Mục</button>}
           </div>
 
           {thongTinHangMuc.map((item, index) => (
@@ -1267,7 +1303,8 @@ const mapStateToProps = state => ({
 });
 const mapDispathToProps = dispath => ({
   dispathNavBar: show => dispath(showNavBar(show)),
-  dispathUserList: () => dispath(requestUserList())
+  dispathUserList: () => dispath(requestUserList()),
+  dispathChatPurchase: data => dispath(chatPurchaseAction(data))
 });
 
 export default connect(mapStateToProps, mapDispathToProps)(withRouter(Purchase));
