@@ -3,7 +3,7 @@
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
 }
-
+html,body{height:100%;}
 .App-header {
   background-color: #222;
   height: 150px;
@@ -85,4 +85,24 @@
   width: 100%;
   z-index: 1031;
   top: 0;
+}
+.full-height {
+    display:table;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.full-row {
+    height: 100%;
+    display: table-row;
+}
+
+.full-row .no-float {
+  display: table-cell;
+  float: none;
+}
+
+.row {
+  margin-right: 0; 
+  margin-left: 0; 
 }

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import {
   FormControl, ControlLabel, Checkbox, Thumbnail, Col, Alert
@@ -197,7 +198,8 @@ function FieldCheckBox({ onChangeCheckBox, value }) {
 
 function ThongTinHangMuc({
   index, value, handleChange, handleChangeFile, phanTichHangMuc,
-  remove, purchaseId, updateChatMessage, updatePreparationDay, addNgayChuanBi, userList
+  remove, purchaseId, updateChatMessage, updatePreparationDay, addNgayChuanBi, userList, that, removeNgayChuanBi,
+  removeHinh
 }) {
   return (
     <div className="row" style={{ marginTop: 50 }}>
@@ -223,6 +225,7 @@ function ThongTinHangMuc({
           label="Hình Ảnh Hạng Mục"
           thongTinHangMuc={index}
           value={value.image}
+          removeHinh={removeHinh}
         />
         <FieldGroupFile
           id="imageCategory"
@@ -292,11 +295,11 @@ function ThongTinHangMuc({
         />
         {
           value && value.ngayChuanBi && value.ngayChuanBi.map((e, i) => (
-            <div key={e.id || new Date().valueOf()} className="col-xs-12">
+            <div key={e.id || new Date().valueOf()} className="col-xs-12" style={{ marginTop: '20px' }}>
               <div className="col-xs-4">
                 <ControlLabel>{`Ngày chuẩn bị ${i + 1}:`}</ControlLabel>
               </div>
-              <div className="col-xs-8">
+              <div className="col-xs-8" style={{display: 'flex', justifyContent: 'space-between'}}>
                 <DatePicker
                   value={moment(e.date || new Date())}
                   showTime
@@ -305,6 +308,7 @@ function ThongTinHangMuc({
                   onChange={el => updatePreparationDay('date', new Date(el), i, index)}
                   onOk={el => updatePreparationDay('date', new Date(el), i, index)}
                 />
+                <button className="btn btn-danger" id={e.id} onClick={e => removeNgayChuanBi(e.target.id, index)}>{`Xóa`}</button>
               </div>
               <div className="col-xs-4">
                 <ControlLabel>{`Công Việc ${i + 1}:`}</ControlLabel>
@@ -396,11 +400,12 @@ function ThongTinHangMuc({
           handleChange={handleChange}
         />
         <div className="col-xs-12">
-          <h3>Chát giữa lãnh đạo, Khách hàng và Sale.</h3>
+          <h3>Chat Giữa Lãnh Đạo, Khách Hàng, Sale và Nhân Viên Sản Xuất</h3>
           <div
             style={{
               maxHeight: '300px', overflow: 'auto', border: '1px solid gray', minHeight: '300px'
             }}
+            ref={c => that._chatMessage.set(index, c)}
           >
             {
               value.chat && value.chat.map((e, i) => (
@@ -417,11 +422,15 @@ function ThongTinHangMuc({
             }
           </div>
           <Search
+            ref={c => that._chatInput.set(index, c)}
             style={{ marginTop: '10px' }}
             placeholder="Nhập gì đó ở đây..."
             enterButton="GỬI"
             size="large"
-            onSearch={val => updateChatMessage(index, val)}
+            onChange={(e) => console.log(e.target.value)}
+            onSearch={val => {
+              updateChatMessage(index, val)
+            }}
           />
         </div>
       </div>
@@ -524,7 +533,8 @@ function FieldGroupFile({
   );
 }
 
-function FieldGroupFileImage({ label, value }) {
+function FieldGroupFileImage({ label, value, removeHinh, thongTinHangMuc }) {
+  console.log(thongTinHangMuc)
   return (
     <div style={{ marginBottom: 10, heigh: '200px' }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
@@ -535,6 +545,7 @@ function FieldGroupFileImage({ label, value }) {
           value.map((e, i) => (
             <Col xs={6} key={parseInt(i.toString())}>
               <Thumbnail href={e.url} target="blank" src={e.url} alt="242x200" />
+              <button className="btn btn-danger" id={e._id} onClick={(e) => removeHinh(e.target.id, thongTinHangMuc)}>{'X'}</button>
             </Col>))
         }
       </div>
@@ -556,8 +567,10 @@ class Purchase extends Component {
       thongTinHangMuc: [],
       phanTichHangMuc: {},
       save: false,
-      purchaseId: match.params.purchaseId
+      purchaseId: match.params.purchaseId,
     };
+    this._chatInput = new Map();
+    this._chatMessage = new Map();
     this.handleChange = this.handleChange.bind(this);
     this.onChangeCheckBox = this.onChangeCheckBox.bind(this);
     this.handleChangeFile = this.handleChangeFile.bind(this);
@@ -568,6 +581,8 @@ class Purchase extends Component {
     this.updateChatMessage = this.updateChatMessage.bind(this);
     this.updatePreparationDay = this.updatePreparationDay.bind(this);
     this.addNgayChuanBi = this.addNgayChuanBi.bind(this);
+    this.removeNgayChuanBi = this.removeNgayChuanBi.bind(this);
+    this.removeHinh = this.removeHinh.bind(this);
   }
 
   addNgayChuanBi = (index) => {
@@ -592,6 +607,7 @@ class Purchase extends Component {
   }
 
   updateChatMessage(index, msg) {
+    
     const { value, purchaseId } = this.state;
     const { login } = this.props;
     const obj = {
@@ -609,8 +625,20 @@ class Purchase extends Component {
         value: {
           ...value
         }
-      });
+      }, () => { 
+        Array.from(this._chatMessage.values())
+        .filter(node => node != null)
+        .forEach(node => {
+            node.scrollTop = node.scrollHeight
+        });
+       });
     });
+    Array.from(this._chatInput.values())
+    .filter(node => node != null)
+    .forEach(node => {
+        node.input.valueOf().input.value = ""
+    });
+    
   }
 
   componentWillReceiveProps(nextProps) {
@@ -825,19 +853,58 @@ class Purchase extends Component {
   }
 
   remove(index) {
+    let confirm = window.confirm("Bạn có thực sự muốn xóa ?")
+    if (confirm) {
+      const { value } = this.state;
+      let { thongTinHangMuc } = this.state;
+      value.category = value && value.category && value.category.length
+        && value.category.filter((e, i) => i !== parseInt(index));
+      thongTinHangMuc = thongTinHangMuc && thongTinHangMuc.length
+        && thongTinHangMuc.filter((e, i) => i !== parseInt(index));
+      this.setState({
+        value: {
+          ...value
+        },
+        thongTinHangMuc
+      });
+    }
+  }
+
+  removeNgayChuanBi(indexNgayChuanBi, index) {
+    console.log(indexNgayChuanBi, index)
+    let confirm = window.confirm("Bạn có thực sự muốn xóa ?")
+    if (confirm) {
+      const { value } = this.state;
+      let { thongTinHangMuc } = this.state;
+      thongTinHangMuc[index].ngayChuanBi = thongTinHangMuc[index].ngayChuanBi.filter(e => e.id != indexNgayChuanBi)
+      value.category[index].ngayChuanBi = thongTinHangMuc[index].ngayChuanBi
+      this.setState({
+        value: {
+          ...value
+        },
+        thongTinHangMuc
+      });
+    }
+  }
+  
+  removeHinh(indexHinh, index) {
+    console.log(indexHinh, index)
     const { value } = this.state;
     let { thongTinHangMuc } = this.state;
-    value.category = value && value.category && value.category.length
-      && value.category.filter((e, i) => i !== parseInt(index));
-    thongTinHangMuc = thongTinHangMuc && thongTinHangMuc.length
-      && thongTinHangMuc.filter((e, i) => i !== parseInt(index));
-    this.setState({
-      value: {
-        ...value
-      },
-      thongTinHangMuc
-    });
+    let confirm = window.confirm("Bạn có thực sự muốn xóa ?")
+    if (confirm) {
+      debugger
+      thongTinHangMuc[index].image = thongTinHangMuc[index].image.filter(e => e._id != indexHinh)
+      value.category[index].image = thongTinHangMuc[index].image
+      this.setState({
+        value: {
+          ...value
+        },
+        thongTinHangMuc
+      });
+    }
   }
+  
 
   render() {
     const {
@@ -1101,6 +1168,9 @@ class Purchase extends Component {
               updateChatMessage={this.updateChatMessage}
               updatePreparationDay={this.updatePreparationDay}
               addNgayChuanBi={this.addNgayChuanBi}
+              that={this}
+              removeNgayChuanBi={this.removeNgayChuanBi}
+              removeHinh={this.removeHinh}
             />))}
           <div className="col-xs-12 content-center">
             <FieldCheckBox value={value} onChangeCheckBox={this.onChangeCheckBox} />

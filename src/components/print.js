@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -34,6 +35,19 @@ class Print extends Component {
 
   render() {
     const { value } = this.state;
+    let category = value && value.category
+    let arr = []
+    if (category && category.length > 2) {
+      let temp = []
+      let count = 0
+      for (var i = 2; i < category.length; i++) {
+        temp.push(category[i])
+        if (count === 5 || i === category.length -1) {
+          arr.push(temp)
+          temp = []
+        }
+      }
+    }
     return (
       <div className="App" ref={el => (this.componentRef = el)}>
         <ReactToPrint
