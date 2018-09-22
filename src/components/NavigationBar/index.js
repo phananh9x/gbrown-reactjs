@@ -57,7 +57,8 @@ class NavigationBar extends Component {
     }
 
     const { role } = login.data.results ? login.data.results : false;
-
+    const displayName = login.data.results ? login.data.results.firstname : '';
+    const displayRoleName = role ? role.name : '';
     return (
       <div style={{ width: '100%' }}>
         {show
@@ -163,7 +164,7 @@ class NavigationBar extends Component {
                       Phần Mềm Chia Việc
                     </MenuItem>
                   </NavDropdown>
-                  <NavDropdown eventKey={3} title={login.data.data ? login.data.data.email : ''} id="basic-nav-dropdown">
+                  <NavDropdown eventKey={3} title={`${displayRoleName} ${displayName}`} id="basic-nav-dropdown">
                     <MenuItem eventKey={3.1}>Thông tin</MenuItem>
                     <MenuItem divider />
                     <MenuItem eventKey={3.2} onClick={this.logout}>Đăng xuất</MenuItem>
@@ -181,7 +182,7 @@ class NavigationBar extends Component {
 
 const mapStateToProps = state => ({
   navBar: state.navBar,
-  login: state.login
+  login: state.login,
 });
 const mapDispathToProps = dispath => ({
   dispathNavBar: show => dispath(showNavBar(show)),

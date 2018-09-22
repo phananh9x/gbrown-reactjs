@@ -1,23 +1,32 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  FormControl, ButtonToolbar, Button, Glyphicon, ButtonGroup,
+  Button, Jumbotron
 } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import ReactTable from 'react-table';
+import { Input } from 'antd';
 import * as API from '../../API';
 import NavigationBar from '../../components/NavigationBar';
 
+const { Search } = Input;
 
 const renderCell = (props) => {
   const { value } = props;
   return (
-    <Link to={`/purchase/${value.purchaseId}`}>
-      <Button>
-        <i className="fa fa-cog" aria-hidden="true" />
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <Button bsStyle="primary" id="schedule">
+        <Link to={`/purchase/${value.purchaseId}`} style={{ color: 'white' }}>
+          Chia việc
+        </Link>
       </Button>
-    </Link>
+      <Button bsStyle="danger" bsSize="xsmall" style={{ marginTop: 5 }} id="state">
+        <Link to={`/purchase/${value.purchaseId}`} style={{ color: 'white' }}>
+          Chưa chia việc
+        </Link>
+      </Button>
+    </div>
   );
 };
 
@@ -27,54 +36,61 @@ class WorkSchedule extends Component {
     this.state = {
       value: [],
       pageSize: 10,
-      searchKey: '',
       map: {},
       selectAll: 0,
     };
+    this.toDay = moment(new Date()).format('DD/MM/YYYY');
+    this.filterDay = moment(new Date().setDate(new Date().getDate() + 5)).format('DD/MM/YYYY');
     this.columns = [{
       id: 'checkbox',
       accessor: '',
       Cell: p => this.renderCheckBox(p),
       Header: () => this.renderCheckBoxAll(),
       sortable: false,
-      width: 45
+      width: 30
     }, {
       accessor: 'purchaseId',
       Header: 'MSHĐ',
+      width: 55,
     }, {
       accessor: 'eventName',
-      Header: 'Tên Sự Kiện'
+      Header: 'Tên Sự Kiện',
+      width: 120
     }, {
-      accessor: 'customerName',
-      Header: 'Tên Khách Hàng'
-    }, {
-      accessor: 'phone',
-      Header: 'Số Điện Thoại'
+      id: 'customerName',
+      accessor: p => this.renderCustomer(p),
+      Header: 'Khách Hàng',
+      width: 150,
     }, {
       accessor: 'location',
-      Header: 'Đia chỉ tổ chức'
+      Header: 'Đia chỉ tổ chức',
+      width: 200,
     }, {
       id: 'saleGbrown',
       accessor: p => this.renderSale(p),
       Header: 'Nhân viên Sale',
-    },
-    {
-      id: 'saleGbrown',
-      accessor: p => this.renderSalePhone(p),
-      Header: 'Số điện thoại Sale',
+      width: 130
+    }, {
+      id: 'chat',
+      accessor: p => this.renderChatList(p),
+      Header: 'Chat',
     }, {
       id: 'startDate',
-      accessor: d => moment(d.startDate).format('DD-MM-YYYY'),
+      accessor: d => this.renderDate(d.startDate),
       Header: 'Ngày Tổ Chức',
+      width: 90
     }, {
       id: 'agreementDate',
-      accessor: d => moment(d.agreementDate).format('DD-MM-YYYY'),
+      accessor: d => this.renderDate(d.agreementDate),
       Header: 'Ngày Chuẩn Bị',
+      width: 100
     }, {
       id: 'setupDate',
-      accessor: d => moment(d.setupDate).format('DD-MM-YYYY'),
+      accessor: d => this.renderDate(d.setupDate),
       Header: 'Ngày Set-up',
+      width: 90
     }, {
+      width: 100,
       accessor: 'purchaseId',
       Header: 'Action',
       Cell: p => renderCell(p),
@@ -85,13 +101,74 @@ class WorkSchedule extends Component {
   renderSale = (p) => {
     const { user } = this.props;
     const sale = user.data.filter(e => e._id === p.saleGbrown)[0];
-    return sale ? sale.firstname : '';
+    const render = (
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div>{sale && sale.firstname}</div>
+        <div>{sale && sale.email}</div>
+      </div>
+    );
+    return sale ? render : '';
   }
 
-  renderSalePhone = (p) => {
-    const { user } = this.props;
-    const sale = user.data.filter(e => e._id === p.saleGbrown)[0];
-    return sale ? sale.email : '';
+  renderCustomer = (p) => {
+    const render = (
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div>{p.customerName}</div>
+        <div>{p.phone}</div>
+      </div>
+    );
+    return render;
+  }
+
+
+  renderDate = (d) => {
+    const render = (
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div>{moment(d).format('DD-MM-YYYY')}</div>
+        <div>{moment(d).format('HH:mm')}</div>
+      </div>
+    );
+    return render;
+  }
+
+  renderChatList = (p) => {
+    const list = [];
+    console.log(p);
+    const chat = [
+      {
+        message: 'test chat message',
+        name: 'Admin',
+        date: '19/09/2018 23:05:12'
+      },
+      {
+        message: 'test chat message',
+        name: 'Sale 1',
+        date: '19/09/2018 23:05:12'
+      },
+    ];
+
+    chat.forEach((e, i) => {
+      list.push(
+        <div style={{ marginTop: 5 }}>
+          <div key={parseInt(i.toString())} style={{ flexDirection: 'row', display: 'flex' }}>
+            <div style={{ fontWeight: 'bold' }}>{`${e.name}: `}</div>
+            <div>{e.message}</div>
+          </div>
+          <div>{e.date}</div>
+        </div>
+      );
+    });
+    list.push(<Search
+      style={{ marginTop: '10px' }}
+      placeholder="Nhập gì đó ở đây..."
+      enterButton="GỬI"
+      size="small"
+      onChange={e => console.log(e.target.value)}
+      onSearch={(val) => {
+        console.log(val);
+      }}
+    />);
+    return list;
   }
 
   renderCheckBox = (props) => {
@@ -132,6 +209,7 @@ class WorkSchedule extends Component {
     if (user.success && value.length === 0) {
       API.getAllPurchase(match.params.purchaseId).then((data) => {
         if (data.success) {
+          console.log(data.results);
           this.setState({ value: data.results });
         }
       });
@@ -144,6 +222,7 @@ class WorkSchedule extends Component {
     if (user.success && value.length === 0) {
       API.getAllPurchase(match.params.purchaseId).then((data) => {
         if (data.success) {
+          console.log(data.results);
           this.setState({ value: data.results });
         }
       });
@@ -175,7 +254,7 @@ class WorkSchedule extends Component {
 
   render() {
     const {
-      value, pageSize, searchKey, selectAll
+      value, pageSize
     } = this.state;
     const {
       history
@@ -187,42 +266,13 @@ class WorkSchedule extends Component {
           show
         />
         <div className="container-fluid" style={{ paddingTop: 70 }}>
-          <div
-            className="row"
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: '70px'
-            }}
-          >
-            <div className="col-xs-6">
-              <ButtonToolbar>
-                <ButtonGroup>
-                  <Button>
-                    <Glyphicon glyph="glyphicon glyphicon-refresh" />
-                  </Button>
-                  {selectAll === 1
-                    ? (
-                      <Button bsStyle="danger">
-                        <Glyphicon glyph="glyphicon glyphicon-trash" />
-                      </Button>
-                    ) : <div />
-                  }
-                </ButtonGroup>
-              </ButtonToolbar>
-            </div>
+          <Jumbotron>
+            <h3>Nhắc nhở công việc trong ngày dành cho khối sản xuất</h3>
+            <p>
+              {`Hôm nay là ngày ${this.toDay}, Quản lý khối sản xuất đang xem toàn bộ những đơn hàng diễn ra vào ngày ${this.filterDay}`}
+            </p>
+          </Jumbotron>
 
-            <div className="col-xs-5">
-              <FormControl
-                type="text"
-                value={searchKey}
-                placeholder="Mã số hợp đồng"
-                onChange={this.onSearch}
-              />
-            </div>
-
-          </div>
           <ReactTable
             showPaginationBottom
             data={value}
@@ -233,7 +283,7 @@ class WorkSchedule extends Component {
                 if (e.target.name === 'checkbox') {
                   this.toggleRow(rowInfo.original.purchaseId);
                 }
-                if (e.target.className !== 'print' && e.target.name !== 'checkbox') {
+                if (e.target.id === 'schedule') {
                   history.push({
                     pathname: `/purchase/${rowInfo.original.purchaseId}`,
                   });
