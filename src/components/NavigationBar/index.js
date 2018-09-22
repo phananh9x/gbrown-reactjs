@@ -49,8 +49,8 @@ class NavigationBar extends Component {
           && (
             <Navbar fixedTop className="navbar-fixed-top">
               <Navbar.Collapse>
-                {/* <Nav>
-                  <NavItem
+                <Nav>
+                  {/* <NavItem
                     onClick={() => {
                       dispathNavBar(!navBar.showNavbar);
                     }}
@@ -58,52 +58,52 @@ class NavigationBar extends Component {
                   >
                     {'Menu'}
                   </NavItem>
-                  {menuArray}
-                </Nav> */}
-                <Nav pullRight>
-                  <NavItem onClick={() => {
-
-                  }}
-                  >
+                  {menuArray} */}
+                  <NavItem>
                     <Link to="/">
                       <p>
                         {'Danh sách PO'}
                       </p>
                     </Link>
+                  </NavItem>
+                </Nav>
 
-                  </NavItem>
-                  <NavItem onClick={() => {
-                    window.open('http://gbrownflower.com/admin', '_blank');
-                  }}
-                  >
-                    <p>
-                      {'Phần Mềm Gbrown Photo'}
-                    </p>
-                  </NavItem>
-                  <NavItem onClick={() => {
-                    window.open('http://kichbanct.gbrownflower.com', '_blank');
-                  }}
-                  >
-                    <p>
-                      {'Phần Mềm Kịch Bản Và Báo Giá'}
-                    </p>
-                  </NavItem>
-                  <NavItem onClick={() => {
-                    window.open('http://work.gbrownflower.com', '_blank');
-                  }}
-                  >
-                    <p>
-                      {'Phần Mềm Chia Việc'}
-                    </p>
-                  </NavItem>
-                  <NavItem onClick={() => {
-                    window.open('http://quanli.salegbrown.vn', '_blank');
-                  }}
-                  >
-                    <p>
-                      {'Phần Mềm Quản lý Hệ Thống'}
-                    </p>
-                  </NavItem>
+                <Nav pullRight>
+                  <NavDropdown title="Liên kết Web">
+                    <MenuItem
+                      eventKey={3.1}
+                      onClick={() => {
+                        window.open('http://quanli.salegbrown.vn', '_blank');
+                      }}
+                    >
+                      Phần Mềm Quản lý Hệ Thống
+                    </MenuItem>
+
+                    <MenuItem
+                      eventKey={3.2}
+                      onClick={() => {
+                        window.open('http://kichbanct.gbrownflower.com', '_blank');
+                      }}
+                    >
+                      Phần Mềm Kịch Bản Và Báo Giá
+                    </MenuItem>
+                    <MenuItem
+                      eventKey={3.3}
+                      onClick={() => {
+                        window.open('http://gbrownflower.com/admin', '_blank');
+                      }}
+                    >
+                      Phần Mềm Gbrown Photo
+                    </MenuItem>
+                    <MenuItem
+                      eventKey={3.4}
+                      onClick={() => {
+                        window.open('http://work.gbrownflower.com', '_blank');
+                      }}
+                    >
+                      Phần Mềm Chia Việc
+                    </MenuItem>
+                  </NavDropdown>
                   <NavDropdown eventKey={3} title={login.data.data ? login.data.data.email : ''} id="basic-nav-dropdown">
                     <MenuItem eventKey={3.1}>Thông tin</MenuItem>
                     <MenuItem divider />
