@@ -10,7 +10,7 @@ export const chatPurchaseActionSuccess = data => ({
   data,
 });
 
-export const chatPurchaseActionError = data => ({
+export const chatPurchaseActionError = error => ({
   type: CHAT_PURCHASE.CHAT_PURCHASE_ERROR,
-  data,
+  error,
 });

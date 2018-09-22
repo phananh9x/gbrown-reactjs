@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import {
-  Button, Jumbotron
+  Button, Jumbotron, Modal
 } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -14,18 +13,25 @@ import { chatPurchaseAction } from '../../redux/actions/chatAction';
 const { Search } = Input;
 
 const renderCell = (props) => {
-  const { value } = props;
+  const { original } = props;
+  console.log(original);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <Button bsStyle="primary" id="schedule">
-        <Link to={`/purchase/${value.purchaseId}`} style={{ color: 'white' }}>
-          Chia việc
-        </Link>
-      </Button>
-      <Button bsStyle="danger" bsSize="xsmall" style={{ marginTop: 5 }} id="state">
-        <Link to={`/purchase/${value.purchaseId}`} style={{ color: 'white' }}>
-          Chưa chia việc
-        </Link>
+      {!original.chiaViec
+        && (
+          <Button bsStyle="primary" id="schedule">
+            Chia việc
+          </Button>
+        )
+      }
+      <Button
+        bsStyle={original.chiaViec ? 'success' : 'danger'}
+        bsSize="xsmall"
+        style={{ marginTop: 5 }}
+        id="confirm_schedule"
+      >
+        Chưa chia việc
       </Button>
     </div>
   );
@@ -39,7 +45,10 @@ class WorkSchedule extends Component {
       pageSize: 10,
       map: {},
       selectAll: 0,
+      showConfirm: false
     };
+    this.modal = {};
+    this.purchaseChatId = {};
     this.toDay = moment(new Date()).format('DD/MM/YYYY');
     this.filterDay = moment(new Date().setDate(new Date().getDate() + 5)).format('DD/MM/YYYY');
     this.columns = [{
@@ -99,6 +108,7 @@ class WorkSchedule extends Component {
     ];
   }
 
+
   renderSale = (p) => {
     const { user } = this.props;
     const sale = user.data.filter(e => e._id === p.saleGbrown)[0];
@@ -134,7 +144,6 @@ class WorkSchedule extends Component {
 
   renderChatList = (p) => {
     const list = [];
-    console.log(p);
     p.chat.forEach((e, i) => {
       list.push(
         <div style={{ marginTop: 5 }} key={parseInt(i.toString())}>
@@ -152,9 +161,9 @@ class WorkSchedule extends Component {
       placeholder="Nhập gì đó ở đây..."
       enterButton="GỬI"
       size="small"
-      onChange={e => console.log(e.target.value)}
       onSearch={(val) => {
         const { dispathChatPurchase } = this.props;
+        this.purchaseChatId = p.purchaseId;
         dispathChatPurchase({
           message: val,
           category: '',
@@ -196,14 +205,37 @@ class WorkSchedule extends Component {
     );
   };
 
+  showConfirm = (modal, onClick) => (
+    <div className="static-modal">
+      <Modal.Dialog>
+        <Modal.Header>
+          <Modal.Title>{modal.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{modal.body}</Modal.Body>
+        <Modal.Footer>
+          <Button>{modal.cancel}</Button>
+          <Button bsStyle="primary" onClick={onClick}>{modal.accept}</Button>
+        </Modal.Footer>
+      </Modal.Dialog>
+    </div>)
+
 
   componentWillReceiveProps(nextProps) {
-    const { match, user } = nextProps;
+    const { match, user, chat } = nextProps;
     const { value } = this.state;
     if (user.success && value.length === 0) {
       API.getAllPurchase(match.params.purchaseId).then((data) => {
         if (data.success) {
           this.setState({ value: data.results });
+        }
+      });
+    }
+    if (!chat.fecthing && chat.success) {
+      const listPurchase = JSON.parse(JSON.stringify(value));
+      listPurchase.forEach((e) => {
+        if (e.purchaseId === this.purchaseChatId) {
+          e.chat.push(chat.data);
+          this.setState({ value: listPurchase });
         }
       });
     }
@@ -215,7 +247,6 @@ class WorkSchedule extends Component {
     if (user.success && value.length === 0) {
       API.getAllPurchase(match.params.purchaseId).then((data) => {
         if (data.success) {
-          console.log(data.results);
           this.setState({ value: data.results });
         }
       });
@@ -245,14 +276,17 @@ class WorkSchedule extends Component {
     this.setState({ map: newSelected, selectAll: 2 });
   };
 
+  confirmSchedule = () => {
+
+  }
+
   render() {
     const {
-      value, pageSize
+      value, pageSize, showConfirm
     } = this.state;
     const {
       history
     } = this.props;
-
     return (
       <div className="app">
         <NavigationBar
@@ -262,7 +296,7 @@ class WorkSchedule extends Component {
           <Jumbotron>
             <h3>Nhắc nhở công việc trong ngày dành cho khối sản xuất</h3>
             <p>
-              {`Hôm nay là ngày ${this.toDay}, Quản lý khối sản xuất đang xem toàn bộ những đơn hàng diễn ra vào ngày ${this.filterDay}`}
+              {`Hôm nay là ngày ${this.toDay}, Quản lý khối sản xuất đang xem toàn bộ những đơn hàng diễn ra vào ngày ${this.filterDay}. Những đơn hàng này cần được chia việc cho nhân viên ngay trong hôm nay.`}
             </p>
           </Jumbotron>
 
@@ -280,10 +314,44 @@ class WorkSchedule extends Component {
                   history.push({
                     pathname: `/purchase/${rowInfo.original.purchaseId}`,
                   });
+                } else if (e.target.id === 'confirm_schedule') {
+                  this.modal = {
+                    title: 'Hoàn thành chia việc',
+                    body: 'Bạn có chắc chắn hoàn thành chia việc',
+                    cancel: 'Huỷ',
+                    accept: 'Xác nhận',
+                    key: e.target.id
+                  };
+                  this.setState({ showConfirm: true });
                 }
               }
             })}
           />
+          {showConfirm
+            && (
+              <Modal.Dialog>
+                <Modal.Header>
+                  <Modal.Title>{this.modal.title}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{this.modal.body}</Modal.Body>
+                <Modal.Footer>
+                  <Button onClick={() => this.setState({ showConfirm: false })}>
+                    {this.modal.cancel}
+                  </Button>
+                  <Button
+                    bsStyle="primary"
+                    onClick={() => {
+                      if (this.modal.key === 'confirm_schedule') {
+                        console.log('do confirm');
+                      }
+                    }}
+                  >
+                    {this.modal.accept}
+                  </Button>
+                </Modal.Footer>
+              </Modal.Dialog>
+            )
+          }
         </div>
       </div>
     );
@@ -291,7 +359,8 @@ class WorkSchedule extends Component {
 }
 const mapStateToProps = state => ({
   user: state.userReducer,
-  login: state.login
+  login: state.login,
+  chat: state.chatPurchaseReducer
 });
 
 const mapDispathToProps = dispath => ({

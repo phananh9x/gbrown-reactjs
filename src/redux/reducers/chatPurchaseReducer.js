@@ -22,15 +22,15 @@ export default function ChatPurchase(state = initialState, action) {
         ...state,
         data: action.data.results,
         error: {},
-        fetching: true,
-        success: false
+        fetching: false,
+        success: true
       };
     case CHAT_PURCHASE.CHAT_PURCHASE_ERROR:
       return {
         ...state,
         data: {},
         error: action.error,
-        fetching: true,
+        fetching: false,
         success: false
       };
 

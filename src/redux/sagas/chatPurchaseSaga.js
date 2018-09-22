@@ -6,8 +6,6 @@ import { CHAT_PURCHASE } from '../actions/actionType';
 export function* chat(param) {
   try {
     const data = yield call(chatPurchaseApi, param.data);
-    console.log(data, 'aaaaaa');
-
     yield put(chatPurchaseActionSuccess(data));
   } catch (e) {
     yield put(chatPurchaseActionError(e));
