@@ -434,6 +434,34 @@ function ThongTinHangMuc({
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
+        <FieldGroupDate
+          disabled={!hasPermission}
+          value={value}
+          id="startTimePartTime"
+          type="text"
+          label="Giờ PartTime"
+          thongTinHangMuc={index}
+          handleChange={handleChange}
+        />
+        <FieldGroupDate
+          disabled={!hasPermission}
+          value={value}
+          id="endTimePartTime"
+          type="text"
+          label="Hết Giờ PartTime"
+          thongTinHangMuc={index}
+          handleChange={handleChange}
+        />
+        <FieldGroup
+          disabled={!hasPermission}
+          value={value}
+          id="nhanSuPartTime"
+          type="text"
+          textArea
+          label="Nhân sự PartTime:"
+          thongTinHangMuc={index}
+          handleChange={handleChange}
+        />
         <div className="col-xs-12">
           <h3>Chat Giữa Lãnh Đạo, Khách Hàng, Sale và Nhân Viên Sản Xuất</h3>
           <div
