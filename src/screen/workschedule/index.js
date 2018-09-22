@@ -14,18 +14,13 @@ const { Search } = Input;
 
 const renderCell = (props) => {
   const { original } = props;
-  console.log(original);
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      {!original.chiaViec
-        && (
-          <Button bsStyle="primary" id="schedule">
-            Chia việc
-          </Button>
-        )
-      }
+      <Button bsStyle="primary" id="schedule">
+        Chia việc
+      </Button>
       <Button
+        // disabled={original.chiaViec}
         bsStyle={original.chiaViec ? 'success' : 'danger'}
         bsSize="xsmall"
         style={{ marginTop: 5 }}
@@ -45,7 +40,6 @@ class WorkSchedule extends Component {
       pageSize: 10,
       map: {},
       selectAll: 0,
-      showConfirm: false
       showConfirm: false,
     };
     this.valueForSave = {};
