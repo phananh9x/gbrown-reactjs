@@ -149,8 +149,8 @@ class WorkSchedule extends Component {
 
     chat.forEach((e, i) => {
       list.push(
-        <div style={{ marginTop: 5 }}>
-          <div key={parseInt(i.toString())} style={{ flexDirection: 'row', display: 'flex' }}>
+        <div style={{ marginTop: 5 }} key={parseInt(i.toString())}>
+          <div style={{ flexDirection: 'row', display: 'flex' }}>
             <div style={{ fontWeight: 'bold' }}>{`${e.name}: `}</div>
             <div>{e.message}</div>
           </div>

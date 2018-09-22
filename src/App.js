@@ -60,7 +60,7 @@ class App extends Component {
       login,
     } = this.props;
 
-    if (!login.success && !login.fetching) {
+    if (!login.success) {
       return Login;
     }
 
