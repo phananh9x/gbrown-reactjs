@@ -74,8 +74,6 @@ class Login extends Component {
     if (!login.fetching) {
       if (login.success) {
         dispathNavBar(true);
-        console.log('dispath');
-
         history.push({
           pathname: '/',
         });
@@ -135,7 +133,7 @@ class Login extends Component {
           <FormGroup style={{ marginBottom: 0 }}>
             <Checkbox>Lưu mật khẩu</Checkbox>
             <Button
-              backgroundColor={Color.PRIMARY_COLOR}
+              backgroundcolor={Color.PRIMARY_COLOR}
               style={{ width: '100%', marginTop: 10 }}
               onClick={this.validateLogin}
               className="btn-success"

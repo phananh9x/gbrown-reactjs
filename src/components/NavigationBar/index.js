@@ -7,8 +7,8 @@ import { connect } from 'react-redux';
 import { showNavBar } from '../../redux/actions/navBar';
 import { loginLogout } from '../../redux/actions/login';
 import { Color } from '../../constants/color';
+import { ROLE } from '../../constants/role';
 
-const group = 2;
 class NavigationBar extends Component {
   constructor(props) {
     super(props);
@@ -22,12 +22,12 @@ class NavigationBar extends Component {
     dispathLogout();
   }
 
-  groupTitle = () => {
-    if (group === 1) {
+  groupTitle = (role) => {
+    if (role.groupId === ROLE.ADMIN) {
       return 'GBrown';
-    } if (group === 2) {
+    } if (role.groupId === ROLE.WORK_MANAGER) {
       return 'Nhắc nhở công việc';
-    } if (group === 3) {
+    } if (role.groupId === ROLE.SALE) {
       return 'Công việc của Sale';
     }
     return '';
@@ -56,6 +56,8 @@ class NavigationBar extends Component {
       });
     }
 
+    const { role } = login.data.results ? login.data.results : false;
+
     return (
       <div style={{ width: '100%' }}>
         {show
@@ -73,11 +75,11 @@ class NavigationBar extends Component {
                   </NavItem>
                   {menuArray} */}
                 <Navbar.Brand>
-                  <a href="#home">{this.groupTitle()}</a>
+                  {role && <a href="#home">{this.groupTitle(role)}</a>}
                 </Navbar.Brand>
 
 
-                {group === 1
+                {role && role.groupId === ROLE.ADMIN
                   && (
                     <Nav>
                       <NavItem>
@@ -89,11 +91,24 @@ class NavigationBar extends Component {
                   )
                 }
 
-                {group === 2
+                {role && role.groupId === ROLE.SALE
                   && (
                     <Nav>
                       <NavItem>
-                        <Link to="/">
+                        <Link to="/work/schedule">
+                          Công việc của Sale
+                        </Link>
+                      </NavItem>
+                    </Nav>
+                  )
+                }
+
+
+                {role && role.groupId === ROLE.WORK_MANAGER
+                  && (
+                    <Nav>
+                      <NavItem>
+                        <Link to="/work/schedule">
                           Chia việc nhân viên
                         </Link>
                       </NavItem>
@@ -112,21 +127,8 @@ class NavigationBar extends Component {
                 }
 
 
-                {group === 3
-                  && (
-                    <Nav>
-                      <NavItem>
-                        <Link to="/aaa">
-                          Công việc của Sale
-                        </Link>
-                      </NavItem>
-                    </Nav>
-                  )
-                }
-
-
                 <Nav pullRight>
-                  <NavDropdown title="Liên kết Web">
+                  <NavDropdown title="Liên kết Web" id="basic-nav-dropdown">
                     <MenuItem
                       eventKey={3.1}
                       onClick={() => {
