@@ -27,7 +27,7 @@ export default class FieldGroupSelect extends Component {
 
   render() {
     const {
-      id, label, handleChange, value
+      id, label, handleChange, value, disabled
     } = this.props;
 
     return (
@@ -38,6 +38,7 @@ export default class FieldGroupSelect extends Component {
         <div className="col-xs-8">
           <FormControl
             id={id}
+            disabled={disabled || false}
             value={value.status}
             componentClass="select"
             placeholder="Chọn"

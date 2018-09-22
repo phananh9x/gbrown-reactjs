@@ -14,6 +14,7 @@ import { showNavBar } from '../redux/actions/navBar';
 import NavigationBar from './NavigationBar';
 import FieldGroupSelect from './FieldGroupSelect';
 import { requestUserList } from '../redux/actions/userAction';
+import { ROLE } from '../constants/role';
 
 const { Search, TextArea } = Input;
 
@@ -81,7 +82,7 @@ const stylesUnSelected = {
 
 
 function FieldGroupSelectNhanVien({
-  id, label, handleChange, value, userList, kind = 0, thongTinHangMuc, multiple = false
+  id, label, handleChange, value, userList, kind = 0, thongTinHangMuc, multiple = false, disabled
 }) {
   let optionValue = '';
   if (kind === 0 && value.saleGbrown) {
@@ -99,6 +100,7 @@ function FieldGroupSelectNhanVien({
       </div>
       <div className="col-xs-8">
         <FormControl
+          disabled={disabled || false}
           id={id}
           multiple={multiple}
           componentClass="select"
@@ -185,7 +187,8 @@ function FieldCheckBoxWithLabel({ id, label }) {
 }
 
 
-function FieldCheckBox({ onChangeCheckBox, value }) {
+function FieldCheckBox({ onChangeCheckBox, value, disabled }) {
+  if (disabled) return <div />
   return (
     <div>
       <Checkbox id="vipPurchase" checked={value.vipPurchase} onChange={e => onChangeCheckBox(e.target.id, e.target.checked)}>Đơn Hàng VIP</Checkbox>
@@ -199,21 +202,25 @@ function FieldCheckBox({ onChangeCheckBox, value }) {
 function ThongTinHangMuc({
   index, value, handleChange, handleChangeFile, phanTichHangMuc,
   remove, purchaseId, updateChatMessage, updatePreparationDay, addNgayChuanBi, userList, that, removeNgayChuanBi,
-  removeHinh
+  removeHinh, hasPermission
 }) {
+
   return (
     <div className="row" style={{ marginTop: 50 }}>
       <div className="col-xs-12">
         <div className="col-xs-10">
           <h1>{`THÔNG TIN HẠNG MỤC ${index + 1}`}</h1>
         </div>
-        <div className="col-xs-2">
-          <Link to={`/purchase/${purchaseId}/chiaviec/${index}`}><button style={{ marginRight: '10px' }} type="button" className="btn btn-success">Chia Việc</button></Link>
-          <button type="button" className="btn btn-danger" id={index} onClick={e => remove(e.target.id)}>Xóa hạng mục</button>
-        </div>
+        {hasPermission &&
+          <div className="col-xs-2">
+            <Link to={`/purchase/${purchaseId}/chiaviec/${index}`}><button style={{ marginRight: '10px' }} type="button" className="btn btn-success">Chia Việc</button></Link>
+            <button type="button" className="btn btn-danger" id={index} onClick={e => remove(e.target.id)}>Xóa hạng mục</button>
+          </div>
+        }
       </div>
       <div className="col-xs-6">
         <FieldGroup
+          disabled={!hasPermission}
           value={value}
           id="categoryName"
           type="text"
@@ -222,44 +229,53 @@ function ThongTinHangMuc({
           handleChange={handleChange}
         />
         <FieldGroupFileImage
+          hasPermission={hasPermission}
           label="Hình Ảnh Hạng Mục"
           thongTinHangMuc={index}
           value={value.image}
           removeHinh={removeHinh}
         />
-        <FieldGroupFile
-          id="imageCategory"
-          type="file"
-          label="Thêm Hình Ảnh Hạng Mục"
-          thongTinHangMuc={index}
-          handleChangeFile={handleChangeFile}
-        />
+        {hasPermission
+          && <FieldGroupFile
+            id="imageCategory"
+            type="file"
+            label="Thêm Hình Ảnh Hạng Mục"
+            thongTinHangMuc={index}
+            handleChangeFile={handleChangeFile}
+          />}
+        {hasPermission
+          && <FieldGroup
+            value={value}
+            id="price"
+            type="number"
+            label="Giá Tiền"
+            thongTinHangMuc={index}
+            handleChange={handleChange}
+          />
+        }
+        {hasPermission
+          && <FieldGroup
+            value={value}
+            id="reducedPrice"
+            type="number"
+            label="Giá Giảm"
+            thongTinHangMuc={index}
+            handleChange={handleChange}
+          />
+        }
+        {hasPermission
+          && <FieldGroup
+            value={value}
+            id="cash"
+            type="number"
+            label="Còn lại"
+            thongTinHangMuc={index}
+            handleChange={handleChange}
+            disabled
+          />
+        }
         <FieldGroup
-          value={value}
-          id="price"
-          type="number"
-          label="Giá Tiền"
-          thongTinHangMuc={index}
-          handleChange={handleChange}
-        />
-        <FieldGroup
-          value={value}
-          id="reducedPrice"
-          type="number"
-          label="Giá Giảm"
-          thongTinHangMuc={index}
-          handleChange={handleChange}
-        />
-        <FieldGroup
-          value={value}
-          id="cash"
-          type="number"
-          label="Còn lại"
-          thongTinHangMuc={index}
-          handleChange={handleChange}
-          disabled
-        />
-        <FieldGroup
+          disabled={!hasPermission}
           value={value || 1}
           id="amount"
           type="number"
@@ -267,15 +283,18 @@ function ThongTinHangMuc({
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
+        {hasPermission
+          && <FieldGroup
+            valueDefault={(value.cash || 0) * (value.amount || 1)}
+            value={value}
+            id="totalcash"
+            type="number"
+            label={`Tổng tiền của ${value.amount} sản phẩm:`}
+            disabled
+          />
+        }
         <FieldGroup
-          valueDefault={(value.cash || 0) * (value.amount || 1)}
-          value={value}
-          id="totalcash"
-          type="number"
-          label={`Tổng tiền của ${value.amount} sản phẩm:`}
-          disabled
-        />
-        <FieldGroup
+          disabled={!hasPermission}
           value={value}
           id="size"
           type="text"
@@ -292,6 +311,7 @@ function ThongTinHangMuc({
           textArea
           thongTinHangMuc={index}
           handleChange={handleChange}
+          disabled={!hasPermission}
         />
         {
           value && value.ngayChuanBi && value.ngayChuanBi.map((e, i) => (
@@ -299,8 +319,9 @@ function ThongTinHangMuc({
               <div className="col-xs-4">
                 <ControlLabel>{`Ngày chuẩn bị ${i + 1}:`}</ControlLabel>
               </div>
-              <div className="col-xs-8" style={{display: 'flex', justifyContent: 'space-between'}}>
+              <div className="col-xs-8" style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <DatePicker
+                  disabled={!hasPermission}
                   value={moment(e.date || new Date())}
                   showTime
                   format="YYYY-MM-DD HH:mm"
@@ -308,18 +329,23 @@ function ThongTinHangMuc({
                   onChange={el => updatePreparationDay('date', new Date(el), i, index)}
                   onOk={el => updatePreparationDay('date', new Date(el), i, index)}
                 />
-                <button className="btn btn-danger" id={e.id} onClick={e => removeNgayChuanBi(e.target.id, index)}>{`Xóa`}</button>
+                {hasPermission
+                  && <button className="btn btn-danger" id={e.id} onClick={e => removeNgayChuanBi(e.target.id, index)}>{`Xóa`}</button>
+                }
               </div>
               <div className="col-xs-4">
                 <ControlLabel>{`Công Việc ${i + 1}:`}</ControlLabel>
               </div>
               <div className="col-xs-8">
-                <TextArea value={e.congviec || ''} rows={4} onChange={el => updatePreparationDay('congviec', el.target.value, i, index)} />
+                <TextArea disabled={!hasPermission} value={e.congviec || ''} rows={4} onChange={el => updatePreparationDay('congviec', el.target.value, i, index)} />
               </div>
             </div>
           ))
         }
-        <button type="button" className="btn btn-success" onClick={() => addNgayChuanBi(index)}>Thêm Ngày Chuẩn Bị</button>
+        {hasPermission
+          && <button type="button" className="btn btn-success" onClick={() => addNgayChuanBi(index)}>Thêm Ngày Chuẩn Bị</button>
+        }
+
       </div>
       <div className="col-xs-6">
         <FieldGroupSelectNhanVien
@@ -353,6 +379,7 @@ function ThongTinHangMuc({
           handleChange={handleChange}
         />
         <FieldGroup
+          disabled={!hasPermission}
           value={value}
           id="proposedPurchase"
           type="text"
@@ -360,7 +387,9 @@ function ThongTinHangMuc({
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
+
         <FieldGroup
+          disabled={!hasPermission}
           value={value}
           id="employeeComments"
           type="text"
@@ -368,14 +397,16 @@ function ThongTinHangMuc({
           thongTinHangMuc={index}
           handleChange={handleChange}
         />
-
-        <FieldGroupFile
-          id="imageSetup"
-          type="file"
-          label="Hình Ảnh Không Gian Set-Up"
-          thongTinHangMuc={index}
-        />
+        {hasPermission
+          && <FieldGroupFile
+            id="imageSetup"
+            type="file"
+            label="Hình Ảnh Không Gian Set-Up"
+            thongTinHangMuc={index}
+          />
+        }
         <FieldGroup
+          disabled={!hasPermission}
           value={value}
           id="requestSetup"
           type="text"
@@ -385,6 +416,7 @@ function ThongTinHangMuc({
         />
         <FieldGroup
           value={value}
+          disabled={!hasPermission}
           id="relatedMaterials"
           type="text"
           label="Vật Liệu Liên Quan"
@@ -392,6 +424,7 @@ function ThongTinHangMuc({
           handleChange={handleChange}
         />
         <FieldGroup
+          disabled={!hasPermission}
           value={value}
           id="customerReviews"
           type="text"
@@ -533,7 +566,7 @@ function FieldGroupFile({
   );
 }
 
-function FieldGroupFileImage({ label, value, removeHinh, thongTinHangMuc }) {
+function FieldGroupFileImage({ label, value, removeHinh, thongTinHangMuc, hasPermission }) {
   console.log(thongTinHangMuc)
   return (
     <div style={{ marginBottom: 10, heigh: '200px' }} className="app-from-group col-xs-12">
@@ -545,7 +578,7 @@ function FieldGroupFileImage({ label, value, removeHinh, thongTinHangMuc }) {
           value.map((e, i) => (
             <Col xs={6} key={parseInt(i.toString())}>
               <Thumbnail href={e.url} target="blank" src={e.url} alt="242x200" />
-              <button className="btn btn-danger" id={e._id} onClick={(e) => removeHinh(e.target.id, thongTinHangMuc)}>{'X'}</button>
+              {hasPermission && <button className="btn btn-danger" id={e._id} onClick={(e) => removeHinh(e.target.id, thongTinHangMuc)}>{'X'}</button>}
             </Col>))
         }
       </div>
@@ -607,7 +640,7 @@ class Purchase extends Component {
   }
 
   updateChatMessage(index, msg) {
-    
+
     const { value, purchaseId } = this.state;
     const { login } = this.props;
     const obj = {
@@ -625,20 +658,20 @@ class Purchase extends Component {
         value: {
           ...value
         }
-      }, () => { 
+      }, () => {
         Array.from(this._chatMessage.values())
-        .filter(node => node != null)
-        .forEach(node => {
+          .filter(node => node != null)
+          .forEach(node => {
             node.scrollTop = node.scrollHeight
-        });
-       });
+          });
+      });
     });
     Array.from(this._chatInput.values())
-    .filter(node => node != null)
-    .forEach(node => {
+      .filter(node => node != null)
+      .forEach(node => {
         node.input.valueOf().input.value = ""
-    });
-    
+      });
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -666,7 +699,7 @@ class Purchase extends Component {
             value: {
               ...data.results
             },
-            thongTinHangMuc: data.results.category
+            thongTinHangMuc: data.results ? data.results.category : []
           });
         }
       });
@@ -886,7 +919,7 @@ class Purchase extends Component {
       });
     }
   }
-  
+
   removeHinh(indexHinh, index) {
     console.log(indexHinh, index)
     const { value } = this.state;
@@ -904,13 +937,15 @@ class Purchase extends Component {
       });
     }
   }
-  
+
 
   render() {
     const {
       thongTinHangMuc, phanTichHangMuc, save, value, purchaseId
     } = this.state;
-    const { user } = this.props;
+    const { user, login } = this.props;
+    const { role } = login.data.results ? login.data.results : false;
+    const hasPermission = role && role.groupId !== ROLE.WORK_MANAGER;
     return (
       <div className="App">
         <Alert bsStyle={`success ${!save ? 'hide' : ''} fixed`}>
@@ -936,11 +971,15 @@ class Purchase extends Component {
                     height: '70px'
                   }}
                   >
-                    <Link to="/main"><button type="button" className="btn btn-primary">Thêm Đơn Hàng</button></Link>
-                    <Link to={`/baogia/${purchaseId}`}><button type="button" className="btn btn-success">In báo Giá</button></Link>
-                    <Link to={`/chitiethopdong/${purchaseId}`}><button type="button" className="btn btn-success">In Chi Tiết Hợp Đồng</button></Link>
-                    <button type="button" className="btn btn-success" onClick={() => window.open(`${API.server}purchase/${purchaseId}/hopdong`, '_blank')}>In Hợp Đồng</button>
-                    <button type="button" className="btn btn-success" onClick={() => window.open(`${API.server}purchase/${purchaseId}/bangiaotiencoc   `, '_blank')}>In Bàn Giao Tiền Cọc</button>
+                    {hasPermission
+                      && <div>
+                        <Link to="/main"><button type="button" className="btn btn-primary">Thêm Đơn Hàng</button></Link>
+                        <Link to={`/baogia/${purchaseId}`}><button type="button" className="btn btn-success">In báo Giá</button></Link>
+                        <Link to={`/chitiethopdong/${purchaseId}`}><button type="button" className="btn btn-success">In Chi Tiết Hợp Đồng</button></Link>
+                        <button type="button" className="btn btn-success" onClick={() => window.open(`${API.server}purchase/${purchaseId}/hopdong`, '_blank')}>In Hợp Đồng</button>
+                        <button type="button" className="btn btn-success" onClick={() => window.open(`${API.server}purchase/${purchaseId}/bangiaotiencoc   `, '_blank')}>In Bàn Giao Tiền Cọc</button>
+                      </div>
+                    }
                   </div>
                 )
               }
@@ -955,12 +994,14 @@ class Purchase extends Component {
                 disabled
               />
               <FieldGroup
+                disabled={!hasPermission}
                 value={value}
                 id="agreementCode"
                 type="text"
                 label="Mã Hợp Đồng"
               />
               <FieldGroup
+                disabled={!hasPermission}
                 value={value}
                 id="eventName"
                 type="text"
@@ -968,6 +1009,7 @@ class Purchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroup
+                disabled={!hasPermission}
                 value={value}
                 id="customerName"
                 type="text"
@@ -975,6 +1017,7 @@ class Purchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroup
+                disabled={!hasPermission}
                 value={value}
                 id="phone"
                 type="text"
@@ -982,6 +1025,7 @@ class Purchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroupDate
+                disabled={!hasPermission}
                 value={value}
                 id="startDate"
                 type="date"
@@ -989,6 +1033,7 @@ class Purchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroup
+                disabled={!hasPermission}
                 value={value}
                 id="location"
                 type="text"
@@ -996,20 +1041,24 @@ class Purchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroup
+                disabled={!hasPermission}
                 value={value}
                 id="colorTone"
                 type="text"
                 label="Tone Màu"
                 handleChange={this.handleChange}
               />
+              {hasPermission
+                && < FieldGroup
+                  value={value}
+                  id="total"
+                  type="text"
+                  label="Tổng tiền"
+                  handleChange={this.handleChange}
+                />
+              }
               <FieldGroup
-                value={value}
-                id="total"
-                type="text"
-                label="Tổng tiền"
-                handleChange={this.handleChange}
-              />
-              <FieldGroup
+                disabled={!hasPermission}
                 value={value}
                 id="manager"
                 type="text"
@@ -1017,34 +1066,45 @@ class Purchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroupFileImage
+                hasPermission={hasPermission}
                 label="Hình Ảnh"
                 value={value.image || []}
               />
-              <FieldGroupFile
-                id="image"
-                type="file"
-                label="Thêm Hình Ảnh"
-                handleChangeFile={this.handleChangeFile}
-              />
-              <FieldGroup
-                value={value}
-                id="totalWriteAutoFill"
-                type="number"
-                disabled
-                label="Tổng tiền tự ghi sau khi cọc:"
-                handleChange={this.handleChange}
-              />
-              <FieldGroup
-                value={value}
-                id="totalAutoFill"
-                type="number"
-                disabled
-                label="Tổng tiền sau khi cọc (Auto Fill):"
-                handleChange={this.handleChange}
-              />
+
+              {hasPermission
+                && <FieldGroupFile
+                  has={!hasPermission}
+                  id="image"
+                  type="file"
+                  label="Thêm Hình Ảnh"
+                  handleChangeFile={this.handleChangeFile}
+                />
+              }
+              {hasPermission
+                &&
+                <FieldGroup
+                  value={value}
+                  id="totalWriteAutoFill"
+                  type="number"
+                  disabled
+                  label="Tổng tiền tự ghi sau khi cọc:"
+                  handleChange={this.handleChange}
+                />
+              }
+              {hasPermission
+                && <FieldGroup
+                  value={value}
+                  id="totalAutoFill"
+                  type="number"
+                  disabled
+                  label="Tổng tiền sau khi cọc (Auto Fill):"
+                  handleChange={this.handleChange}
+                />
+              }
             </div>
             <div className="col-xs-6">
               <FieldGroupDate
+                disabled={!hasPermission}
                 value={value}
                 id="agreementDate"
                 type="date"
@@ -1052,6 +1112,7 @@ class Purchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroup
+                disabled={!hasPermission}
                 value={value}
                 id="customerAddress"
                 type="text"
@@ -1059,6 +1120,7 @@ class Purchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroup
+                disabled={!hasPermission}
                 value={value}
                 id="email"
                 type="email"
@@ -1066,6 +1128,7 @@ class Purchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroupDate
+                disabled={!hasPermission}
                 value={value}
                 id="setupDate"
                 type="date"
@@ -1073,6 +1136,7 @@ class Purchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroup
+                disabled={!hasPermission}
                 value={value}
                 id="setupAdress"
                 type="text"
@@ -1080,6 +1144,7 @@ class Purchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroupSelectNhanVien
+                disabled={!hasPermission}
                 userList={user.data}
                 value={value}
                 id="saleGbrown"
@@ -1088,6 +1153,7 @@ class Purchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroup
+                disabled={!hasPermission}
                 value={value}
                 id="phoneSaleGbrown"
                 type="Number"
@@ -1095,6 +1161,7 @@ class Purchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroup
+                disabled={!hasPermission}
                 value={value}
                 id="emailSaleGbrown"
                 type="email"
@@ -1102,28 +1169,36 @@ class Purchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroup
+                disabled={!hasPermission}
                 value={value}
                 id="material"
                 type="text"
                 label="Chất Liệu"
                 handleChange={this.handleChange}
               />
-              <FieldGroup
-                value={value}
-                id="deposit"
-                type="text"
-                label="Đặt Cọc"
-                handleChange={this.handleChange}
-              />
-              <FieldGroup
-                textArea
-                value={value}
-                id="depositDescription"
-                type="text"
-                label="Note Chi Tiết đặt cọc"
-                handleChange={this.handleChange}
-              />
+              {hasPermission
+                &&
+                <FieldGroup
+                  value={value}
+                  id="deposit"
+                  type="text"
+                  label="Đặt Cọc"
+                  handleChange={this.handleChange}
+                />
+              }
+              {hasPermission
+                &&
+                <FieldGroup
+                  textArea
+                  value={value}
+                  id="depositDescription"
+                  type="text"
+                  label="Note Chi Tiết đặt cọc"
+                  handleChange={this.handleChange}
+                />
+              }
               <FieldGroupSelect
+                disabled={!hasPermission}
                 data={status}
                 value={value}
                 id="status"
@@ -1132,6 +1207,7 @@ class Purchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroupDate
+                disabled={!hasPermission}
                 value={value}
                 id="acceptanceDate"
                 type="date"
@@ -1139,6 +1215,7 @@ class Purchase extends Component {
                 disabled
               />
               <FieldGroup
+                disabled={!hasPermission}
                 value={value}
                 id="description"
                 type="text"
@@ -1171,10 +1248,11 @@ class Purchase extends Component {
               that={this}
               removeNgayChuanBi={this.removeNgayChuanBi}
               removeHinh={this.removeHinh}
+              hasPermission={role && role.groupId !== ROLE.WORK_MANAGER}
             />))}
-          <div className="col-xs-12 content-center">
-            <FieldCheckBox value={value} onChangeCheckBox={this.onChangeCheckBox} />
-            <button type="button" className="btn btn-success w10" onClick={this.savePurchase}>Cập Nhập Đơn Hàng</button>
+          <div className="col-xs-12 content-center" >
+            <FieldCheckBox disabled={!hasPermission} value={value} onChangeCheckBox={this.onChangeCheckBox} />
+            <button style={{ marginTop: 20, marginBottom: 20, width: '20%', alignSelf: 'center' }} type="button" className="btn btn-success" onClick={this.savePurchase}>Cập Nhập Đơn Hàng</button>
           </div>
         </div>
       </div>
