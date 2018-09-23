@@ -1108,6 +1108,7 @@ class Purchase extends Component {
     const { user, login } = this.props;
     const { role } = login.data.results ? login.data.results : false;
     const hasPermission = role && role.groupId !== ROLE.WORK_MANAGER;
+    const iamSale = role && role.groupId === ROLE.SALE;
     return (
       <div className="App">
         <Alert bsStyle={`success`} className={`fixed ${!save ? 'hide' : ''}`}>
@@ -1263,6 +1264,29 @@ class Purchase extends Component {
                   handleChange={this.handleChange}
                 />
               }
+              <div className="col-xs-12">
+                <h3>Thông Tin Nhân Sự PartTime</h3>
+                <div
+                  style={{
+                    maxHeight: '300px', overflow: 'auto', border: '1px solid lightblue', minHeight: '300px'
+                  }}
+                >
+                  {
+                    value && value.nhanSuPartTime && value.nhanSuPartTime.map((e, i) => (
+                      <div key={i} style={{ borderBottom: (i !== (value.nhanSuPartTime.length - 1) && '1px solid lightblue') || 'none', margin: '0 10px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <div>Thời Gian Đến: <b>{e.startTimePartTime && moment(e.startTimePartTime).format("DD/MM/YYYY HH:mm")}</b></div>
+                          <div>Thời Gian Đi: <b>{e.endTimePartTime && moment(e.endTimePartTime).format("DD/MM/YYYY HH:mm")}</b></div>
+                        </div>
+                        <div>
+                          <p>Thông Tin Nhân Sư PartTime :</p>
+                          <b style={{ whiteSpace: 'pre-wrap' }}>{e.nhanSuPartTime && e.nhanSuPartTime}</b>
+                        </div>
+                      </div>
+                    ))
+                  }
+                </div>
+              </div>
             </div>
             <div className="col-xs-6">
               <FieldGroupDate
@@ -1306,7 +1330,7 @@ class Purchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroupSelectNhanVien
-                disabled={!hasPermission}
+                disabled={!hasPermission || iamSale}
                 userList={user.data}
                 value={value}
                 id="saleGbrown"
@@ -1315,7 +1339,7 @@ class Purchase extends Component {
                 handleChange={this.handleChange}
               />
               <FieldGroup
-                disabled={!hasPermission}
+                disabled={!hasPermission || iamSale}
                 value={value}
                 id="phoneSaleGbrown"
                 type="Number"
@@ -1408,29 +1432,6 @@ class Purchase extends Component {
                     this.createChatTotal(val);
                   }}
                 />
-              </div>
-              <div className="col-xs-12">
-                <h3>Thông Tin Nhân Sự PartTime</h3>
-                <div
-                  style={{
-                    maxHeight: '300px', overflow: 'auto', border: '1px solid lightblue', minHeight: '300px'
-                  }}
-                >
-                  {
-                    value && value.nhanSuPartTime && value.nhanSuPartTime.map((e, i) => (
-                      <div key={i} style={{ borderBottom: (i !== (value.nhanSuPartTime.length - 1) && '1px solid lightblue') || 'none', margin: '0 10px' }}>
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                          <div>Thời Gian Đến: <b>{e.startTimePartTime && moment(e.startTimePartTime).format("DD/MM/YYYY HH:mm")}</b></div>
-                          <div>Thời Gian Đi: <b>{e.endTimePartTime && moment(e.endTimePartTime).format("DD/MM/YYYY HH:mm")}</b></div>
-                        </div>
-                        <div>
-                          <p>Thông Tin Nhân Sư PartTime :</p>
-                          <b style={{ whiteSpace: 'pre-wrap' }}>{e.nhanSuPartTime && e.nhanSuPartTime}</b>
-                        </div>
-                      </div>
-                    ))
-                  }
-                </div>
               </div>
             </div>
 
