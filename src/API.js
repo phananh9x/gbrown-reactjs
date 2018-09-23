@@ -77,3 +77,17 @@ export const getAllPurchase = () =>
       console.log('This is error');
       return error;
     });
+
+export const getAllPurchaseFilterByDate = date =>
+  fetch(`${server}user/work/filter`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(date),
+  }).then(res => res.json())
+    .catch((error) => {
+      console.log('This is error');
+      return error;
+    });
