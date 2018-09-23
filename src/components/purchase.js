@@ -646,6 +646,7 @@ class Purchase extends Component {
     this.addNgayChuanBi = this.addNgayChuanBi.bind(this);
     this.removeNgayChuanBi = this.removeNgayChuanBi.bind(this);
     this.removeHinh = this.removeHinh.bind(this);
+    this.createChatTotal = this.createChatTotal.bind(this);
   }
 
   addNgayChuanBi = (index) => {
@@ -705,9 +706,22 @@ class Purchase extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { login } = nextProps;
+    const { login, chat } = nextProps;
+    const { value } = this.state;
     if (login.success) {
       this.getUserList();
+    }
+    if (!chat.fecthing && chat.success) {
+      this.setState({
+        value: {
+        ...value,
+          chat: [...value.chat, chat.data]
+        }
+      }, () => {
+        // debugger
+        this._chatMessageTotal.scrollTop = this._chatMessageTotal.scrollHeight
+        this._chatInputTotal.input.valueOf().input.value = ""
+      })
     }
   }
 
@@ -1011,6 +1025,14 @@ class Purchase extends Component {
     }
   }
 
+  createChatTotal(val) {
+    const { dispathChatPurchase } = this.props;
+    const { value } = this.state;
+    dispathChatPurchase({
+      message: val,
+      purchaseId: value.purchaseId
+    });
+  }
 
   render() {
     const {
@@ -1326,7 +1348,7 @@ class Purchase extends Component {
                   size="large"
                   onChange={(e) => console.log(e.target.value)}
                   onSearch={val => {
-                    
+                    this.createChatTotal(val);
                   }}
                 />
               </div>
@@ -1345,7 +1367,8 @@ class Purchase extends Component {
                           <div>Thời Gian Đi: <b>{e.endTimePartTime && moment(e.endTimePartTime).format("DD/MM/YYYY HH:mm")}</b></div>
                         </div>
                         <div>
-                          <p>Thông Tin Nhân Sư PartTime : <b>{e.nhanSuPartTime && e.nhanSuPartTime}</b></p>
+                          <p>Thông Tin Nhân Sư PartTime :</p>
+                          <b style={{ whiteSpace: 'pre-wrap' }}>{e.nhanSuPartTime && e.nhanSuPartTime}</b>
                         </div>
                       </div>
                     ))
@@ -1393,7 +1416,8 @@ class Purchase extends Component {
 const mapStateToProps = state => ({
   navBar: state.navBar,
   user: state.userReducer,
-  login: state.login
+  login: state.login,
+  chat: state.chatPurchaseReducer
 });
 const mapDispathToProps = dispath => ({
   dispathNavBar: show => dispath(showNavBar(show)),
