@@ -11,6 +11,11 @@ export const userListApi = () => {
   return http.get(url, {});
 };
 
+export const updateProfile = (data) => {
+  const url = `${server}user/update`;
+  return http.post(url, data);
+};
+
 export const chatPurchaseApi = (data) => {
   const url = `${server}chat/purchase/${data.purchaseId}/create`;
   return http.post(url, data);

@@ -170,7 +170,11 @@ class NavigationBar extends Component {
                     </MenuItem>
                   </NavDropdown>
                   <NavDropdown eventKey={3} title={`${displayRoleName} ${displayName}`} id="basic-nav-dropdown">
-                    <MenuItem eventKey={3.1}>Thông tin</MenuItem>
+                    <MenuItem eventKey={3.1}>
+                      <Link to="/user/profile">
+                        Thông tin cá nhân
+                      </Link>
+                    </MenuItem>
                     <MenuItem divider />
                     <MenuItem eventKey={3.2} onClick={this.logout}>Đăng xuất</MenuItem>
 

@@ -25,6 +25,7 @@ import { requestUserList } from './redux/actions/userAction';
 import { ROLE } from './constants/role';
 import MeetingSale from './screen/meetingsale';
 import MeetingEkip from './screen/meetingekip';
+import Profile from './screen/profile';
 
 library.add(faStroopwafel, faUser, faLock, faCheck);
 class App extends Component {
@@ -62,7 +63,7 @@ class App extends Component {
       login,
     } = this.props;
 
-    if (!login.success) {
+    if (!login.success && !login.data.results) {
       return Login;
     }
 
@@ -88,6 +89,7 @@ class App extends Component {
               <Route exact path="/work/schedule" component={this.middleWareLogin(WorkSchedule)} />
               <Route exact path="/work/meetingsale" component={this.middleWareLogin(MeetingSale)} />
               <Route exact path="/work/meetingekip" component={this.middleWareLogin(MeetingEkip)} />
+              <Route exact path="/user/profile" component={this.middleWareLogin(Profile)} />
             </Switch>
           </Router>
         </main>

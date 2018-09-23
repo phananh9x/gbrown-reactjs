@@ -1,4 +1,4 @@
-import { LOGIN } from '../actions/actionType';
+import { LOGIN, USER } from '../actions/actionType';
 
 const initalState = {
   data: {},
@@ -38,6 +38,26 @@ export default function Login(state = initalState, action) {
       return {
         ...state,
         data: {},
+        fetching: false,
+        success: false
+      };
+    case USER.UPDATE_PROFILE_REQUEST:
+      return {
+        ...state,
+        fetching: true,
+        success: false
+      };
+    case USER.UPDATE_PROFILE_SUCCESS:
+      return {
+        data: action.data.results,
+        error: {},
+        fetching: false,
+        success: true
+      };
+    case USER.UPDATE_PROFILE_ERROR:
+      return {
+        ...state,
+        error: action.error,
         fetching: false,
         success: false
       };

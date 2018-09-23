@@ -1,4 +1,4 @@
-import { LOGIN } from './actionType';
+import { LOGIN, USER } from './actionType';
 
 
 export const loginRequest = data => ({
@@ -18,5 +18,21 @@ export const loginError = error => ({
 
 export const loginLogout = error => ({
   type: LOGIN.LOGOUT,
+  error
+});
+
+export const updateProfile = data => ({
+  type: USER.UPDATE_PROFILE_REQUEST,
+  data
+});
+
+export const updateProfileSuccess = data => ({
+  type: USER.UPDATE_PROFILE_SUCCESS,
+  data
+});
+
+
+export const updateProfileError = error => ({
+  type: USER.UPDATE_PROFILE_ERROR,
   error
 });

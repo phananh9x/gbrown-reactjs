@@ -22,6 +22,7 @@ const style = {
   login: {
     backgroundColor: 'white',
     width: '25%',
+    minWidth: '200',
     alignSelf: 'center',
     paddingLeft: '3%',
     paddingRight: '3%',
