@@ -17,23 +17,22 @@ const renderCell = (props) => {
   const { original } = props;
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <Button bsStyle="primary" id="purchase_info">
+      <Button bsStyle="primary" id="schedule">
         Chi tiết
       </Button>
       <Button
-        // disabled={original.chiaViec}
-        bsStyle={original.hopSale ? 'success' : 'danger'}
+        bsStyle={original.hopEkip ? 'success' : 'danger'}
         bsSize="xsmall"
         style={{ marginTop: 5 }}
-        id="confirm_meeting_sale"
+        id="confirm_schedule"
       >
-        {original.hopSale ? 'Đã họp' : 'Chưa họp'}
+        {original.hopEkip ? 'Đã họp' : 'Chưa họp'}
       </Button>
     </div>
   );
 };
 
-class MeetingSale extends Component {
+class MeetingEkip extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -47,7 +46,7 @@ class MeetingSale extends Component {
     this.modal = {};
     this.purchaseChatId = {};
     this.toDay = moment(new Date()).format('DD/MM/YYYY');
-    this.filterDay = moment(new Date().setDate(new Date().getDate() + 4)).format('DD/MM/YYYY');
+    this.filterDay = moment(new Date().setDate(new Date().getDate() + 1)).format('DD/MM/YYYY');
     this.columns = [{
       id: 'checkbox',
       accessor: '',
@@ -294,13 +293,13 @@ class MeetingSale extends Component {
 
 
   confirmSchedule = () => {
-    this.valueForSave.hopSale = true;
+    this.valueForSave.hopEkip = true;
     API.updatePurchase(this.valueForSave, this.valueForSave.purchaseId).then(() => {
       const { value } = this.state;
       const newValue = JSON.parse(JSON.stringify(value));
       newValue.forEach((e) => {
         if (e.purchaseId === this.valueForSave.purchaseId) {
-          e.hopSale = true;
+          e.hopEkip = true;
           const { dispathChatPurchase } = this.props;
           /**
            * also send message to CHAT when you update schedule
@@ -308,7 +307,7 @@ class MeetingSale extends Component {
            */
           this.purchaseChatId = this.valueForSave.purchaseId;
           const message = {
-            message: WORK_MANAGER.meeting_sale_completed,
+            message: WORK_MANAGER.meeting_ekip_completed,
             prefix: WORK_MANAGER.prefix,
             lead: null,
             staffs: []
@@ -340,7 +339,7 @@ class MeetingSale extends Component {
           <Jumbotron>
             <h3>Nhắc nhở công việc trong ngày dành cho khối sản xuất</h3>
             <p>
-              {`Hôm nay là ngày ${this.toDay}, Quản lý khối sản xuất đang xem toàn bộ những đơn hàng diễn ra vào ngày ${this.filterDay}. Những đơn hàng này cần phải được họp với Sale ngay trong ngày hôm nay.`}
+              {`Hôm nay là ngày ${this.toDay}, Quản lý khối sản xuất đang xem toàn bộ những đơn hàng diễn ra vào ngày ${this.filterDay}. Những đơn hàng này cần phải được họp lại với toàn bộ Ekip sản xuất lần cuối để chuẩn bị setup vào ngày mai.`}
             </p>
           </Jumbotron>
 
@@ -354,14 +353,14 @@ class MeetingSale extends Component {
                 if (e.target.name === 'checkbox') {
                   this.toggleRow(rowInfo.original.purchaseId);
                 }
-                if (e.target.id === 'purchase_info') {
+                if (e.target.id === 'schedule') {
                   history.push({
                     pathname: `/purchase/${rowInfo.original.purchaseId}`,
                   });
-                } else if (e.target.id === 'confirm_meeting_sale') {
+                } else if (e.target.id === 'confirm_schedule') {
                   this.modal = {
-                    title: 'Hoàn thành họp với sale',
-                    body: 'Bạn có chắc chắn đã họp với Sale',
+                    title: 'Hoàn thành họp Ekip',
+                    body: 'Bạn có chắc chắn đã họp với toàn bộ Ekip sản xuất',
                     cancel: 'Huỷ',
                     accept: 'Xác nhận',
                     key: e.target.id
@@ -386,7 +385,7 @@ class MeetingSale extends Component {
                   <Button
                     bsStyle="primary"
                     onClick={() => {
-                      if (this.modal.key === 'confirm_meeting_sale') {
+                      if (this.modal.key === 'confirm_schedule') {
                         this.setState({ showConfirm: false }, () => this.confirmSchedule());
                       }
                     }}
@@ -412,4 +411,4 @@ const mapDispathToProps = dispath => ({
   dispathChatPurchase: data => dispath(chatPurchaseAction(data))
 });
 
-export default connect(mapStateToProps, mapDispathToProps)(MeetingSale);
+export default connect(mapStateToProps, mapDispathToProps)(MeetingEkip);
