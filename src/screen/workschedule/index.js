@@ -341,7 +341,7 @@ class WorkSchedule extends Component {
           <Jumbotron>
             <h3>Nhắc nhở công việc trong ngày dành cho khối sản xuất</h3>
             <p>
-              {`Hôm nay là ngày ${this.toDay}, Quản lý khối sản xuất đang xem toàn bộ những đơn hàng diễn ra vào ngày ${this.filterDay}. Những đơn hàng này cần được chia việc cho nhân viên ngay trong hôm nay.`}
+              {`Hôm nay là ngày ${this.toDay}, Quản lý khối sản xuất đang xem toàn bộ những đơn hàng diễn ra vào ngày ${this.filterDay}. Những đơn hàng này cần phải được chia việc cho nhân viên ngay trong ngày hôm nay.`}
             </p>
           </Jumbotron>
 

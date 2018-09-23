@@ -47,7 +47,7 @@ class MeetingSale extends Component {
     this.modal = {};
     this.purchaseChatId = {};
     this.toDay = moment(new Date()).format('DD/MM/YYYY');
-    this.filterDay = moment(new Date().setDate(new Date().getDate() + 5)).format('DD/MM/YYYY');
+    this.filterDay = moment(new Date().setDate(new Date().getDate() + 4)).format('DD/MM/YYYY');
     this.columns = [{
       id: 'checkbox',
       accessor: '',
@@ -341,7 +341,7 @@ class MeetingSale extends Component {
           <Jumbotron>
             <h3>Nhắc nhở công việc trong ngày dành cho khối sản xuất</h3>
             <p>
-              {`Hôm nay là ngày ${this.toDay}, Quản lý khối sản xuất đang xem toàn bộ những đơn hàng diễn ra vào ngày ${this.filterDay}. Những đơn hàng này cần được chia việc cho nhân viên ngay trong hôm nay.`}
+              {`Hôm nay là ngày ${this.toDay}, Quản lý khối sản xuất đang xem toàn bộ những đơn hàng diễn ra vào ngày ${this.filterDay}. Những đơn hàng này cần phải được họp với Sale ngay trong ngày hôm nay.`}
             </p>
           </Jumbotron>
 
