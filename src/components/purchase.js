@@ -607,7 +607,7 @@ function FieldGroupFileImage({ label, value, removeHinh, thongTinHangMuc, hasPer
           value.map((e, i) => (
             <Col xs={6} key={parseInt(i.toString())}>
               <Thumbnail href={e.url} target="blank" src={e.url} alt="242x200" />
-              {hasPermission && <button className="btn-danger remove-image" id={e._id} onClick={(e) => removeHinh(e.target.id, thongTinHangMuc)}><Glyphicon glyph="glyphicon glyphicon-remove" /></button>}
+              {hasPermission && <button className="btn-danger remove-image" id={`${thongTinHangMuc}-${i}-image`} onClick={(e) => removeHinh(e, e.target.id, thongTinHangMuc)}><Glyphicon onClick={(e) => removeHinh(e, e.target.parentElement.id, thongTinHangMuc)}  glyph="glyphicon glyphicon-remove" /></button>}
             </Col>))
         }
       </div>
@@ -933,13 +933,12 @@ class Purchase extends Component {
     const { value, thongTinHangMuc } = this.state;
     formdata.append('file', values[0]);
     API.upload(formdata).then((data) => {
-      const url = { url: API.server + data.results.path };
-
+      data.results.url = API.server + data.results.path;
       if (thongTinHangMuclk === undefined) {
-        value.image.push(url);
+        value.image.push( data.results);
         this.setState({ value });
       } else {
-        thongTinHangMuc[thongTinHangMuclk].image.push(url);
+        thongTinHangMuc[thongTinHangMuclk].image.push( data.results);
         this.setState({
           value: {
             ...value,
@@ -1008,21 +1007,24 @@ class Purchase extends Component {
     }
   }
 
-  removeHinh(indexHinh, index) {
+  removeHinh(event, indexHinh, index) {
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
     const { value } = this.state;
     let { thongTinHangMuc } = this.state;
     let confirm = window.confirm("Bạn có thực sự muốn xóa ?")
-    if (confirm) {
-      debugger
-      thongTinHangMuc[index].image = thongTinHangMuc[index].image.filter(e => e._id != indexHinh)
+    if (confirm && index !== undefined ) {
+      thongTinHangMuc[index].image = thongTinHangMuc[index].image.filter((e, i) => i != parseInt(indexHinh.split("-")[1]))
       value.category[index].image = thongTinHangMuc[index].image
-      this.setState({
-        value: {
-          ...value
-        },
-        thongTinHangMuc
-      });
+    }else {
+      value.image = value.image.filter((e, i) => i!= parseInt(indexHinh.split("-")[1]))
     }
+    this.setState({
+      value: {
+        ...value
+      },
+      thongTinHangMuc
+    });
   }
 
   createChatTotal(val) {
