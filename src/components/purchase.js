@@ -1,7 +1,8 @@
 /* eslint-disable */
 import React, { Component } from 'react';
 import {
-  FormControl, ControlLabel, Checkbox, Thumbnail, Col, Alert
+  FormControl, ControlLabel, Checkbox, Thumbnail, Col, Alert,
+  Glyphicon
 } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
@@ -17,7 +18,6 @@ import { requestUserList } from '../redux/actions/userAction';
 import { ROLE } from '../constants/role';
 import { WORK_MANAGER } from '../constants/string';
 import { chatPurchaseAction } from '../redux/actions/chatAction';
-
 const { Search, TextArea } = Input;
 
 const menuList = [
@@ -210,11 +210,11 @@ function ThongTinHangMuc({
   return (
     <div className="row" style={{ marginTop: 50 }}>
       <div className="col-xs-12">
-        <div className="col-xs-10">
+        <div className="col-xs-6">
           <h1>{`THÔNG TIN HẠNG MỤC ${index + 1}`}</h1>
         </div>
         {hasPermission &&
-          <div className="col-xs-2">
+          <div className="col-xs-6" style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Link to={`/purchase/${purchaseId}/chiaviec/${index}`}><button style={{ marginRight: '10px' }} type="button" className="btn btn-success">Chia Việc</button></Link>
             <button type="button" className="btn btn-danger" id={index} onClick={e => remove(e.target.id)}>Xóa hạng mục</button>
           </div>
@@ -438,7 +438,7 @@ function ThongTinHangMuc({
           disabled={!hasPermission}
           value={value}
           id="startTimePartTime"
-          type="text"
+          type="date"
           label="Giờ PartTime"
           thongTinHangMuc={index}
           handleChange={handleChange}
@@ -447,7 +447,7 @@ function ThongTinHangMuc({
           disabled={!hasPermission}
           value={value}
           id="endTimePartTime"
-          type="text"
+          type="date"
           label="Hết Giờ PartTime"
           thongTinHangMuc={index}
           handleChange={handleChange}
@@ -466,13 +466,13 @@ function ThongTinHangMuc({
           <h3>Chat Giữa Lãnh Đạo, Khách Hàng, Sale và Nhân Viên Sản Xuất</h3>
           <div
             style={{
-              maxHeight: '300px', overflow: 'auto', border: '1px solid gray', minHeight: '300px'
+              maxHeight: '300px', overflow: 'auto', border: '1px solid lightblue', minHeight: '300px'
             }}
             ref={c => that._chatMessage.set(index, c)}
           >
             {
               value.chat && value.chat.map((e, i) => (
-                <div key={e.id || new Date().valueOf()} style={{ borderBottom: (i !== (value.chat.length - 1) && '1px solid gray') || 'none', margin: '0 10px' }}>
+                <div key={e.id || new Date().valueOf()} style={{ borderBottom: (i !== (value.chat.length - 1) && '1px solid lightblue') || 'none', margin: '0 10px' }}>
                   <div style={{ justifyContent: 'space-between', display: 'flex' }}>
                     <b>{e.name.toUpperCase()}</b>
                     <p>{e.date}</p>
@@ -607,7 +607,7 @@ function FieldGroupFileImage({ label, value, removeHinh, thongTinHangMuc, hasPer
           value.map((e, i) => (
             <Col xs={6} key={parseInt(i.toString())}>
               <Thumbnail href={e.url} target="blank" src={e.url} alt="242x200" />
-              {hasPermission && <button className="btn btn-danger" id={e._id} onClick={(e) => removeHinh(e.target.id, thongTinHangMuc)}>{'X'}</button>}
+              {hasPermission && <button className="btn-danger remove-image" id={e._id} onClick={(e) => removeHinh(e.target.id, thongTinHangMuc)}><Glyphicon glyph="glyphicon glyphicon-remove" /></button>}
             </Col>))
         }
       </div>
@@ -743,10 +743,11 @@ class Purchase extends Component {
        */
     const { dispathChatPurchase } = this.props;
     const { value, purchaseId } = this.state;
+    let nhanSuPartTime = []
+
     value.category.forEach((e, index) => {
 
       let implementationOfficerName = '';
-
       if (this.holderThongTinHangMuc[index].implementationOfficer !== e.implementationOfficer
         || this.holderThongTinHangMuc[index].implementationOfficerGroup !== e.implementationOfficerGroup) {
         implementationOfficerName = e.implementationOfficer ? e.implementationOfficer.firstname : '';
@@ -768,7 +769,16 @@ class Purchase extends Component {
         });
         value.chiaViec = false;
       }
+
+      if (e.nhanSuPartTime || e.endTimePartTime || e.startTimePartTime) {
+        let obj = {}
+        obj.nhanSuPartTime = e.nhanSuPartTime || ''
+        obj.endTimePartTime = e.endTimePartTime || ''
+        obj.startTimePartTime = e.startTimePartTime || ''
+        nhanSuPartTime.push(obj);
+      }
     })
+    value.nhanSuPartTime = nhanSuPartTime;
 
 
     API.updatePurchase(value, purchaseId).then(() => {
@@ -1011,7 +1021,7 @@ class Purchase extends Component {
     const hasPermission = role && role.groupId !== ROLE.WORK_MANAGER;
     return (
       <div className="App">
-        <Alert bsStyle={`success ${!save ? 'hide' : ''}`} className="fixed">
+        <Alert bsStyle={`success`} className={`fixed ${!save ? 'hide' : ''}`}>
           <strong>Cập nhật thông tin đơn hàng thành Công!</strong>
         </Alert>
         <NavigationBar
@@ -1112,14 +1122,13 @@ class Purchase extends Component {
                 handleChange={this.handleChange}
               />
               {hasPermission
-                && < FieldGroup
+                && <FieldGroup
                   value={value}
                   id="total"
                   type="text"
                   label="Tổng tiền"
                   handleChange={this.handleChange}
-                />
-              }
+                />}
               <FieldGroup
                 disabled={!hasPermission}
                 value={value}
@@ -1132,6 +1141,7 @@ class Purchase extends Component {
                 hasPermission={hasPermission}
                 label="Hình Ảnh"
                 value={value.image || []}
+                removeHinh={this.removeHinh}
               />
 
               {hasPermission
@@ -1286,6 +1296,62 @@ class Purchase extends Component {
                 textArea
                 handleChange={this.handleChange}
               />
+              <div className="col-xs-12">
+                <h3>Chat Tổng</h3>
+                <div
+                  style={{
+                    maxHeight: '300px', overflow: 'auto', border: '1px solid lightblue', minHeight: '300px'
+                  }}
+                  ref={c => this._chatMessageTotal = c}
+                >
+                  {
+                    value && value.chat && value.chat.map((e, i) => (
+                      <div key={e._id  || new Date().valueOf()} style={{ borderBottom: (i !== (value.chat.length - 1) && '1px solid lightblue') || 'none', margin: '0 10px' }}>
+                        <div style={{ justifyContent: 'space-between', display: 'flex' }}>
+                          <b>{e.user && e.user.firstname.toUpperCase()}</b>
+                          <p>{moment(new Date(e.created)).format("DD/MM/YYYY HH:mm")}</p>
+                        </div>
+                        <div>
+                          <p>{e.message}</p>
+                        </div>
+                      </div>
+                    ))
+                  }
+                </div>
+                <Search
+                  ref={c => this._chatInputTotal = c}
+                  style={{ marginTop: '10px' }}
+                  placeholder="Nhập gì đó ở đây..."
+                  enterButton="GỬI"
+                  size="large"
+                  onChange={(e) => console.log(e.target.value)}
+                  onSearch={val => {
+                    
+                  }}
+                />
+              </div>
+               <div className="col-xs-12">
+                <h3>Thông Tin Nhân Sự PartTime</h3>
+                <div
+                  style={{
+                    maxHeight: '300px', overflow: 'auto', border: '1px solid lightblue', minHeight: '300px'
+                  }}
+                >
+                  {
+                    value && value.nhanSuPartTime && value.nhanSuPartTime.map((e, i) => (
+                      <div key={i} style={{ borderBottom: (i !== (value.nhanSuPartTime.length - 1) && '1px solid lightblue') || 'none', margin: '0 10px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <div>Thời Gian Đến: <b>{e.startTimePartTime && moment(e.startTimePartTime).format("DD/MM/YYYY HH:mm")}</b></div>
+                          <div>Thời Gian Đi: <b>{e.endTimePartTime && moment(e.endTimePartTime).format("DD/MM/YYYY HH:mm")}</b></div>
+                        </div>
+                        <div>
+                          <p>Thông Tin Nhân Sư PartTime : <b>{e.nhanSuPartTime && e.nhanSuPartTime}</b></p>
+                        </div>
+                      </div>
+                    ))
+                  }
+                </div>
+              </div>
             </div>
 
           </div>
