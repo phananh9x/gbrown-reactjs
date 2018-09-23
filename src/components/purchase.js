@@ -16,7 +16,7 @@ import NavigationBar from './NavigationBar';
 import FieldGroupSelect from './FieldGroupSelect';
 import { requestUserList } from '../redux/actions/userAction';
 import { ROLE } from '../constants/role';
-import { WORK_MANAGER } from '../constants/string';
+import { WORK_MANAGER, SALE } from '../constants/string';
 import { chatPurchaseAction } from '../redux/actions/chatAction';
 const { Search, TextArea } = Input;
 
@@ -607,7 +607,7 @@ function FieldGroupFileImage({ label, value, removeHinh, thongTinHangMuc, hasPer
           value.map((e, i) => (
             <Col xs={6} key={parseInt(i.toString())}>
               <Thumbnail href={e.url} target="blank" src={e.url} alt="242x200" />
-              {hasPermission && <button className="btn-danger remove-image" id={`${thongTinHangMuc}-${i}-image`} onClick={(e) => removeHinh(e, e.target.id, thongTinHangMuc)}><Glyphicon onClick={(e) => removeHinh(e, e.target.parentElement.id, thongTinHangMuc)}  glyph="glyphicon glyphicon-remove" /></button>}
+              {hasPermission && <button className="btn-danger remove-image" id={`${thongTinHangMuc}-${i}-image`} onClick={(e) => removeHinh(e, e.target.id, thongTinHangMuc)}><Glyphicon onClick={(e) => removeHinh(e, e.target.parentElement.id, thongTinHangMuc)} glyph="glyphicon glyphicon-remove" /></button>}
             </Col>))
         }
       </div>
@@ -755,28 +755,31 @@ class Purchase extends Component {
     /**
        * detect when worker manager makes schedule changes
        */
-    const { dispathChatPurchase } = this.props;
+    const { dispathChatPurchase, login } = this.props;
     const { value, purchaseId } = this.state;
     let nhanSuPartTime = []
+    const userRole = login.data.results.role.groupId;
 
     value.category.forEach((e, index) => {
 
-      if (this.holderThongTinHangMuc[index].implementationOfficer !== e.implementationOfficer
-        || this.holderThongTinHangMuc[index].implementationOfficerGroup !== e.implementationOfficerGroup) {
+      if (userRole === ROLE.WORK_MANAGER) {
+        if (this.holderThongTinHangMuc[index].implementationOfficer !== e.implementationOfficer
+          || this.holderThongTinHangMuc[index].implementationOfficerGroup !== e.implementationOfficerGroup) {
 
-        const message = {
-          message: WORK_MANAGER.schedule_changes,
-          lead: e.implementationOfficer ? e.implementationOfficer.firstname : null,
-          staffs: e.implementationOfficerGroup || [],
-          prefix: WORK_MANAGER.prefix
-        };
+          const message = {
+            message: WORK_MANAGER.schedule_changes,
+            lead: e.implementationOfficer ? e.implementationOfficer.firstname : null,
+            staffs: e.implementationOfficerGroup || [],
+            prefix: WORK_MANAGER.prefix
+          };
 
-        dispathChatPurchase({
-          message: JSON.stringify(message),
-          category: e.categoryName || '',
-          purchaseId: value.purchaseId
-        });
-        value.chiaViec = false;
+          dispathChatPurchase({
+            message: JSON.stringify(message),
+            category: e.categoryName || '',
+            purchaseId: value.purchaseId
+          });
+          value.chiaViec = false;
+        }
       }
 
       if (e.nhanSuPartTime || e.endTimePartTime || e.startTimePartTime) {
@@ -791,9 +794,25 @@ class Purchase extends Component {
 
 
     API.updatePurchase(value, purchaseId).then(() => {
+      if (userRole === ROLE.SALE) {
+        const message = {
+          message: SALE.purchase_updated,
+          lead: null,
+          staffs: [],
+          prefix: WORK_MANAGER.prefix
+        };
+
+        dispathChatPurchase({
+          message: JSON.stringify(message),
+          category: '',
+          purchaseId: value.purchaseId
+        });
+      }
+
       this.setState({
         save: true
       });
+
       this.holderThongTinHangMuc = JSON.parse(JSON.stringify(value.category));
       setTimeout(() => {
         this.setState({
@@ -930,10 +949,10 @@ class Purchase extends Component {
     API.upload(formdata).then((data) => {
       data.results.url = API.server + data.results.path;
       if (thongTinHangMuclk === undefined) {
-        value.image.push( data.results);
+        value.image.push(data.results);
         this.setState({ value });
       } else {
-        thongTinHangMuc[thongTinHangMuclk].image.push( data.results);
+        thongTinHangMuc[thongTinHangMuclk].image.push(data.results);
         this.setState({
           value: {
             ...value,
@@ -1008,11 +1027,11 @@ class Purchase extends Component {
     const { value } = this.state;
     let { thongTinHangMuc } = this.state;
     let confirm = window.confirm("Bạn có thực sự muốn xóa ?")
-    if (confirm && index !== undefined ) {
+    if (confirm && index !== undefined) {
       thongTinHangMuc[index].image = thongTinHangMuc[index].image.filter((e, i) => i != parseInt(indexHinh.split("-")[1]))
       value.category[index].image = thongTinHangMuc[index].image
-    }else {
-      value.image = value.image.filter((e, i) => i!= parseInt(indexHinh.split("-")[1]))
+    } else {
+      value.image = value.image.filter((e, i) => i != parseInt(indexHinh.split("-")[1]))
     }
     this.setState({
       value: {

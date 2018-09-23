@@ -17,6 +17,8 @@ import FieldGroup from './FieldGroup';
 import FieldGroupDate from './FieldGroupDate';
 import NavigationBar from './NavigationBar';
 import { requestUserList } from '../redux/actions/userAction';
+import { chatPurchaseAction } from '../redux/actions/chatAction';
+import { SALE } from '../constants/string';
 
 const { TextArea } = Input;
 
@@ -47,8 +49,14 @@ const stylesUnSelected = {
 
 
 function FieldGroupSelectNhanVien({
-  id, label, handleChange, userList, thongTinHangMuc, kind = 0, multiple, value
+  id, label, handleChange, userList, thongTinHangMuc, kind = 0, multiple, value, disabled
 }) {
+  let optionValue = '';
+  if (kind === 0 && value.saleGbrown) {
+    const saleGbrown = userList.filter(e => e._id === value.saleGbrown)[0];
+    optionValue = (saleGbrown !== undefined ? saleGbrown._id : value.saleGbrown._id);
+  }
+
   return (
     <div controlid={id} style={{ marginBottom: 10 }} className="app-from-group col-xs-12">
       <div className="col-xs-4 app-label">
@@ -56,8 +64,10 @@ function FieldGroupSelectNhanVien({
       </div>
       <div className="col-xs-8">
         <FormControl
+          disabled={disabled}
           multiple={multiple}
           id={id}
+          value={optionValue}
           componentClass="select"
           placeholder="Chọn"
           onChange={e => handleChange(id, (userList.filter(s => s._id === e.target.value))[0],
@@ -505,6 +515,9 @@ class AddPurchase extends Component {
   componentWillReceiveProps(nextProps) {
     const { login } = nextProps;
     if (login.success) {
+      const { value } = this.state;
+      value.saleGbrown = login.data.results._id;
+      value.phoneSaleGbrown = login.data.results.email;
       this.getUserList();
     }
   }
@@ -519,11 +532,12 @@ class AddPurchase extends Component {
   componentDidMount() {
     const { purchaseId } = this.state;
     const { match } = this.props;
+
     if (purchaseId) {
       API.getPurchaseDetail(match.params.purchaseId).then((data) => {
         this.setState({
           value: {
-            ...data.results
+            ...data.results,
           },
           thongTinHangMuc: data.results.category
         });
@@ -533,8 +547,19 @@ class AddPurchase extends Component {
 
   savePurchase() {
     const { value } = this.state;
-    const { history } = this.props;
+    const { history, dispathChatPurchase } = this.props;
     API.savePurchase(value).then((data) => {
+      const message = {
+        message: SALE.purchase_created,
+        prefix: null,
+        lead: null,
+        staffs: []
+      };
+      dispathChatPurchase({
+        message: JSON.stringify(message),
+        category: '',
+        purchaseId: data.results.purchaseId
+      });
       this.setState({
         save: true
       });
@@ -552,8 +577,6 @@ class AddPurchase extends Component {
   handleChange(key, valuek, thongTinHangMuclk) {
     const { value, thongTinHangMuc } = this.state;
     const { user } = this.props;
-    console.log(thongTinHangMuclk, valuek);
-
     if (thongTinHangMuclk !== undefined) {
       if (key === 'saleGbrown') {
         const phoneSaleGbrown = user.data.filter(e => e._id === valuek._id)[0].email;
@@ -628,8 +651,6 @@ class AddPurchase extends Component {
           });
         }
       }
-      console.log(thongTinHangMuc[thongTinHangMuclk][key]);
-
       this.setState({
         value: {
           ...value,
@@ -912,10 +933,12 @@ class AddPurchase extends Component {
                 value={value}
                 id="saleGbrown"
                 type="text"
+                disabled
                 label="Nhân Viên Thực Hiện"
                 handleChange={this.handleChange}
               />
               <FieldGroup
+                disabled
                 value={value}
                 id="phoneSaleGbrown"
                 type="number"
@@ -1025,7 +1048,8 @@ const mapStateToProps = state => ({
   login: state.login
 });
 const mapDispathToProps = dispath => ({
-  dispathUserList: () => dispath(requestUserList())
+  dispathUserList: () => dispath(requestUserList()),
+  dispathChatPurchase: data => dispath(chatPurchaseAction(data))
 });
 
 export default connect(mapStateToProps, mapDispathToProps)(withRouter(AddPurchase));
