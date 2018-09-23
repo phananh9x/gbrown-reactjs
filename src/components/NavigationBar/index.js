@@ -96,6 +96,11 @@ class NavigationBar extends Component {
                   && (
                     <Nav>
                       <NavItem>
+                        <Link to="/">
+                          Danh sách PO
+                        </Link>
+                      </NavItem>
+                      <NavItem>
                         <Link to="/work/schedule">
                           Công việc của Sale
                         </Link>

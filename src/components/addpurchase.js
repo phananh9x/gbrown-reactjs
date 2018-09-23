@@ -515,9 +515,6 @@ class AddPurchase extends Component {
   componentWillReceiveProps(nextProps) {
     const { login } = nextProps;
     if (login.success) {
-      const { value } = this.state;
-      value.saleGbrown = login.data.results._id;
-      value.phoneSaleGbrown = login.data.results.email;
       this.getUserList();
     }
   }
@@ -529,10 +526,16 @@ class AddPurchase extends Component {
     }
   }
 
+  componentWillMount() {
+    const { value } = this.state;
+    const { login } = this.props;
+    value.saleGbrown = login.data.results._id;
+    value.phoneSaleGbrown = login.data.results.email;
+  }
+
   componentDidMount() {
     const { purchaseId } = this.state;
     const { match } = this.props;
-
     if (purchaseId) {
       API.getPurchaseDetail(match.params.purchaseId).then((data) => {
         this.setState({
@@ -551,7 +554,7 @@ class AddPurchase extends Component {
     API.savePurchase(value).then((data) => {
       const message = {
         message: SALE.purchase_created,
-        prefix: null,
+        prefix: SALE.prefix,
         lead: null,
         staffs: []
       };
