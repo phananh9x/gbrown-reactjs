@@ -714,7 +714,7 @@ class Purchase extends Component {
     if (!chat.fecthing && chat.success) {
       this.setState({
         value: {
-        ...value,
+          ...value,
           chat: [...value.chat, chat.data]
         }
       }, () => {
@@ -761,23 +761,18 @@ class Purchase extends Component {
 
     value.category.forEach((e, index) => {
 
-      let implementationOfficerName = '';
       if (this.holderThongTinHangMuc[index].implementationOfficer !== e.implementationOfficer
         || this.holderThongTinHangMuc[index].implementationOfficerGroup !== e.implementationOfficerGroup) {
-        implementationOfficerName = e.implementationOfficer ? e.implementationOfficer.firstname : '';
 
-        if (implementationOfficerName.length > 0) {
-          implementationOfficerName += ', ';
-        }
-
-        if (e.implementationOfficerGroup && e.implementationOfficerGroup.length > 0) {
-          e.implementationOfficerGroup.forEach(p => {
-            implementationOfficerName += p.firstname + ',';
-          })
-        }
+        const message = {
+          message: WORK_MANAGER.schedule_changes,
+          lead: e.implementationOfficer ? e.implementationOfficer.firstname : null,
+          staffs: e.implementationOfficerGroup || [],
+          prefix: WORK_MANAGER.prefix
+        };
 
         dispathChatPurchase({
-          message: WORK_MANAGER.schedule_changes + implementationOfficerName,
+          message: JSON.stringify(message),
           category: e.categoryName || '',
           purchaseId: value.purchaseId
         });
@@ -1028,10 +1023,61 @@ class Purchase extends Component {
   createChatTotal(val) {
     const { dispathChatPurchase } = this.props;
     const { value } = this.state;
-    dispathChatPurchase({
+    const message = {
       message: val,
+      prefix: null,
+      staffs: [],
+      lead: null
+    }
+    dispathChatPurchase({
+      message: JSON.stringify(message),
       purchaseId: value.purchaseId
     });
+  }
+
+  renderChat = (value) => {
+    const list = [];
+    if (value && value.chat) {
+      value.chat.map((e, i) => {
+        try {
+          const messageObject = JSON.parse(e.message);
+          const staffs = [];
+
+          if (messageObject.staffs) {
+            messageObject.staffs.forEach((s, k) => {
+              staffs.push(<div style={{}}>{`${(k + 1)}. ${s.firstname}`}</div>);
+            });
+          }
+
+          list.push(
+            <div style={{ margin: 5 }} key={parseInt(i.toString())}>
+              <div style={{ flexDirection: 'row', display: 'flex' }}>
+                {messageObject.prefix && <div style={{ fontWeight: 'bold' }}>{`[${messageObject.prefix}] `}</div>}
+                <div style={{ fontWeight: 'bold' }}>{`${e.user.firstname}: `}</div>
+                <div style={{}}>{messageObject.message}</div>
+              </div>
+              {e.category && e.category.length > 0 && <div style={{}}>{`Hạng mục: ${e.category}`}</div>}
+              {messageObject.lead && <div style={{}}>{`Nhân viên thực hiện: ${messageObject.lead}`}</div>}
+              {messageObject.staffs && messageObject.staffs.length > 0
+                && <div style={{}}>Nhân viên làm cùng </div>}
+              {staffs.length > 0 && staffs}
+              <div>{moment(e.created).format('DD-MM-YYYY HH:mm:ss')}</div>
+            </div>
+          );
+        } catch (error) {
+          list.push(
+            <div style={{ margin: 5 }} key={parseInt(i.toString())}>
+              <div style={{ flexDirection: 'row', display: 'flex' }}>
+                <div style={{ fontWeight: 'bold' }}>{`${e.user.firstname}: `}</div>
+                <div style={{}}>{e.message}</div>
+              </div>
+              <div>{moment(e.created).format('DD-MM-YYYY HH:mm:ss')}</div>
+            </div>
+          );
+        }
+      })
+    }
+    return list;
   }
 
   render() {
@@ -1327,17 +1373,7 @@ class Purchase extends Component {
                   ref={c => this._chatMessageTotal = c}
                 >
                   {
-                    value && value.chat && value.chat.map((e, i) => (
-                      <div key={e._id  || new Date().valueOf()} style={{ borderBottom: (i !== (value.chat.length - 1) && '1px solid lightblue') || 'none', margin: '0 10px' }}>
-                        <div style={{ justifyContent: 'space-between', display: 'flex' }}>
-                          <b>{e.user && e.user.firstname.toUpperCase()}</b>
-                          <p>{moment(new Date(e.created)).format("DD/MM/YYYY HH:mm")}</p>
-                        </div>
-                        <div>
-                          <p>{e.message}</p>
-                        </div>
-                      </div>
-                    ))
+                    this.renderChat(value)
                   }
                 </div>
                 <Search
@@ -1352,7 +1388,7 @@ class Purchase extends Component {
                   }}
                 />
               </div>
-               <div className="col-xs-12">
+              <div className="col-xs-12">
                 <h3>Thông Tin Nhân Sự PartTime</h3>
                 <div
                   style={{

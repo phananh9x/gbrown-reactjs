@@ -23,6 +23,7 @@ import ShareWork from './components/sharework';
 import WorkSchedule from './screen/workschedule';
 import { requestUserList } from './redux/actions/userAction';
 import { ROLE } from './constants/role';
+import MeetingSale from './screen/meetingsale';
 
 library.add(faStroopwafel, faUser, faLock, faCheck);
 class App extends Component {
@@ -84,6 +85,7 @@ class App extends Component {
               <Route exact path="/purchase/:purchaseId" component={this.middleWareLogin(Purchase)} />
               <Route exact path="/purchase/:purchaseId/chiaviec/:categoryIndex" component={this.middleWareLogin(ShareWork)} />
               <Route exact path="/work/schedule" component={this.middleWareLogin(WorkSchedule)} />
+              <Route exact path="/work/meetingsale" component={this.middleWareLogin(MeetingSale)} />
             </Switch>
           </Router>
         </main>

@@ -33,7 +33,7 @@ const renderCell = (props) => {
   );
 };
 
-class WorkSchedule extends Component {
+class MeetingSale extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -415,4 +415,4 @@ const mapDispathToProps = dispath => ({
   dispathChatPurchase: data => dispath(chatPurchaseAction(data))
 });
 
-export default connect(mapStateToProps, mapDispathToProps)(WorkSchedule);
+export default connect(mapStateToProps, mapDispathToProps)(MeetingSale);

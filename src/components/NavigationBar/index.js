@@ -114,7 +114,7 @@ class NavigationBar extends Component {
                         </Link>
                       </NavItem>
                       <NavItem>
-                        <Link to="/">
+                        <Link to="/work/meetingsale">
                           Lịch họp với Sale
                         </Link>
                       </NavItem>
