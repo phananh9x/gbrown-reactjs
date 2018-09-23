@@ -6,6 +6,13 @@ export const WORK_MANAGER = {
   prefix: 'Hệ thống'
 };
 
+export const WORK_REMINDER = {
+  remind_sale_meeting: 'Cần tham gia họp với sale trước khi phân chia công việc',
+  remind_work_schedule: 'Cần chia việc cho nhân viên trong hôm nay',
+  remind_ekip_meeting: 'Cần tham gia họp ekip lần cuối trước khi đi setup',
+  prefix: 'Hệ thống'
+};
+
 export const SALE = {
   purchase_created: 'Đã tạo đơn hàng',
   purchase_updated: 'Đã cập nhật đơn hàng',

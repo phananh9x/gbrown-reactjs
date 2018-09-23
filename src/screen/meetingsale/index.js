@@ -47,7 +47,7 @@ class MeetingSale extends Component {
     this.modal = {};
     this.purchaseChatId = {};
     this.toDay = moment(new Date()).format('DD/MM/YYYY');
-    this.filterDay = moment(new Date().setDate(new Date().getDate() + 4)).format('DD/MM/YYYY');
+    this.filterDay = moment(new Date().setDate(new Date().getDate() + 5)).format('DD/MM/YYYY');
     this.columns = [{
       id: 'checkbox',
       accessor: '',

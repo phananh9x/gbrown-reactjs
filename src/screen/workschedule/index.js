@@ -9,7 +9,7 @@ import { Input } from 'antd';
 import * as API from '../../API';
 import NavigationBar from '../../components/NavigationBar';
 import { chatPurchaseAction } from '../../redux/actions/chatAction';
-import { WORK_MANAGER } from '../../constants/string';
+import { WORK_MANAGER, WORK_REMINDER } from '../../constants/string';
 
 const { Search } = Input;
 
@@ -45,9 +45,9 @@ class WorkSchedule extends Component {
     };
     this.valueForSave = {};
     this.modal = {};
-    this.purchaseChatId = {};
+    this.purchaseChatId = null;
     this.toDay = moment(new Date()).format('DD/MM/YYYY');
-    this.filterDay = moment(new Date().setDate(new Date().getDate() + 5)).format('DD/MM/YYYY');
+    this.filterDay = moment(new Date().setDate(new Date().getDate() + 4)).format('DD/MM/YYYY');
     this.columns = [{
       id: 'checkbox',
       accessor: '',
@@ -171,7 +171,7 @@ class WorkSchedule extends Component {
         list.push(
           <div style={{ marginTop: 5 }} key={parseInt(i.toString())}>
             <div style={{ flexDirection: 'row', display: 'flex' }}>
-              <div style={{ fontWeight: 'bold' }}>{`${e.user.firstname}: `}</div>
+              {e.user && <div style={{ fontWeight: 'bold' }}>{`${e.user.firstname}: `}</div>}
               <div style={{ width: 100 }}>{e.message}</div>
             </div>
             <div>{moment(e.created).format('DD-MM-YYYY HH:mm:ss')}</div>
@@ -237,12 +237,13 @@ class WorkSchedule extends Component {
 
 
   componentWillReceiveProps(nextProps) {
-    const { match, user, chat } = nextProps;
+    const { user, chat } = nextProps;
     const { value } = this.state;
-    const date = moment(new Date().setDate(new Date().getDate() + 5)).toDate()
+    const date = moment(new Date().setDate(new Date().getDate() + 5)).toDate();
     if (user.success && value.length === 0) {
-      API.getAllPurchaseFilterByDate({date: date}).then((data) => {
+      API.getAllPurchaseFilterByDate({ date }).then((data) => {
         if (data.success) {
+          // this.handleReminder(data.results);
           this.setState({ value: data.results });
         }
       });
@@ -250,26 +251,176 @@ class WorkSchedule extends Component {
     if (!chat.fecthing && chat.success) {
       const listPurchase = JSON.parse(JSON.stringify(value));
       listPurchase.forEach((e) => {
-        if (e.purchaseId === this.purchaseChatId) {
-          console.log('okee');
-          e.chat.push(chat.data);
-          this.setState({ value: listPurchase });
+        if (this.purchaseChatId === null) {
+          try {
+            const messageObject = JSON.parse(chat.data.message);
+            if (e.purchaseId === messageObject.purchaseId) {
+              e.chat.push(chat.data);
+              this.setState({ value: listPurchase });
+            }
+          } catch (x) {
+            if (e.purchaseId === this.purchaseChatId) {
+              this.purchaseChatId = null;
+              e.chat.push(chat.data);
+              this.setState({ value: listPurchase });
+            }
+          }
         }
       });
     }
   }
 
   componentDidMount() {
-    const { match, user } = this.props;
+    const { user } = this.props;
     const { value } = this.state;
-    const date = moment(new Date().setDate(new Date().getDate() + 5)).toDate()
+    const date = moment(new Date().setDate(new Date().getDate() + 4)).toDate();
     if (user.success && value.length === 0) {
-       API.getAllPurchaseFilterByDate({date: date}).then((data) => {
+      API.getAllPurchaseFilterByDate({ date }).then((data) => {
         if (data.success) {
+          // this.handleReminder(data.results);
           this.setState({ value: data.results });
         }
       });
     }
+  }
+
+  /**
+   * messsage
+   */
+  remindSaleMeeting = (p) => {
+    const { dispathChatPurchase } = this.props;
+    const message = {
+      message: WORK_REMINDER.remind_sale_meeting,
+      prefix: WORK_REMINDER.prefix,
+      lead: null,
+      staffs: [],
+      purchaseId: p.purchaseId
+    };
+    dispathChatPurchase({
+      message: JSON.stringify(message),
+      category: '',
+      purchaseId: p.purchaseId
+    });
+  }
+
+  remindScheduleWork = (p) => {
+    const { dispathChatPurchase } = this.props;
+    const message = {
+      message: WORK_REMINDER.remind_work_schedule,
+      prefix: WORK_REMINDER.prefix,
+      lead: null,
+      staffs: [],
+      color: 'red',
+      purchaseId: p.purchaseId
+    };
+    dispathChatPurchase({
+      message: JSON.stringify(message),
+      category: '',
+      purchaseId: p.purchaseId
+    });
+  }
+
+  remindEkipMeeting = (p) => {
+    const { dispathChatPurchase } = this.props;
+    const message = {
+      message: WORK_REMINDER.remind_ekip_meeting,
+      prefix: WORK_REMINDER.prefix,
+      lead: null,
+      staffs: [],
+      color: 'red',
+      purchaseId: p.purchaseId
+    };
+    dispathChatPurchase({
+      message: JSON.stringify(message),
+      category: '',
+      purchaseId: p.purchaseId
+    });
+  }
+
+  /**
+   * should be handled inm server
+   */
+  handleReminder = (purchases) => {
+    purchases.forEach((p) => {
+      let lastReminderDate = p.lastReminderDate || this.toDay;
+      let remindStatus = p.remindStatus ? JSON.parse(p.remindStatus) : {
+        step: 'salemeeting',
+        done: false
+      };
+      /**
+       * send first reminder about meeting sale
+       */
+      if (!p.lastReminderDate && lastReminderDate === this.toDay) {
+        lastReminderDate = this.toDay;
+        remindStatus = {
+          step: 'salemeeting',
+          done: false
+        };
+        p.lastReminderDate = lastReminderDate;
+        p.remindStatus = JSON.stringify(remindStatus);
+        API.updatePurchase(p, p.purchaseId).then(() => {
+          setTimeout(() => {
+            this.remindSaleMeeting(p);
+          }, 1000);
+        });
+      } else if (lastReminderDate < this.toDay) {
+        lastReminderDate = this.toDay;
+        if (!remindStatus.done && remindStatus.step === 'salemeeting') {
+          /**
+          * loop
+          */
+          setTimeout(() => {
+            this.remindSaleMeeting(p);
+          }, 1000);
+        } else if (remindStatus.done && remindStatus.step === 'salemeeting') {
+          /**
+           * done
+           */
+          setTimeout(() => {
+            this.remindScheduleWork(p);
+          });
+          remindStatus = {
+            step: 'schedulework',
+            done: false
+          };
+        } else if (!remindStatus.done && remindStatus.step === 'schedulework') {
+          /**
+           * loop
+           */
+          setTimeout(() => {
+            this.remindScheduleWork(p);
+          });
+        } else if (remindStatus.done && remindStatus.step === 'schedulework') {
+          /**
+           * done
+           */
+          setTimeout(() => {
+            this.remindEkipMeeting(p);
+          }, 1000);
+          remindStatus = {
+            step: 'ekipmeeting',
+            done: false
+          };
+        } else if (!remindStatus.done && remindStatus.step === 'ekipmeeting') {
+          /**
+           * loop
+           */
+          setTimeout(() => {
+            this.remindEkipMeeting(p);
+          }, 1000);
+        } else if (remindStatus.done && remindStatus.step === 'ekipmeeting') {
+          remindStatus = {
+            step: 'completed',
+            done: true
+          };
+        }
+        p.lastReminderDate = lastReminderDate;
+        p.remindStatus = JSON.stringify(remindStatus);
+        API.updatePurchase(p, p.purchaseId).then(() => {
+          this.remindSaleMeeting(p);
+        });
+      }
+    });
   }
 
   toggleSelectAll = () => {
