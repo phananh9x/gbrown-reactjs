@@ -211,44 +211,44 @@ class ShareWork extends Component {
         })}
         <div className="A4 page vertical">
           <div className="vertical" style={{ margin: '0.5cm' }}>
-            <div className="full-height"style={{ border: '1px solid #000', marginTop: '0.5cm' }}>
+            <div className="full-height" style={{ border: '1px solid #000', marginTop: '0.5cm' }}>
               <div className="full-row">
-                  <div className="col-xs-6 no-float" style={{ padding: 0, borderRight: '1px solid #000' }}>
-                    <div style={{ fontSize: 15, fontWeight: 600 }}>Ngày Chuẩn bị:</div>
-                    {category && category.ngayChuanBi.length
-                      && category.ngayChuanBi.map((e, i) =>
-                        <div key={e.id} style={{
-                          borderBottom: ((category.ngayChuanBi.length - 1 !== i)
-                            && '1px solid #000') || 'none', marginRight: '15px'
-                        }}
-                        >
-                          <div>
-                            {`Ngày ${i + 1}:    `}
-                            <b>{e.date && moment(new Date(e.date)).format("HH:mm DD/MM/YYYY")}</b>
-                          </div>
-                          <div>
-                            {`Công Việc ${i + 1}:   `}
-                            <b>{e.congviec}</b>
-                          </div>
-                        </div>
-                      )}
-                  </div>
-                  <div className="col-xs-6 no-float">
-                    <div style={{ fontSize: 14, fontWeight: '600' }}>Chat với lãnh đạo khách hàng, sale và nhân viên sản xuất:</div>
-                    {
-                      category && category.chat.length && category.chat.map((e, i) =>
+                <div className="col-xs-6 no-float" style={{ padding: 0, borderRight: '1px solid #000' }}>
+                  <div style={{ fontSize: 15, fontWeight: 600 }}>Ngày Chuẩn bị:</div>
+                  {category && category.ngayChuanBi && category.ngayChuanBi.length
+                    && category.ngayChuanBi.map((e, i) =>
+                      <div key={e.id} style={{
+                        borderBottom: ((category.ngayChuanBi.length - 1 !== i)
+                          && '1px solid #000') || 'none', marginRight: '15px'
+                      }}
+                      >
                         <div>
-                          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <div style={{ fontWeight: 500, fontSize: 12, width: '58%' }}><b>{`${e.name} : `}</b>{e.message}</div>
-                            <div><b>{e.date}</b></div>
-                          </div>
+                          {`Ngày ${i + 1}:    `}
+                          <b>{e.date && moment(new Date(e.date)).format("HH:mm DD/MM/YYYY")}</b>
                         </div>
-                      )
-                    }
+                        <div>
+                          {`Công Việc ${i + 1}:   `}
+                          <b>{e.congviec}</b>
+                        </div>
+                      </div>
+                    )}
+                </div>
+                <div className="col-xs-6 no-float">
+                  <div style={{ fontSize: 14, fontWeight: '600' }}>Chat với lãnh đạo khách hàng, sale và nhân viên sản xuất:</div>
+                  {
+                    category && category.chat && category.chat.length && category.chat.map((e, i) =>
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <div style={{ fontWeight: 500, fontSize: 12, width: '58%' }}><b>{`${e.name} : `}</b>{e.message}</div>
+                          <div><b>{e.date}</b></div>
+                        </div>
+                      </div>
+                    )
+                  }
                 </div>
               </div>
             </div>
-            
+
             <div className="col-xs-12" style={{ display: 'flex', justifyContent: 'space-around', marginTop: '50px' }}>
               <div style={{ height: '70px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>Quản lý</div>

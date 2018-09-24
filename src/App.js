@@ -73,6 +73,8 @@ class App extends Component {
   render() {
     const { navBar, login } = this.props;
     const { role } = login.data.results ? login.data.results : false;
+    console.log(role);
+
     return (
       <div className="App" id="outer-container">
         <Menu pageWrapId="page-wrap" outerContainerId="outer-container" show={navBar.showNavbar} />
@@ -80,7 +82,12 @@ class App extends Component {
           <Router>
             <Switch>
               <Route exact path="/login" component={Login} />
-              <Route exact path="/" component={this.middleWareLogin(role && role.groupId === ROLE.WORK_MANAGER ? WorkSchedule : PurchaseList)} />
+              <Route
+                exact
+                path="/"
+                component={this.middleWareLogin(role
+                  && role.groupId === ROLE.ADMIN ? PurchaseList : WorkSchedule)}
+              />
               <Route exact path="/baogia/:purchaseId" component={Print} />
               <Route exact path="/chitiethopdong/:purchaseId" component={PrintDetail} />
               <Route exact path="/main" component={this.middleWareLogin(AddPurchase)} />
