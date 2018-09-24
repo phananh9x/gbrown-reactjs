@@ -251,20 +251,20 @@ class WorkSchedule extends Component {
     if (!chat.fecthing && chat.success) {
       const listPurchase = JSON.parse(JSON.stringify(value));
       listPurchase.forEach((e) => {
-        try {
-          if (this.purchaseChatId === null) {
+        if (this.purchaseChatId === null) {
+          try {
             const messageObject = JSON.parse(chat.data.message);
             if (e.purchaseId === messageObject.purchaseId) {
               e.chat.push(chat.data);
               this.setState({ value: listPurchase });
             }
+          } catch (x) {
+            console.log(x);
           }
-        } catch (x) {
-          if (e.purchaseId === this.purchaseChatId) {
-            e.chat.push(chat.data);
-            this.setState({ value: listPurchase });
-            this.purchaseChatId = null;
-          }
+        } else if (e.purchaseId === this.purchaseChatId) {
+          e.chat.push(chat.data);
+          this.setState({ value: listPurchase });
+          this.purchaseChatId = null;
         }
       });
     }
@@ -347,12 +347,13 @@ class WorkSchedule extends Component {
         step: 'salemeeting',
         done: false
       };
+      console.log(p);
 
       /**
        * send first reminder about meeting sale
        */
 
-      if (p.lastRemindDate === true && lastRemindDate === this.toDay) {
+      if (!p.lastRemindDate && lastRemindDate === this.toDay) {
         lastRemindDate = this.toDay;
         remindStatus = {
           step: 'salemeeting',
