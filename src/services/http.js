@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_ROOT = process.env.REACT_APP_CONTACTS_API_URL || 'http://103.7.41.176:4444/';
+const API_ROOT = process.env.REACT_APP_CONTACTS_API_URL || 'http://103.7.41.176:3000/';
 
 axios.defaults.baseURL = API_ROOT;
 axios.defaults.timeout = 5000;

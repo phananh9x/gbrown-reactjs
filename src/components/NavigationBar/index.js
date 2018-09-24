@@ -100,11 +100,21 @@ class NavigationBar extends Component {
                           Danh sách PO
                         </Link>
                       </NavItem>
-                      {/* <NavItem>
+                      <NavItem>
                         <Link to="/work/schedule">
-                          Công việc của Sale
+                          Chia việc nhân viên
                         </Link>
-                      </NavItem> */}
+                      </NavItem>
+                      <NavItem>
+                        <Link to="/work/meetingsale">
+                          Lịch họp với Sale
+                        </Link>
+                      </NavItem>
+                      <NavItem>
+                        <Link to="/work/meetingekip">
+                          Lịch họp với Ekip
+                        </Link>
+                      </NavItem>
                     </Nav>
                   )
                 }
