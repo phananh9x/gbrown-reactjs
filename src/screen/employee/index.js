@@ -1,28 +1,14 @@
+
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import {
-  FormControl, ButtonToolbar, Button, Glyphicon, ButtonGroup,
-  DropdownButton, MenuItem,
-} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import ReactTable from 'react-table';
-import { DatePicker } from 'antd';
-import * as API from '../../API';
+import { Select } from 'antd';
 import NavigationBar from '../../components/NavigationBar';
 import { requestUserList } from '../../redux/actions/userAction';
-import { Select } from 'antd';
 import { updateProfile } from '../../redux/actions/login';
 
-const status = [
-  { id: 1, name: 'Đơn Hàng Mới' },
-  { id: 2, name: 'Đã Gọi' },
-  { id: 3, name: 'Đang Chăm Sóc' },
-  { id: 4, name: 'Đã Huỷ Bỏ' },
-  { id: 5, name: 'Đã Kí Hợp Đồng' },
-];
-
-const Option = Select.Option;
+const { Option } = Select;
 
 const menuList = [
   {
@@ -42,11 +28,10 @@ class EmployeeList extends Component {
     this.state = {
       value: [],
       pageSize: 10,
-      searchKey: '',
     };
-    this.renderCell = this.renderCell.bind(this)
+    this.renderCell = this.renderCell.bind(this);
 
-    this.columns = [ {
+    this.columns = [{
       accessor: 'firstname',
       Header: 'Tên nhân viên'
     }, {
@@ -66,26 +51,26 @@ class EmployeeList extends Component {
     }
     ];
   }
-  
-  handleChange =(original, value) => {
 
+  handleChange = (original, value) => {
+    console.log(original, value);
   }
 
   renderCell = (props) => {
-    console.log(props)
     const { original } = props;
     // const { value } = this.state;
     return (
       <Select
         showSearch
-        value={original && original.role && original.role.name || ''}
+        value={(original && original.role && original.role.name) || ''}
         style={{ width: 200 }}
         placeholder="Select a person"
         optionFilterProp="children"
-        onChange={(value) => this.handleChange(original, value)}
-        // onFocus={handleFocus}
-        // onBlur={handleBlur}
-        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+        onChange={value => this.handleChange(original, value)}
+        filterOption={(input, option) => option.props.children
+          .toLowerCase().indexOf(input.toLowerCase())
+          >= 0
+        }
       >
         <Option value="5ba5a5902c920e304c392546">ADMIN</Option>
         <Option value="5ba5a5af2c920e304c392547">NHÂN VIÊN SẢN XUẤT</Option>
@@ -93,7 +78,7 @@ class EmployeeList extends Component {
         <Option value="5ba5a5e12c920e304c392549">KHÁC</Option>
 
       </Select>
-    )
+    );
   }
 
   renderCheckBox = (props) => {
@@ -127,16 +112,20 @@ class EmployeeList extends Component {
     );
   };
 
-  componentWillReceiveProps(nextProps) {
-    const { login, user } = nextProps;
+  componentDidMount() {
+    const { login } = this.props;
     if (login.success) {
       this.getUserList();
     }
+  }
 
-    if (user.success) {
+  componentWillReceiveProps(nextProps) {
+    const { user } = nextProps;
+
+    if (user.success && !user.fetching) {
       this.setState({
         value: user.data
-      })
+      });
     }
   }
 
@@ -170,22 +159,16 @@ class EmployeeList extends Component {
     this.setState({ map: newSelected, selectAll: 2 });
   };
 
-  onSearch = (e) => {
-    this.setState({ searchKey: e.target.value });
-  }
-
   handleChangeDate = (date) => {
     console.log(date);
   }
 
   render() {
     const {
-      value, pageSize, searchKey, selectAll, staffFilter, statusFilter
+      pageSize
     } = this.state;
 
-    const {
-      history, user
-    } = this.props;
+    const { user } = this.props;
 
     console.log(user);
     return (
@@ -197,7 +180,7 @@ class EmployeeList extends Component {
         <div className="container-fluid" style={{ paddingTop: 70 }}>
           <ReactTable
             showPaginationBottom
-            data={value}
+            data={user.data}
             columns={this.columns}
             pageSize={pageSize}
             getTrProps={(state, rowInfo) => ({
