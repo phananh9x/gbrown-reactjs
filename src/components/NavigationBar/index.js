@@ -88,6 +88,11 @@ class NavigationBar extends Component {
                           Danh sách PO
                         </Link>
                       </NavItem>
+                      <NavItem>
+                        <Link to="/employee">
+                          Danh sách nhân viên
+                        </Link>
+                      </NavItem>
                     </Nav>
                   )
                 }
