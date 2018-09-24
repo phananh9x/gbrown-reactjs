@@ -26,6 +26,8 @@ import { ROLE } from './constants/role';
 import MeetingSale from './screen/meetingsale';
 import MeetingEkip from './screen/meetingekip';
 import Profile from './screen/profile';
+import SaleSchedule from './screen/saleschedule';
+
 
 library.add(faStroopwafel, faUser, faLock, faCheck);
 class App extends Component {
@@ -80,7 +82,7 @@ class App extends Component {
           <Router>
             <Switch>
               <Route exact path="/login" component={Login} />
-              <Route exact path="/" component={this.middleWareLogin(role && role.groupId === ROLE.WORK_MANAGER ? WorkSchedule : PurchaseList)} />
+              <Route exact path="/" component={this.middleWareLogin(role && role.groupId === ROLE.WORK_MANAGER ? WorkSchedule : role && role.groupId === ROLE.SALE ? SaleSchedule : PurchaseList)} />
               <Route exact path="/baogia/:purchaseId" component={Print} />
               <Route exact path="/chitiethopdong/:purchaseId" component={PrintDetail} />
               <Route exact path="/main" component={this.middleWareLogin(AddPurchase)} />
@@ -90,6 +92,7 @@ class App extends Component {
               <Route exact path="/work/meetingsale" component={this.middleWareLogin(MeetingSale)} />
               <Route exact path="/work/meetingekip" component={this.middleWareLogin(MeetingEkip)} />
               <Route exact path="/user/profile" component={this.middleWareLogin(Profile)} />
+              <Route exact path="/sale/schedule" component={this.middleWareLogin(SaleSchedule)} />
             </Switch>
           </Router>
         </main>

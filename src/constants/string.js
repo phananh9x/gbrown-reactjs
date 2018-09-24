@@ -16,5 +16,6 @@ export const WORK_REMINDER = {
 export const SALE = {
   purchase_created: 'Đã tạo đơn hàng',
   purchase_updated: 'Đã cập nhật đơn hàng',
-  prefix: 'Hệ thống'
+  prefix: 'Hệ thống',
+  schedule_completed: 'Đã hoàn thành công việc'
 };
