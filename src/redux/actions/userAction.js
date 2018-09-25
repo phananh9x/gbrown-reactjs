@@ -14,3 +14,20 @@ export const requestUserListError = error => ({
   type: USER.USER_LIST_REQUEST_ERROR,
   error
 });
+
+
+export const adminUserProfile = data => ({
+  type: USER.ADMIN_UPDATE_PROFILE_REQUEST,
+  data
+});
+
+export const adminUserProfileSuccess = data => ({
+  type: USER.ADMIN_UPDATE_PROFILE_SUCCESS,
+  data
+});
+
+
+export const admineUserProfileError = error => ({
+  type: USER.ADMIN_UPDATE_PROFILE_ERROR,
+  error
+});

@@ -5,8 +5,7 @@ import moment from 'moment';
 import ReactTable from 'react-table';
 import { Select } from 'antd';
 import NavigationBar from '../../components/NavigationBar';
-import { requestUserList } from '../../redux/actions/userAction';
-import { updateProfile } from '../../redux/actions/login';
+import { requestUserList, adminUserProfile } from '../../redux/actions/userAction';
 
 const { Option } = Select;
 
@@ -32,6 +31,8 @@ class EmployeeList extends Component {
     this.renderCell = this.renderCell.bind(this);
 
     this.columns = [{
+      width: 50
+    }, {
       accessor: 'firstname',
       Header: 'Tên nhân viên'
     }, {
@@ -54,6 +55,13 @@ class EmployeeList extends Component {
 
   handleChange = (original, value) => {
     console.log(original, value);
+    const { dispathAdminUpdateProfile } = this.props;
+    const data = {
+      _id: original._id,
+      role: value,
+    };
+
+    dispathAdminUpdateProfile(data);
   }
 
   renderCell = (props) => {
@@ -73,8 +81,8 @@ class EmployeeList extends Component {
         }
       >
         <Option value="5ba5a5902c920e304c392546">ADMIN</Option>
-        <Option value="5ba5a5af2c920e304c392547">NHÂN VIÊN SẢN XUẤT</Option>
-        <Option value="5ba5a5c62c920e304c392548">SALE</Option>
+        <Option value="5ba5a5c62c920e304c392548">NHÂN VIÊN SẢN XUẤT</Option>
+        <Option value="5ba5a5af2c920e304c392547">SALE</Option>
         <Option value="5ba5a5e12c920e304c392549">KHÁC</Option>
 
       </Select>
@@ -202,7 +210,7 @@ const mapStateToProps = state => ({
 });
 const mapDispathToProps = dispath => ({
   dispathUserList: () => dispath(requestUserList()),
-  dispathUpdateProfile: data => dispath(updateProfile(data))
+  dispathAdminUpdateProfile: data => dispath(adminUserProfile(data))
 });
 
 export default connect(mapStateToProps, mapDispathToProps)(EmployeeList);
