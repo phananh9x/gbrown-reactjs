@@ -33,7 +33,7 @@ const renderCell = (props) => {
   );
 };
 
-class SaleSchedule extends Component {
+class SaleOrdering extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -239,7 +239,7 @@ class SaleSchedule extends Component {
   componentWillReceiveProps(nextProps) {
     const { user, chat } = nextProps;
     const { value } = this.state;
-    const date = moment(new Date().setDate(new Date().getDate() + 10)).toDate();
+    const date = moment(new Date().setDate(new Date().getDate() + 3)).toDate();
     if (user.success && value.length === 0) {
       API.getAllPurchaseFilterByDate({ date }).then((data) => {
         if (data.success) {
@@ -273,7 +273,7 @@ class SaleSchedule extends Component {
   componentDidMount() {
     const { user } = this.props;
     const { value } = this.state;
-    const date = moment(new Date().setDate(new Date().getDate() + 4)).toDate();
+    const date = moment(new Date().setDate(new Date().getDate() + 3)).toDate();
     if (user.success && value.length === 0) {
       API.getAllPurchaseFilterByDate({ date }).then((data) => {
         if (data.success) {
@@ -568,4 +568,4 @@ const mapDispathToProps = dispath => ({
   dispathChatPurchase: data => dispath(chatPurchaseAction(data))
 });
 
-export default connect(mapStateToProps, mapDispathToProps)(SaleSchedule);
+export default connect(mapStateToProps, mapDispathToProps)(SaleOrdering);

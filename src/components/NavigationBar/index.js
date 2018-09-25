@@ -121,18 +121,13 @@ class NavigationBar extends Component {
                         </Link>
                       </NavItem>
                       <NavItem>
-                        <Link to="/work/schedule">
-                          Chia việc nhân viên
+                        <Link to="/sale/schedule">
+                          Chăm sóc khách hàng
                         </Link>
                       </NavItem>
                       <NavItem>
-                        <Link to="/work/meetingsale">
-                          Lịch họp với Sale
-                        </Link>
-                      </NavItem>
-                      <NavItem>
-                        <Link to="/work/meetingekip">
-                          Lịch họp với Ekip
+                        <Link to="/sale/ordering">
+                          Chốt đơn hàng
                         </Link>
                       </NavItem>
                     </Nav>
