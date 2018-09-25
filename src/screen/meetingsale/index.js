@@ -237,10 +237,12 @@ class MeetingSale extends Component {
 
 
   componentWillReceiveProps(nextProps) {
-    const { match, user, chat } = nextProps;
+    const { user, chat } = nextProps;
     const { value } = this.state;
-    if (user.success && value.length === 0) {
-      API.getAllPurchase(match.params.purchaseId).then((data) => {
+    const date = moment(new Date().setDate(new Date().getDate() + 5)).toDate();
+    if (user.success && value.length === 0 && !this.loadList) {
+      this.loadList = true;
+      API.getAllPurchaseFilterByDate({ date }).then((data) => {
         if (data.success) {
           this.setState({ value: data.results });
         }
@@ -258,10 +260,12 @@ class MeetingSale extends Component {
   }
 
   componentDidMount() {
-    const { match, user } = this.props;
+    const { user } = this.props;
     const { value } = this.state;
-    if (user.success && value.length === 0) {
-      API.getAllPurchase(match.params.purchaseId).then((data) => {
+    const date = moment(new Date().setDate(new Date().getDate() + 5)).toDate();
+    if (user.success && value.length === 0 && !this.loadList) {
+      this.loadList = true;
+      API.getAllPurchaseFilterByDate({ date }).then((data) => {
         if (data.success) {
           this.setState({ value: data.results });
         }
