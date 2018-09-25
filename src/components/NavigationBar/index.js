@@ -89,11 +89,6 @@ class NavigationBar extends Component {
                         </Link>
                       </NavItem>
                       <NavItem>
-                        <Link to="/employee">
-                          Danh sách nhân viên
-                        </Link>
-                      </NavItem>
-                      <NavItem>
                         <Link to="/work/schedule">
                           Chia việc nhân viên
                         </Link>
@@ -106,6 +101,11 @@ class NavigationBar extends Component {
                       <NavItem>
                         <Link to="/work/meetingekip">
                           Lịch họp với Ekip
+                        </Link>
+                      </NavItem>
+                      <NavItem>
+                        <Link to="/employee">
+                          Danh sách nhân viên
                         </Link>
                       </NavItem>
                     </Nav>

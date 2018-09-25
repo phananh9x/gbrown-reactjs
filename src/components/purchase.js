@@ -472,14 +472,12 @@ function ThongTinHangMuc({
           >
             {
               value.chat && value.chat.map((e, i) => (
-                <div key={e.id || new Date().valueOf()} style={{ borderBottom: (i !== (value.chat.length - 1) && '1px solid lightblue') || 'none', margin: '0 10px' }}>
-                  <div style={{ justifyContent: 'space-between', display: 'flex' }}>
-                    <b>{e.name.toUpperCase()}</b>
-                    <p>{e.date}</p>
+                <div style={{ marginTop: 5, padding: 4, paddingLeft: 6 }} key={parseInt(i.toString())}>
+                  <div style={{ flexDirection: 'row', display: 'flex' }}>
+                    <div style={{ fontWeight: 'bold' }}>{`${e.name}: `}</div>
+                    <div style={{ width: 100 }}>{e.message}</div>
                   </div>
-                  <div>
-                    <p>{e.message}</p>
-                  </div>
+                  <div>{e.date}</div>
                 </div>
               ))
             }
@@ -673,7 +671,22 @@ class Purchase extends Component {
   updateChatMessage(index, msg) {
 
     const { value, purchaseId } = this.state;
-    const { login } = this.props;
+    const { login, dispathChatPurchase } = this.props;
+
+
+    const message = {
+      message: msg,
+      lead: null,
+      staffs: [],
+      prefix: WORK_MANAGER.prefix
+    };
+
+    dispathChatPurchase({
+      message: JSON.stringify(message),
+      category: value.category[index].categoryName || '',
+      purchaseId: purchaseId
+    });
+
     const obj = {
       id: `${new Date().valueOf()}-${Math.floor(Math.random() * 900000) + 100000}`,
       message: msg,
@@ -1071,32 +1084,32 @@ class Purchase extends Component {
           }
 
           list.push(
-            <div style={{ margin: 5 }} key={parseInt(i.toString())}>
+            <div style={{ marginTop: 5, padding: 4, paddingLeft: 6 }} key={parseInt(i.toString())}>
               <div style={{ flexDirection: 'row', display: 'flex' }}>
                 {messageObject.prefix && <div style={{ fontWeight: 'bold' }}>{`[${messageObject.prefix}] `}</div>}
-                <div style={{ fontWeight: 'bold' }}>{`${e.user.firstname}: `}</div>
+                {e.user && <div style={{ fontWeight: 'bold' }}>{`${e.user.firstname}: `}</div>}
                 <div style={{}}>{messageObject.message}</div>
               </div>
               {e.category && e.category.length > 0 && <div style={{}}>{`Hạng mục: ${e.category}`}</div>}
               {messageObject.lead && <div style={{}}>{`Nhân viên thực hiện: ${messageObject.lead}`}</div>}
               {messageObject.staffs && messageObject.staffs.length > 0
                 && <div style={{}}>Nhân viên làm cùng </div>}
-              {staffs.length > 0 && staffs}
+              {staffs}
               <div>{moment(e.created).format('DD-MM-YYYY HH:mm:ss')}</div>
             </div>
           );
         } catch (error) {
           list.push(
-            <div style={{ margin: 5 }} key={parseInt(i.toString())}>
+            <div style={{ marginTop: 5, padding: 4, paddingLeft: 6 }} key={parseInt(i.toString())}>
               <div style={{ flexDirection: 'row', display: 'flex' }}>
-                <div style={{ fontWeight: 'bold' }}>{`${e.user.firstname}: `}</div>
-                <div style={{}}>{e.message}</div>
+                {e.user && <div style={{ fontWeight: 'bold' }}>{`${e.user.firstname}: `}</div>}
+                <div style={{ width: 100 }}>{e.message}</div>
               </div>
               <div>{moment(e.created).format('DD-MM-YYYY HH:mm:ss')}</div>
             </div>
           );
         }
-      })
+      });
     }
     return list;
   }
