@@ -18,7 +18,7 @@ const renderCell = (props) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <Button bsStyle="primary" id="schedule">
-        Chia việc
+        Chi tiết
       </Button>
       <Button
         // disabled={original.chiaViec}
@@ -27,7 +27,7 @@ const renderCell = (props) => {
         style={{ marginTop: 5 }}
         id="confirm_schedule"
       >
-        {original.chiaViec ? 'Đã chia việc' : 'Chưa chia việc'}
+        {original.chiaViec ? 'Đã chốt' : 'Chưa chốt'}
       </Button>
     </div>
   );
@@ -494,7 +494,7 @@ class SaleOrdering extends Component {
           <Jumbotron>
             <h3>Nhắc nhở công việc trong ngày dành cho nhân viên Sale</h3>
             <p>
-              {`Hôm nay là ngày ${this.toDay}, Alo với khách hàng để chốt lại đơn hàng, xác nhận thông tin khách hàng, biểu nghữ chương trình, chốt lại toàn bộ kịch bản, cũng như nội dung dịch vụ và hình ảnh liên quan.`}
+              {`Hôm nay là ngày ${this.toDay}, Alo với khách hàng để chốt lại thông tin đơn hàng lần cuối`}
             </p>
           </Jumbotron>
 

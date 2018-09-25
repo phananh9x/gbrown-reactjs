@@ -17,5 +17,13 @@ export const SALE = {
   purchase_created: 'Đã tạo đơn hàng',
   purchase_updated: 'Đã cập nhật đơn hàng',
   prefix: 'Hệ thống',
-  schedule_completed: 'Đã hoàn thành công việc'
+  schedule_completed: 'Đã hoàn thành chăm sóc khách hàng',
+  ordering_completed: 'Đã hoàn thành chốt đơn hàng',
+};
+
+
+export const SALE_REMINDER = {
+  remind_sale_schedule: 'Cần gọi điện cho khách hàng để chốt thông tin đơn hàng',
+  remind_sale_ordering: 'Cần gọi điện cho khách hàng để chốt đơn hàng lần cuối',
+  prefix: 'Hệ thống'
 };

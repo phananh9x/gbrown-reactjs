@@ -18,7 +18,7 @@ const renderCell = (props) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <Button bsStyle="primary" id="schedule">
-        Chia việc
+        Chi tiết
       </Button>
       <Button
         // disabled={original.chiaViec}
@@ -27,7 +27,7 @@ const renderCell = (props) => {
         style={{ marginTop: 5 }}
         id="confirm_schedule"
       >
-        {original.chiaViec ? 'Đã chia việc' : 'Chưa chia việc'}
+        {original.chiaViec ? 'Đã chăm sóc' : 'Chưa chăm sóc'}
       </Button>
     </div>
   );
@@ -97,7 +97,7 @@ class SaleSchedule extends Component {
       Header: 'Ngày Set-up',
       width: 90
     }, {
-      width: 100,
+      width: 105,
       accessor: 'purchaseId',
       Header: 'Action',
       Cell: p => renderCell(p),
