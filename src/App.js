@@ -88,7 +88,7 @@ class App extends Component {
                 exact
                 path="/"
                 component={this.middleWareLogin(role
-                  && role.groupId === ROLE.ADMIN ? PurchaseList : WorkSchedule)}
+                  && role.groupId === ROLE.WORK_MANAGER ? WorkSchedule : PurchaseList)}
               />
               <Route exact path="/baogia/:purchaseId" component={Print} />
               <Route exact path="/chitiethopdong/:purchaseId" component={PrintDetail} />
@@ -100,8 +100,11 @@ class App extends Component {
               <Route exact path="/work/meetingekip" component={this.middleWareLogin(MeetingEkip)} />
               <Route exact path="/user/profile" component={this.middleWareLogin(Profile)} />
               <Route exact path="/sale/schedule" component={this.middleWareLogin(SaleSchedule)} />
-              <Route exact path="/employee" component={this.middleWareLogin(role
-                  && role.groupId === ROLE.ADMIN ? EmployeeList : WorkSchedule)} 
+              <Route
+                exact
+                path="/employee"
+                component={this.middleWareLogin(role
+                  && role.groupId === ROLE.ADMIN ? EmployeeList : Profile)}
               />
             </Switch>
           </Router>
