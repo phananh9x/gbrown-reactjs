@@ -35,26 +35,29 @@ export const MODAL = {
   button_accept: 'Xác nhận',
   button_cancel: 'Huỷ',
 
+  /**
+   * caring -> sale meeting -> scheduling -> ordering -> ekip meeting
+   */
   require_care_customer_title: 'Không thể hoàn thành họp Sale',
-  require_care_customer_body: 'Sale chưa hoàn thành chăm sóc đơn hàng này',
+  require_care_customer_body: 'Bạn không thể hoàn thành họp Sale bởi vì Sale chưa chăm sóc đơn hàng này',
 
   care_customer_complete_title: 'Hoàn thành chăm sóc',
-  care_customer_complete_body: 'Bạn có chắc chắn hoàn thành chăm sóc',
+  care_customer_complete_body: 'Bạn có chắc chắn hoàn thành chăm sóc cho khách hàng này',
 
   require_salemeeting_title: 'Không thể hoàn thành chia việc',
-  require_salemeeting_body: 'Cần tham gia [Hợp với Sale] trước khi chia viêc',
+  require_salemeeting_body: 'Bạn không thể hoàn thành chia việc bởi vì Sale chưa họp đơn hàng này',
 
   salemeeting_complete_title: 'Hoàn thành họp với sale',
   salemeeting_complete_body: 'Bạn có chắc chắn đã họp với Sale',
 
-  require_schedulework_title: 'Không thể hoàn thành chia việc',
-  require_schedulework_body: 'Quản lý sản xuất phải hoàn thành chia việc trước',
+  require_schedulework_title: 'Không thể hoàn thành chốt đơn hàng',
+  require_schedulework_body: 'Bạn không thể hoàn thành chốt đơn hàng bởi vì quản lý sản xuất chưa chia công việc này cho nhân viên',
 
   schedulework_complete_title: 'Hoàn thành chia việc',
   schedulework_complete_body: 'Bạn có chắc chắn hoàn thành chia việc',
 
-  require_ordering_title: 'Không thể hoàn thành chốt đơn hàng',
-  require_ordering_body: 'Sale cần liên hệ với khách hàng để chốt đơn hàng',
+  require_ordering_title: 'Không thể hoàn thành hợp ekip',
+  require_ordering_body: 'Bạn không thể hoàn thành họp ekip bởi vì Sale chưa chốt đơn hàng này',
 
   ordering_complete_title: 'Xác nhận chốt đơn hàng',
   ordering_complete_body: 'Bạn có chắc chắn hoàn thành chốt đơn hàng',
@@ -71,4 +74,18 @@ export const PROGRESS = {
   scheduling: 'Chia việc (4 ngày)',
   ordering: 'Chốt đơn (3 ngày)',
   ekipmeeting: ' Hợp ekip (1ngày)'
+};
+
+
+export const BUTTON = {
+  not_caring: 'Chưa chăm sóc',
+  cared: 'Đã chăm sóc',
+  not_sale_meeting: 'Chưa họp Sale',
+  sale_met: 'Đã hop Sale',
+  not_scheduling: 'Chưa chia việc',
+  scheduled: 'Đã chia việc',
+  not_ordering: 'Chưa chốt đơn',
+  ordered: 'Đã chốt đơn',
+  not_ekip_meeting: 'Chưa họp ekip',
+  ekip_met: 'Đã hơp ekip'
 };

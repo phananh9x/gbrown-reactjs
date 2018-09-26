@@ -11,7 +11,8 @@ import NavigationBar from '../../components/NavigationBar';
 import { chatPurchaseAction } from '../../redux/actions/chatAction';
 import {
   WORK_MANAGER, MODAL,
-  PROGRESS
+  PROGRESS,
+  BUTTON
 } from '../../constants/string';
 
 const { Search } = Input;
@@ -84,7 +85,7 @@ const renderCell = (props) => {
         style={{ marginTop: 5 }}
         id="confirm_meeting_sale"
       >
-        {original.hopSale ? 'Đã họp' : 'Chưa họp'}
+        {original.hopSale ? BUTTON.sale_met : BUTTON.not_sale_meeting}
       </Button>
     </div>
   );
@@ -152,7 +153,7 @@ class MeetingSale extends Component {
       Cell: p => renderProgress(p),
     },
     {
-      width: 100,
+      width: 110,
       accessor: 'purchaseId',
       Header: 'Action',
       Cell: p => renderCell(p),

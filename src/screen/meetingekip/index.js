@@ -10,7 +10,7 @@ import * as API from '../../API';
 import NavigationBar from '../../components/NavigationBar';
 import { chatPurchaseAction } from '../../redux/actions/chatAction';
 import {
-  WORK_MANAGER, MODAL, PROGRESS
+  WORK_MANAGER, MODAL, PROGRESS, BUTTON
 } from '../../constants/string';
 
 const { Search } = Input;
@@ -81,7 +81,7 @@ const renderCell = (props) => {
         style={{ marginTop: 5 }}
         id="confirm_schedule"
       >
-        {original.hopEkip ? 'Đã họp' : 'Chưa họp'}
+        {original.hopEkip ? BUTTON.ekip_met : BUTTON.not_ekip_meeting}
       </Button>
     </div>
   );
@@ -149,7 +149,7 @@ class MeetingEkip extends Component {
       Cell: p => renderProgress(p),
     },
     {
-      width: 100,
+      width: 110,
       accessor: 'purchaseId',
       Header: 'Action',
       Cell: p => renderCell(p),
@@ -421,7 +421,7 @@ class MeetingEkip extends Component {
                     pathname: `/purchase/${rowInfo.original.purchaseId}`,
                   });
                 } else if (e.target.id === 'confirm_schedule') {
-                  if (rowInfo.hopEkip) {
+                  if (!rowInfo.original.hopEkip) {
                     if (!rowInfo.original.chotDon) {
                       this.modal = {
                         title: MODAL.require_ordering_title,

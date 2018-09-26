@@ -10,7 +10,7 @@ import * as API from '../../API';
 import NavigationBar from '../../components/NavigationBar';
 import { chatPurchaseAction } from '../../redux/actions/chatAction';
 import {
-  SALE, WORK_REMINDER, MODAL, PROGRESS
+  SALE, WORK_REMINDER, MODAL, PROGRESS, BUTTON
 } from '../../constants/string';
 
 const { Search } = Input;
@@ -83,7 +83,7 @@ const renderCell = (props) => {
         style={{ marginTop: 5 }}
         id="confirm_schedule"
       >
-        {original.chamSoc ? 'Đã chăm sóc' : 'Chưa chăm sóc'}
+        {original.chamSoc ? BUTTON.cared : BUTTON.not_caring}
       </Button>
     </div>
   );
@@ -151,7 +151,7 @@ class SaleSchedule extends Component {
       Cell: p => renderProgress(p),
     },
     {
-      width: 100,
+      width: 110,
       accessor: 'purchaseId',
       Header: 'Action',
       Cell: p => renderCell(p),
