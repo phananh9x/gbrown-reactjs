@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  Button, Jumbotron, Modal
+  Button, Jumbotron, Modal, Glyphicon
 } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -12,6 +12,60 @@ import { chatPurchaseAction } from '../../redux/actions/chatAction';
 import { SALE, WORK_REMINDER } from '../../constants/string';
 
 const { Search } = Input;
+
+const renderProgress = (props) => {
+  const { original } = props;
+
+  const checklist = [
+    {
+      name: 'Chăm sóc',
+      checked: original.caring
+    },
+    {
+      name: 'Họp Sale',
+      checked: original.hopSale
+    },
+    {
+      name: 'Chia việc',
+      checked: original.chiaViec
+    },
+    {
+      name: 'Chốt đơn',
+      checked: original.ordering
+    },
+    {
+      name: 'Họp Ekip',
+      checked: original.hopEkip
+    }
+  ];
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {
+        checklist.map((e, i) => (
+          <div style={{ display: 'flex', flexDirection: 'row', marginLeft: 5 }} key={parseInt(i.toString())}>
+            {e.checked
+              ? (
+                <button className="btn-success" type="button">
+                  <Glyphicon color="green" glyph="glyphicon glyphicon-ok" />
+                </button>
+              ) : (
+                <button className="btn-danger" type="button">
+                  <Glyphicon color="red" glyph="glyphicon glyphicon-remove" />
+                </button>
+              )
+            }
+            <div style={{ marginLeft: 5 }}>
+              {e.name}
+            </div>
+          </div>
+        ))
+      }
+
+    </div>
+  );
+};
+
 
 const renderCell = (props) => {
   const { original } = props;
@@ -60,17 +114,9 @@ class SaleSchedule extends Component {
       Header: 'MSHĐ',
       width: 55,
     }, {
-      accessor: 'eventName',
-      Header: 'Tên Sự Kiện',
-      width: 120
-    }, {
       id: 'customerName',
       accessor: p => this.renderCustomer(p),
       Header: 'Khách Hàng',
-      width: 150,
-    }, {
-      accessor: 'location',
-      Header: 'Đia chỉ tổ chức',
       width: 200,
     }, {
       id: 'saleGbrown',
@@ -81,6 +127,7 @@ class SaleSchedule extends Component {
       id: 'chat',
       accessor: p => this.renderChatList(p),
       Header: 'Chat',
+      maxWidth: 500,
     }, {
       id: 'startDate',
       accessor: d => this.renderDate(d.startDate),
@@ -97,7 +144,12 @@ class SaleSchedule extends Component {
       Header: 'Ngày Set-up',
       width: 90
     }, {
-      width: 105,
+      width: 100,
+      Header: 'Tiến độ',
+      Cell: p => renderProgress(p),
+    },
+    {
+      width: 100,
       accessor: 'purchaseId',
       Header: 'Action',
       Cell: p => renderCell(p),
@@ -121,8 +173,13 @@ class SaleSchedule extends Component {
   renderCustomer = (p) => {
     const render = (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ fontWeight: 'bold' }}>Sự kiện</div>
+        <div>{p.eventName}</div>
+        <div style={{ fontWeight: 'bold', marginTop: 5 }}>Khách hàng</div>
         <div>{p.customerName}</div>
         <div>{p.phone}</div>
+        <div style={{ fontWeight: 'bold', marginTop: 5 }}>Địa chỉ tổ chức</div>
+        <div>{p.location}</div>
       </div>
     );
     return render;

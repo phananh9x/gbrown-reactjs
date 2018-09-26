@@ -88,21 +88,35 @@ class NavigationBar extends Component {
                           Danh sách PO
                         </Link>
                       </NavItem>
-                      <NavItem>
-                        <Link to="/work/schedule">
-                          Chia việc nhân viên
-                        </Link>
-                      </NavItem>
-                      <NavItem>
-                        <Link to="/work/meetingsale">
-                          Lịch họp với Sale
-                        </Link>
-                      </NavItem>
-                      <NavItem>
-                        <Link to="/work/meetingekip">
-                          Lịch họp với Ekip
-                        </Link>
-                      </NavItem>
+                      <NavDropdown title="Nhân viên Sale" id="basic-nav-dropdown">
+                        <NavItem>
+                          <Link to="/sale/schedule">
+                            Chăm sóc khách hàng
+                          </Link>
+                        </NavItem>
+                        <NavItem>
+                          <Link to="/sale/ordering">
+                            Chốt đơn hàng
+                          </Link>
+                        </NavItem>
+                      </NavDropdown>
+                      <NavDropdown title="Quản lý sản xuất" id="basic-nav-dropdown">
+                        <NavItem>
+                          <Link to="/work/schedule">
+                            Chia việc nhân viên
+                          </Link>
+                        </NavItem>
+                        <NavItem>
+                          <Link to="/work/meetingsale">
+                            Lịch họp với Sale
+                          </Link>
+                        </NavItem>
+                        <NavItem>
+                          <Link to="/work/meetingekip">
+                            Lịch họp với Ekip
+                          </Link>
+                        </NavItem>
+                      </NavDropdown>
                       <NavItem>
                         <Link to="/employee">
                           Danh sách nhân viên
