@@ -304,7 +304,6 @@ class WorkSchedule extends Component {
       this.loadList = true;
       API.getAllPurchaseFilterByDate({ date }).then((data) => {
         if (data.success) {
-          this.handleReminder(data.results);
           this.setState({ value: data.results });
         }
       });
@@ -338,7 +337,6 @@ class WorkSchedule extends Component {
     if (user.success && value.length === 0) {
       API.getAllPurchaseFilterByDate({ date }).then((data) => {
         if (data.success) {
-          // this.handleReminder(data.results);
           this.setState({ value: data.results });
         }
       });
@@ -395,93 +393,6 @@ class WorkSchedule extends Component {
       message: JSON.stringify(message),
       category: '',
       purchaseId: p.purchaseId
-    });
-  }
-
-  /**
-   * should be handled inm server
-   */
-  handleReminder = (purchases) => {
-    purchases.forEach((p) => {
-      let lastRemindDate = p.lastRemindDate || this.toDay;
-      let remindStatus = p.remindStatus ? JSON.parse(p.remindStatus) : {
-        step: 'salemeeting',
-        done: false
-      };
-
-      /**
-       * send first reminder about meeting sale
-       */
-
-      if (!p.lastRemindDate
-        && new Date(p.lastRemindDate).toLocaleDateString() === new Date().toLocaleDateString()) {
-        lastRemindDate = this.toDay;
-        remindStatus = {
-          step: 'salemeeting',
-          done: false
-        };
-        p.lastRemindDate = lastRemindDate;
-        p.remindStatus = JSON.stringify(remindStatus);
-        API.updatePurchase(p, p.purchaseId).then(() => {
-          this.remindSaleMeeting(p);
-        });
-      } else if (new Date(p.lastRemindDate).toLocaleDateString() < new Date().toLocaleDateString() && remindStatus.step !== 'completed') {
-        lastRemindDate = new Date().toLocaleDateString();
-        let send = false;
-        if (!remindStatus.done && remindStatus.step === 'salemeeting') {
-          /**
-          * loop
-          */
-          this.remindSaleMeeting(p);
-          send = true;
-        } else if (remindStatus.done && remindStatus.step === 'salemeeting') {
-          /**
-           * done
-           */
-          this.remindScheduleWork(p);
-          remindStatus = {
-            step: 'schedulework',
-            done: false
-          };
-          send = true;
-        } else if (!remindStatus.done && remindStatus.step === 'schedulework') {
-          /**
-           * loop
-           */
-          this.remindScheduleWork(p);
-          send = true;
-        } else if (remindStatus.done && remindStatus.step === 'schedulework') {
-          /**
-           * done
-           */
-          this.remindEkipMeeting(p);
-          remindStatus = {
-            step: 'ekipmeeting',
-            done: false
-          };
-          send = true;
-        } else if (!remindStatus.done && remindStatus.step === 'ekipmeeting') {
-          /**
-           * loop
-           */
-          this.remindEkipMeeting(p);
-          send = true;
-        } else if (remindStatus.done && remindStatus.step === 'ekipmeeting') {
-          remindStatus = {
-            step: 'completed',
-            done: true
-          };
-          send = true;
-        }
-        if (send) {
-          p.lastRemindDate = lastRemindDate;
-          p.remindStatus = JSON.stringify(remindStatus);
-          API.updatePurchase(p, p.purchaseId).then(() => {
-            //  this.remindSaleMeeting(p);
-          });
-          send = false;
-        }
-      }
     });
   }
 

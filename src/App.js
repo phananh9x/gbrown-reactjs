@@ -76,7 +76,6 @@ class App extends Component {
   render() {
     const { navBar, login } = this.props;
     const { role } = login.data.results ? login.data.results : false;
-    console.log(role);
 
     return (
       <div className="App" id="outer-container">
