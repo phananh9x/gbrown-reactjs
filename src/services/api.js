@@ -25,3 +25,13 @@ export const updateUser = (data) => {
   const url = `${server}user/${data._id}/update`;
   return http.post(url, data);
 };
+
+export const getUserRole = () => {
+  const url = `${server}role`;
+  return http.get(url, {});
+};
+
+export const registerUser = (data) => {
+  const url = `${server}user/register`;
+  return http.post(url, data);
+};

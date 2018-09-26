@@ -29,6 +29,7 @@ import Profile from './screen/profile';
 import SaleSchedule from './screen/saleschedule';
 import EmployeeList from './screen/employee';
 import SaleOrdering from './screen/saleordering';
+import AddEmployee from './screen/addemployee';
 
 library.add(faStroopwafel, faUser, faLock, faCheck);
 class App extends Component {
@@ -106,6 +107,12 @@ class App extends Component {
                 path="/employee"
                 component={this.middleWareLogin(role
                   && role.groupId === ROLE.ADMIN ? EmployeeList : Profile)}
+              />
+              <Route
+                exact
+                path="/employee/add"
+                component={this.middleWareLogin(role
+                  && role.groupId === ROLE.ADMIN ? AddEmployee : Profile)}
               />
             </Switch>
           </Router>

@@ -200,6 +200,8 @@ class SaleOrdering extends Component {
 
   renderChatList = (p) => {
     const list = [];
+    console.log(p);
+
     p.chat.forEach((e, i) => {
       try {
         const messageObject = JSON.parse(e.message);

@@ -91,3 +91,18 @@ export const getAllPurchaseFilterByDate = date =>
       console.log('This is error');
       return error;
     });
+
+
+export const getSaleRemindByDate = date =>
+  fetch(`${server}user/sale/remind`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(date),
+  }).then(res => res.json())
+    .catch((error) => {
+      console.log('This is error');
+      return error;
+    });

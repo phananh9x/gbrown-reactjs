@@ -2,6 +2,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
+import {
+  Button, Glyphicon, ButtonToolbar, ButtonGroup
+} from 'react-bootstrap';
 import ReactTable from 'react-table';
 import { Select } from 'antd';
 import NavigationBar from '../../components/NavigationBar';
@@ -54,7 +58,6 @@ class EmployeeList extends Component {
   }
 
   handleChange = (original, value) => {
-    console.log(original, value);
     const { dispathAdminUpdateProfile } = this.props;
     const data = {
       _id: original._id,
@@ -177,14 +180,27 @@ class EmployeeList extends Component {
     } = this.state;
 
     const { user } = this.props;
-
-    console.log(user);
     return (
       <div className="app">
         <NavigationBar
           menus={menuList}
           show
         />
+        <div className="col-xs-6">
+          <ButtonToolbar>
+            <ButtonGroup>
+              <Link to="/main">
+                <Button>
+                  <Glyphicon glyph="glyphicon glyphicon-pencil" />
+                  {' Thêm'}
+                </Button>
+              </Link>
+              <Button>
+                <Glyphicon glyph="glyphicon glyphicon-refresh" />
+              </Button>
+            </ButtonGroup>
+          </ButtonToolbar>
+        </div>
         <div className="container-fluid" style={{ paddingTop: 70 }}>
           <ReactTable
             showPaginationBottom

@@ -117,11 +117,18 @@ class NavigationBar extends Component {
                           </Link>
                         </NavItem>
                       </NavDropdown>
-                      <NavItem>
-                        <Link to="/employee">
-                          Danh sách nhân viên
-                        </Link>
-                      </NavItem>
+                      <NavDropdown title="Nhân viên" id="basic-nav-dropdown">
+                        <NavItem>
+                          <Link to="/employee">
+                            Danh sách nhân viên
+                          </Link>
+                        </NavItem>
+                        <NavItem>
+                          <Link to="/employee/add">
+                            Thêm nhân viên
+                          </Link>
+                        </NavItem>
+                      </NavDropdown>
                     </Nav>
                   )
                 }

@@ -1,4 +1,4 @@
-import { USER } from '../actions/actionType';
+import { USER_ROLE } from '../actions/actionType';
 
 const initialState = {
   data: [],
@@ -7,16 +7,16 @@ const initialState = {
   success: false
 };
 
-export default function UserList(state = initialState, action) {
+export default function UserRole(state = initialState, action) {
   switch (action.type) {
-    case USER.USER_LIST_REQUEST:
+    case USER_ROLE.ROLE_LIST_REQUEST:
       return {
         ...state,
         fetching: true,
         success: false,
         error: {}
       };
-    case USER.USER_LIST_REQUEST_SUCCESS:
+    case USER_ROLE.ROLE_LIST_SUCCESS:
       return {
         ...state,
         data: action.data.results,
@@ -24,7 +24,7 @@ export default function UserList(state = initialState, action) {
         success: true,
         error: {}
       };
-    case USER.USER_LIST_REQUEST_ERROR:
+    case USER_ROLE.ROLE_LIST_ERROR:
       return {
         ...state,
         error: action.error,

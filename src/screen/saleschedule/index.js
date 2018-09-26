@@ -300,7 +300,7 @@ class SaleSchedule extends Component {
     const { value } = this.state;
     const date = moment(new Date().setDate(new Date().getDate() + 10)).toDate();
     if (user.success && value.length === 0) {
-      API.getAllPurchaseFilterByDate({ date }).then((data) => {
+      API.getSaleRemindByDate({ date }).then((data) => {
         if (data.success) {
           // this.handleReminder(data.results);
           this.setState({ value: data.results });
@@ -334,7 +334,7 @@ class SaleSchedule extends Component {
     const { value } = this.state;
     const date = moment(new Date().setDate(new Date().getDate() + 4)).toDate();
     if (user.success && value.length === 0) {
-      API.getAllPurchaseFilterByDate({ date }).then((data) => {
+      API.getSaleRemindByDate({ date }).then((data) => {
         if (data.success) {
           // this.handleReminder(data.results);
           this.setState({ value: data.results });
