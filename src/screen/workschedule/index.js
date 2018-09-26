@@ -498,6 +498,7 @@ class WorkSchedule extends Component {
                         key: MODAL.key_close
                       };
                       this.valueForSave = rowInfo.original;
+                      this.setState({ showConfirm: true });
                     } else if (rowInfo.original.hopSale) {
                       this.modal = {
                         title: MODAL.schedulework_complete_title,
@@ -507,8 +508,8 @@ class WorkSchedule extends Component {
                         key: e.target.id
                       };
                       this.valueForSave = rowInfo.original;
+                      this.setState({ showConfirm: true });
                     }
-                    this.setState({ showConfirm: true });
                   }
                 }
               }

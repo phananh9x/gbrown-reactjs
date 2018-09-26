@@ -430,6 +430,7 @@ class MeetingEkip extends Component {
                         key: MODAL.key_close
                       };
                       this.valueForSave = rowInfo.original;
+                      this.setState({ showConfirm: true });
                     } else if (rowInfo.original.chotDon) {
                       this.modal = {
                         title: MODAL.ekip_meeting_complete_title,
@@ -439,9 +440,9 @@ class MeetingEkip extends Component {
                         key: e.target.id
                       };
                       this.valueForSave = rowInfo.original;
+                      this.setState({ showConfirm: true });
                     }
                   }
-                  this.setState({ showConfirm: true });
                 }
               }
             })}
