@@ -9,7 +9,9 @@ import { Input } from 'antd';
 import * as API from '../../API';
 import NavigationBar from '../../components/NavigationBar';
 import { chatPurchaseAction } from '../../redux/actions/chatAction';
-import { WORK_MANAGER, WORK_REMINDER } from '../../constants/string';
+import {
+  WORK_MANAGER, WORK_REMINDER, MODAL, PROGRESS
+} from '../../constants/string';
 
 const { Search } = Input;
 
@@ -19,23 +21,23 @@ const renderProgress = (props) => {
 
   const checklist = [
     {
-      name: 'Chăm sóc (10 ngày)',
-      checked: original.caring
+      name: PROGRESS.caring,
+      checked: original.chamSoc
     },
     {
-      name: 'Họp Sale (5 ngày)',
+      name: PROGRESS.sale_meeting,
       checked: original.hopSale
     },
     {
-      name: 'Chia việc (4 ngày)',
+      name: PROGRESS.scheduling,
       checked: original.chiaViec
     },
     {
-      name: 'Chốt đơn (3 ngày)',
-      checked: original.ordering
+      name: PROGRESS.ordering,
+      checked: original.chotDon
     },
     {
-      name: 'Họp Ekip (1 ngày)',
+      name: PROGRESS.ekipmeeting,
       checked: original.hopEkip
     }
   ];
@@ -573,17 +575,30 @@ class WorkSchedule extends Component {
                     pathname: `/purchase/${rowInfo.original.purchaseId}`,
                   });
                 } else if (e.target.id === 'confirm_schedule') {
-                  this.modal = {
-                    title: 'Hoàn thành chia việc',
-                    body: 'Bạn có chắc chắn hoàn thành chia việc',
-                    cancel: 'Huỷ',
-                    accept: 'Xác nhận',
-                    key: e.target.id
-                  };
-                  this.valueForSave = rowInfo.original;
-                  console.log('origin', this.valueForSave);
-
-                  this.setState({ showConfirm: true });
+                  /**
+                   * chua hop sale thi khong the chia viec duoc
+                   */
+                  if (!rowInfo.original.chiaViec) {
+                    if (!rowInfo.original.hopSale) {
+                      this.modal = {
+                        title: MODAL.require_salemeeting_title,
+                        body: MODAL.require_salemeeting_body,
+                        accept: MODAL.button_close,
+                        key: MODAL.key_close
+                      };
+                      this.valueForSave = rowInfo.original;
+                    } else if (rowInfo.original.hopSale) {
+                      this.modal = {
+                        title: MODAL.schedulework_complete_title,
+                        body: MODAL.schedulework_complete_body,
+                        cancel: MODAL.button_cancel,
+                        accept: MODAL.button_accept,
+                        key: e.target.id
+                      };
+                      this.valueForSave = rowInfo.original;
+                    }
+                    this.setState({ showConfirm: true });
+                  }
                 }
               }
             })}
@@ -596,14 +611,20 @@ class WorkSchedule extends Component {
                 </Modal.Header>
                 <Modal.Body>{this.modal.body}</Modal.Body>
                 <Modal.Footer>
-                  <Button onClick={() => this.setState({ showConfirm: false })}>
-                    {this.modal.cancel}
-                  </Button>
+                  {this.modal.cancel
+                    && (
+                      <Button onClick={() => this.setState({ showConfirm: false })}>
+                        {this.modal.cancel}
+                      </Button>
+                    )
+                  }
                   <Button
                     bsStyle="primary"
                     onClick={() => {
                       if (this.modal.key === 'confirm_schedule') {
                         this.setState({ showConfirm: false }, () => this.confirmSchedule());
+                      } else if (this.modal.key === MODAL.key_close) {
+                        this.setState({ showConfirm: false });
                       }
                     }}
                   >

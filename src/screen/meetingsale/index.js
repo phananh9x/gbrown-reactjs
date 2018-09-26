@@ -9,33 +9,35 @@ import { Input } from 'antd';
 import * as API from '../../API';
 import NavigationBar from '../../components/NavigationBar';
 import { chatPurchaseAction } from '../../redux/actions/chatAction';
-import { WORK_MANAGER } from '../../constants/string';
+import {
+  WORK_MANAGER, MODAL,
+  PROGRESS
+} from '../../constants/string';
 
 const { Search } = Input;
 
 
 const renderProgress = (props) => {
   const { original } = props;
-
   const checklist = [
     {
-      name: 'Chăm sóc',
-      checked: original.caring
+      name: PROGRESS.caring,
+      checked: original.chamSoc
     },
     {
-      name: 'Họp Sale',
+      name: PROGRESS.sale_meeting,
       checked: original.hopSale
     },
     {
-      name: 'Chia việc',
+      name: PROGRESS.scheduling,
       checked: original.chiaViec
     },
     {
-      name: 'Chốt đơn',
-      checked: original.ordering
+      name: PROGRESS.ordering,
+      checked: original.chotDon
     },
     {
-      name: 'Họp Ekip',
+      name: PROGRESS.ekipmeeting,
       checked: original.hopEkip
     }
   ];
@@ -145,7 +147,7 @@ class MeetingSale extends Component {
       Header: 'Ngày Set-up',
       width: 90
     }, {
-      width: 100,
+      width: 150,
       Header: 'Tiến độ',
       Cell: p => renderProgress(p),
     },
@@ -421,15 +423,27 @@ class MeetingSale extends Component {
                     pathname: `/purchase/${rowInfo.original.purchaseId}`,
                   });
                 } else if (e.target.id === 'confirm_meeting_sale') {
-                  this.modal = {
-                    title: 'Hoàn thành họp với sale',
-                    body: 'Bạn có chắc chắn đã họp với Sale',
-                    cancel: 'Huỷ',
-                    accept: 'Xác nhận',
-                    key: e.target.id
-                  };
-                  this.valueForSave = rowInfo.original;
-                  this.setState({ showConfirm: true });
+                  if (!rowInfo.original.hopSale) {
+                    if (!rowInfo.original.chamSoc) {
+                      this.modal = {
+                        title: MODAL.require_care_customer_title,
+                        body: MODAL.require_care_customer_body,
+                        accept: MODAL.button_close,
+                        key: MODAL.key_close
+                      };
+                      this.valueForSave = rowInfo.original;
+                    } else if (rowInfo.original.chamSoc) {
+                      this.modal = {
+                        title: MODAL.salemeeting_complete_title,
+                        body: MODAL.salemeeting_complete_body,
+                        cancel: MODAL.button_cancel,
+                        accept: MODAL.button_accept,
+                        key: e.target.id
+                      };
+                      this.valueForSave = rowInfo.original;
+                    }
+                    this.setState({ showConfirm: true });
+                  }
                 }
               }
             })}
@@ -442,14 +456,20 @@ class MeetingSale extends Component {
                 </Modal.Header>
                 <Modal.Body>{this.modal.body}</Modal.Body>
                 <Modal.Footer>
-                  <Button onClick={() => this.setState({ showConfirm: false })}>
-                    {this.modal.cancel}
-                  </Button>
+                  {this.modal.cancel
+                    && (
+                      <Button onClick={() => this.setState({ showConfirm: false })}>
+                        {this.modal.cancel}
+                      </Button>
+                    )
+                  }
                   <Button
                     bsStyle="primary"
                     onClick={() => {
-                      if (this.modal.key === 'confirm_meeting_sale') {
+                      if (this.modal.key === 'confirm_schedule') {
                         this.setState({ showConfirm: false }, () => this.confirmSchedule());
+                      } else if (this.modal.key === MODAL.key_close) {
+                        this.setState({ showConfirm: false });
                       }
                     }}
                   >

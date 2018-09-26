@@ -9,7 +9,9 @@ import { Input } from 'antd';
 import * as API from '../../API';
 import NavigationBar from '../../components/NavigationBar';
 import { chatPurchaseAction } from '../../redux/actions/chatAction';
-import { SALE, WORK_REMINDER } from '../../constants/string';
+import {
+  SALE, WORK_REMINDER, MODAL, PROGRESS
+} from '../../constants/string';
 
 const { Search } = Input;
 
@@ -18,23 +20,23 @@ const renderProgress = (props) => {
 
   const checklist = [
     {
-      name: 'Chăm sóc',
-      checked: original.caring
+      name: PROGRESS.caring,
+      checked: original.chamSoc
     },
     {
-      name: 'Họp Sale',
+      name: PROGRESS.sale_meeting,
       checked: original.hopSale
     },
     {
-      name: 'Chia việc',
+      name: PROGRESS.scheduling,
       checked: original.chiaViec
     },
     {
-      name: 'Chốt đơn',
-      checked: original.ordering
+      name: PROGRESS.ordering,
+      checked: original.chotDon
     },
     {
-      name: 'Họp Ekip',
+      name: PROGRESS.ekipmeeting,
       checked: original.hopEkip
     }
   ];
@@ -76,12 +78,12 @@ const renderCell = (props) => {
       </Button>
       <Button
         // disabled={original.chiaViec}
-        bsStyle={original.chiaViec ? 'success' : 'danger'}
+        bsStyle={original.chamSoc ? 'success' : 'danger'}
         bsSize="xsmall"
         style={{ marginTop: 5 }}
         id="confirm_schedule"
       >
-        {original.chiaViec ? 'Đã chăm sóc' : 'Chưa chăm sóc'}
+        {original.chamSoc ? 'Đã chăm sóc' : 'Chưa chăm sóc'}
       </Button>
     </div>
   );
@@ -144,7 +146,7 @@ class SaleSchedule extends Component {
       Header: 'Ngày Set-up',
       width: 90
     }, {
-      width: 100,
+      width: 150,
       Header: 'Tiến độ',
       Cell: p => renderProgress(p),
     },
@@ -505,13 +507,13 @@ class SaleSchedule extends Component {
 
 
   confirmSchedule = () => {
-    this.valueForSave.chiaViec = true;
+    this.valueForSave.chamSoc = true;
     API.updatePurchase(this.valueForSave, this.valueForSave.purchaseId).then(() => {
       const { value } = this.state;
       const newValue = JSON.parse(JSON.stringify(value));
       newValue.forEach((e) => {
         if (e.purchaseId === this.valueForSave.purchaseId) {
-          e.chiaViec = true;
+          e.chamSoc = true;
           const { dispathChatPurchase } = this.props;
           /**
            * also send message to CHAT when you update schedule
@@ -570,17 +572,17 @@ class SaleSchedule extends Component {
                     pathname: `/purchase/${rowInfo.original.purchaseId}`,
                   });
                 } else if (e.target.id === 'confirm_schedule') {
-                  this.modal = {
-                    title: 'Hoàn thành chia việc',
-                    body: 'Bạn có chắc chắn hoàn thành chia việc',
-                    cancel: 'Huỷ',
-                    accept: 'Xác nhận',
-                    key: e.target.id
-                  };
-                  this.valueForSave = rowInfo.original;
-                  console.log('origin', this.valueForSave);
-
-                  this.setState({ showConfirm: true });
+                  if (!rowInfo.original.chamSoc) {
+                    this.modal = {
+                      title: MODAL.care_customer_complete_title,
+                      body: MODAL.care_customer_complete_body,
+                      cancel: MODAL.button_cancel,
+                      accept: MODAL.button_accept,
+                      key: e.target.id
+                    };
+                    this.valueForSave = rowInfo.original;
+                    this.setState({ showConfirm: true });
+                  }
                 }
               }
             })}
@@ -593,14 +595,20 @@ class SaleSchedule extends Component {
                 </Modal.Header>
                 <Modal.Body>{this.modal.body}</Modal.Body>
                 <Modal.Footer>
-                  <Button onClick={() => this.setState({ showConfirm: false })}>
-                    {this.modal.cancel}
-                  </Button>
+                  {this.modal.cancel
+                    && (
+                      <Button onClick={() => this.setState({ showConfirm: false })}>
+                        {this.modal.cancel}
+                      </Button>
+                    )
+                  }
                   <Button
                     bsStyle="primary"
                     onClick={() => {
                       if (this.modal.key === 'confirm_schedule') {
                         this.setState({ showConfirm: false }, () => this.confirmSchedule());
+                      } else if (this.modal.key === MODAL.key_close) {
+                        this.setState({ showConfirm: false });
                       }
                     }}
                   >
