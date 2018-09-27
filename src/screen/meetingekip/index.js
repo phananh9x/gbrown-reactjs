@@ -99,7 +99,7 @@ class MeetingEkip extends Component {
     };
     this.valueForSave = {};
     this.modal = {};
-    this.purchaseChatId = {};
+    this.purchaseChatId = null;
     this.toDay = moment(new Date()).format('DD/MM/YYYY');
     this.filterDay = moment(new Date().setDate(new Date().getDate() + 1)).format('DD/MM/YYYY');
     this.columns = [{
@@ -309,9 +309,20 @@ class MeetingEkip extends Component {
     if (!chat.fecthing && chat.success) {
       const listPurchase = JSON.parse(JSON.stringify(value));
       listPurchase.forEach((e) => {
-        if (e.purchaseId === this.purchaseChatId) {
+        if (this.purchaseChatId === null) {
+          try {
+            const messageObject = JSON.parse(chat.data.message);
+            if (e.purchaseId === messageObject.purchaseId) {
+              e.chat.push(chat.data);
+              this.setState({ value: listPurchase });
+            }
+          } catch (x) {
+            console.log(x);
+          }
+        } else if (e.purchaseId === this.purchaseChatId) {
           e.chat.push(chat.data);
           this.setState({ value: listPurchase });
+          this.purchaseChatId = null;
         }
       });
     }

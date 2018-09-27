@@ -302,9 +302,8 @@ class SaleOrdering extends Component {
     const { value } = this.state;
     const date = moment(new Date().setDate(new Date().getDate() + 3)).toDate();
     if (user.success && value.length === 0) {
-      API.getAllPurchaseFilterByDate({ date }).then((data) => {
+      API.getSaleRemindByDate({ date }).then((data) => {
         if (data.success) {
-          // this.handleReminder(data.results);
           this.setState({ value: data.results });
         }
       });
@@ -320,12 +319,12 @@ class SaleOrdering extends Component {
               this.setState({ value: listPurchase });
             }
           } catch (x) {
-            if (e.purchaseId === this.purchaseChatId) {
-              this.purchaseChatId = null;
-              e.chat.push(chat.data);
-              this.setState({ value: listPurchase });
-            }
+            console.log(x);
           }
+        } else if (e.purchaseId === this.purchaseChatId) {
+          e.chat.push(chat.data);
+          this.setState({ value: listPurchase });
+          this.purchaseChatId = null;
         }
       });
     }
@@ -336,9 +335,8 @@ class SaleOrdering extends Component {
     const { value } = this.state;
     const date = moment(new Date().setDate(new Date().getDate() + 3)).toDate();
     if (user.success && value.length === 0) {
-      API.getAllPurchaseFilterByDate({ date }).then((data) => {
+      API.getSaleRemindByDate({ date }).then((data) => {
         if (data.success) {
-          // this.handleReminder(data.results);
           this.setState({ value: data.results });
         }
       });
@@ -395,92 +393,6 @@ class SaleOrdering extends Component {
       message: JSON.stringify(message),
       category: '',
       purchaseId: p.purchaseId
-    });
-  }
-
-  /**
-   * should be handled inm server
-   */
-  handleReminder = (purchases) => {
-    purchases.forEach((p) => {
-      let lastReminderDate = p.lastReminderDate || this.toDay;
-      let remindStatus = p.remindStatus ? JSON.parse(p.remindStatus) : {
-        step: 'salemeeting',
-        done: false
-      };
-      /**
-       * send first reminder about meeting sale
-       */
-      if (!p.lastReminderDate && lastReminderDate === this.toDay) {
-        lastReminderDate = this.toDay;
-        remindStatus = {
-          step: 'salemeeting',
-          done: false
-        };
-        p.lastReminderDate = lastReminderDate;
-        p.remindStatus = JSON.stringify(remindStatus);
-        API.updatePurchase(p, p.purchaseId).then(() => {
-          setTimeout(() => {
-            this.remindSaleMeeting(p);
-          }, 1000);
-        });
-      } else if (lastReminderDate < this.toDay) {
-        lastReminderDate = this.toDay;
-        if (!remindStatus.done && remindStatus.step === 'salemeeting') {
-          /**
-          * loop
-          */
-          setTimeout(() => {
-            this.remindSaleMeeting(p);
-          }, 1000);
-        } else if (remindStatus.done && remindStatus.step === 'salemeeting') {
-          /**
-           * done
-           */
-          setTimeout(() => {
-            this.remindScheduleWork(p);
-          });
-          remindStatus = {
-            step: 'schedulework',
-            done: false
-          };
-        } else if (!remindStatus.done && remindStatus.step === 'schedulework') {
-          /**
-           * loop
-           */
-          setTimeout(() => {
-            this.remindScheduleWork(p);
-          });
-        } else if (remindStatus.done && remindStatus.step === 'schedulework') {
-          /**
-           * done
-           */
-          setTimeout(() => {
-            this.remindEkipMeeting(p);
-          }, 1000);
-          remindStatus = {
-            step: 'ekipmeeting',
-            done: false
-          };
-        } else if (!remindStatus.done && remindStatus.step === 'ekipmeeting') {
-          /**
-           * loop
-           */
-          setTimeout(() => {
-            this.remindEkipMeeting(p);
-          }, 1000);
-        } else if (remindStatus.done && remindStatus.step === 'ekipmeeting') {
-          remindStatus = {
-            step: 'completed',
-            done: true
-          };
-        }
-        p.lastReminderDate = lastReminderDate;
-        p.remindStatus = JSON.stringify(remindStatus);
-        API.updatePurchase(p, p.purchaseId).then(() => {
-          this.remindSaleMeeting(p);
-        });
-      }
     });
   }
 
