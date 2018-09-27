@@ -200,6 +200,7 @@ function ThongTinHangMuc({
         />
         <FieldGroup
           value={value}
+          valueDefault={1}
           id="amount"
           type="number"
           label="Số Lượng"
