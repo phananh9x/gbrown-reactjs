@@ -5,6 +5,7 @@ import {
 } from '../actions/login';
 import { LOGIN, USER } from '../actions/actionType';
 import http from '../../services/http';
+import { updateToken } from '../../API';
 
 export function* loginSagas(param) {
   try {
@@ -14,6 +15,7 @@ export function* loginSagas(param) {
     } else {
       localStorage.setItem('@user', JSON.stringify(Object.assign(data, param)));
       http.setAuthorizationHeader(data.results.token);
+      updateToken(data.results.token);
       yield put(loginSuccess(data));
     }
   } catch (e) {

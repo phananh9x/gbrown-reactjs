@@ -302,7 +302,7 @@ class SaleOrdering extends Component {
     const { value } = this.state;
     const date = moment(new Date().setDate(new Date().getDate() + 3)).toDate();
     if (user.success && value.length === 0) {
-      API.getSaleRemindByDate({ date }).then((data) => {
+      API.getSaleRemindByDate({ date, status: 'chotDon' }).then((data) => {
         if (data.success) {
           this.setState({ value: data.results });
         }
@@ -335,7 +335,7 @@ class SaleOrdering extends Component {
     const { value } = this.state;
     const date = moment(new Date().setDate(new Date().getDate() + 3)).toDate();
     if (user.success && value.length === 0) {
-      API.getSaleRemindByDate({ date }).then((data) => {
+      API.getSaleRemindByDate({ date, status: 'chotDon' }).then((data) => {
         if (data.success) {
           this.setState({ value: data.results });
         }

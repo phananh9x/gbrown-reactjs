@@ -299,7 +299,7 @@ class SaleSchedule extends Component {
     const { value } = this.state;
     const date = moment(new Date().setDate(new Date().getDate() + 10)).toDate();
     if (user.success && value.length === 0) {
-      API.getSaleRemindByDate({ date }).then((data) => {
+      API.getSaleRemindByDate({ date, status: 'chamSoc' }).then((data) => {
         if (data.success) {
           this.setState({ value: data.results });
         }
@@ -332,7 +332,7 @@ class SaleSchedule extends Component {
     const { value } = this.state;
     const date = moment(new Date().setDate(new Date().getDate() + 10)).toDate();
     if (user.success && value.length === 0) {
-      API.getSaleRemindByDate({ date }).then((data) => {
+      API.getSaleRemindByDate({ date, status: 'chamSoc' }).then((data) => {
         if (data.success) {
           this.setState({ value: data.results });
         }
